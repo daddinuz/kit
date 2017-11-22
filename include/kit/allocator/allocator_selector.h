@@ -30,25 +30,25 @@ extern "C" {
 #include <stdlib.h>
 #include <memory.h>
 
-#define __kit_Allocator_Selector_malloc(file, line, size)                           \
+#define __kit_Allocator_mallocFn(file, line, size)                           \
     malloc(size)
 
-#define __kit_Allocator_Selector_calloc(file, line, memberSize, numberOfMembers)    \
+#define __kit_Allocator_callocFn(file, line, memberSize, numberOfMembers)    \
     calloc(memberSize, numberOfMembers)
 
-#define __kit_Allocator_Selector_ralloc(file, line, ptr, newSize)                   \
+#define __kit_Allocator_rallocFn(file, line, ptr, newSize)                   \
     realloc(ptr, newSize)
 
-#define __kit_Allocator_Selector_copy(file, line, dst, src, size)                   \
+#define __kit_Allocator_copyFn(file, line, dst, src, size)                   \
     memcpy(dst, src, size)
 
-#define __kit_Allocator_Selector_move(file, line, dst, src, size)                   \
+#define __kit_Allocator_moveFn(file, line, dst, src, size)                   \
     memmove(dst, src, size)
 
-#define __kit_Allocator_Selector_write(file, line, ptr, value, size)                \
+#define __kit_Allocator_writeFn(file, line, ptr, value, size)                \
     memset(ptr, value, size)
 
-#define __kit_Allocator_Selector_free(file, line, ptr)                              \
+#define __kit_Allocator_freeFn(file, line, ptr)                              \
     free(ptr)
 
 #ifdef __cplusplus
