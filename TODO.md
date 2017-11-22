@@ -7,7 +7,7 @@
 ### Collections 
 
 - ~~implement interface of array.h~~
-- implement interface of atom.h
+- ~~implement interface of atom.h~~
 - implement interface of doubly_list.h
 - implement interface of pair.h
 - implement interface of queue.h

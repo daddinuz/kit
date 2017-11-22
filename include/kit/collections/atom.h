@@ -7,7 +7,7 @@
  */
 
 /*
- * An atom is a pointer to a unique, immutable, sequence of zero or more arbitrary bytes.
+ * Atoms are pointers to a unique, immutable, sequence of zero or more arbitrary bytes.
  * There is only a single occurrence of any atom, which is why it’s called an atom.
  * Two atoms are identical if they point to the same location.
  * One of the advantages of atoms is that comparing two byte sequences for equality is performed by simply comparing pointers.
@@ -97,7 +97,7 @@ kit_Atom_fromFloating(long double n);
  * @return The length of the atom.
  */
 extern size_t
-kit_Atom_getLength(kit_Atom atom) __attribute__((__nonnull__));
+kit_Atom_length(kit_Atom atom) __attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }
