@@ -6,6 +6,15 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Arrays are fixed-size sequence containers: they hold a specific number of elements ordered in a strict linear sequence.
+ * It is as efficient in terms of storage size as an ordinary array declared with the language's bracket syntax ([]).
+ * This container merely adds a layer of member and global functions to it, so that arrays can be used as other containers.
+ *
+ * Unlike the other containers, arrays have a fixed size therefore, they cannot be expanded or contracted dynamically
+ * Zero-sized arrays are valid, but they should not be dereferenced.
+ */
+
 #ifndef KIT_ARRAY_INCLUDED
 #define KIT_ARRAY_INCLUDED
 
@@ -22,7 +31,7 @@ extern "C" {
 /**
  * kit_Array interface.
  */
-extern struct kit_Array;
+struct kit_Array;
 
 /**
  * Creates a new instance of kit_Array.
@@ -134,6 +143,7 @@ kit_Array_capacity(struct kit_Array *self) __attribute__((__nonnull__));
 /**
  * [Unsafe method]
  * Gets the raw data of the container.
+ * Any direct modification of the raw data may break the container.
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
@@ -141,7 +151,7 @@ kit_Array_capacity(struct kit_Array *self) __attribute__((__nonnull__));
  * @param self The container instance.
  * @return The low level array of elements.
  */
-extern void *
+extern void **
 kit_Array_raw(struct kit_Array *self) __attribute__((__nonnull__));
 
 #ifdef __cplusplus

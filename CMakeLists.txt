@@ -65,8 +65,8 @@ target_link_libraries(${LIBRARY} PRIVATE option)
 #####
 # Seeds
 ###
-# add_library(${SEEDS_LIBRARY} ${SEEDS_HEADERS} ${SEEDS_SOURCES})
-# target_link_libraries(${SEEDS_LIBRARY} PRIVATE ${LIBRARY})
+add_library(${SEEDS_LIBRARY} ${SEEDS_HEADERS} ${SEEDS_SOURCES})
+target_link_libraries(${SEEDS_LIBRARY} PRIVATE ${LIBRARY})
 
 #####
 # Tests
