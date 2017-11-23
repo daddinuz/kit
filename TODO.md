@@ -11,16 +11,17 @@
 - ~~implement interface of doubly_list.h~~
 - ~~implement interface of pair.h~~
 
-- define interface of list.h
-- approve interface of list.h
-- implement interface of list.h
-
-- implement interface of queue.h
-- implement interface of sequence.h
-- implement interface of singly_list.h
-- implement interface of stack.h
 - implement interface of vector.h
 - implement interface of xor_list.h
+- implement interface of singly_list.h
+
+- implement interface of stack.h
+- implement interface of queue.h
+- implement interface of sequence.h
+
+- ~~define interface of list.h~~
+- ~~approve interface of list.h~~
+- implement interface of list.h
 
 - approve interface of map.h
 - implement interface of map.h
