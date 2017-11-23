@@ -6,6 +6,19 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Vectors are containers representing arrays that can change in size.
+ * Just like arrays, vectors use contiguous storage locations for their elements, which means
+ * that their elements can be accessed just as efficiently as in arrays.
+ *
+ * But unlike arrays, their size can change dynamically, with their storage being handled automatically by the container.
+ * Internally, vectors use a dynamically allocated array to store their elements.
+ * This array may need to be reallocated in order to grow in size when new elements are inserted, which implies
+ * allocating a new array and moving all elements to it.
+ * This is a relatively expensive task in terms of processing time, and thus, vectors do not reallocate
+ * each time an element is added to the container.
+ */
+
 #ifndef KIT_VECTOR_INCLUDED
 #define KIT_VECTOR_INCLUDED
 
@@ -23,7 +36,7 @@ extern "C" {
 /**
  * kit_Vector interface.
  */
-extern struct kit_Vector;
+struct kit_Vector;
 
 /**
  * Creates a new instance of kit_Vector.
@@ -263,7 +276,8 @@ extern size_t
 kit_Vector_capacity(struct kit_Vector *self) __attribute__((__nonnull__));
 
 /**
- * Explicitly request an expansion to hold at least @param size elements.
+ * Explicitly request an expansion to hold at least size elements.
+ * If requested size is less than vector capacity nothing will be done.
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
@@ -277,7 +291,7 @@ extern enum kit_Result
 kit_Vector_reserve(struct kit_Vector *self, size_t size) __attribute__((__nonnull__));
 
 /**
- * Requests the container to shrink in order to fit the stored elements freeing resources not used.
+ * Requests the container to shrink in order to fit at least the stored elements freeing resources not used.
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
@@ -306,7 +320,7 @@ kit_Vector_raw(struct kit_Vector *self) __attribute__((__nonnull__));    /* unsa
 /**
  * kit_Vector_Iterator interface.
  */
-extern struct kit_Vector_Iterator;
+struct kit_Vector_Iterator;
 
 /**
  * Creates a new instance of kit_Vector_Iterator.
