@@ -15,22 +15,22 @@
 /*
  * Features declarations
  */
-FeatureDeclare(AtomLoads);
+FeatureDeclare(AtomEssentials);
 
 /*
  * Describe our test case
  */
 Describe("Atom",
          Trait(
-                 "Loads",
-                 Run(AtomLoads),
+                 "Essentials",
+                 Run(AtomEssentials),
          )
 )
 
 /*
  * Features declarations
  */
-FeatureDefine(AtomLoads) {
+FeatureDefine(AtomEssentials) {
     (void) traits_context;
 
     {
