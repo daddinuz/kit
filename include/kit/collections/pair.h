@@ -6,6 +6,11 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Pairs couple together a pair of values.
+ * The individual values can be accessed through its first and second methods.
+ */
+
 #ifndef KIT_PAIR_INCLUDED
 #define KIT_PAIR_INCLUDED
 
