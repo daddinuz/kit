@@ -8,8 +8,13 @@
 
 - ~~implement interface of array.h~~
 - ~~implement interface of atom.h~~
-- implement interface of doubly_list.h
+- ~~implement interface of doubly_list.h~~
 - ~~implement interface of pair.h~~
+
+- define interface of list.h
+- approve interface of list.h
+- implement interface of list.h
+
 - implement interface of queue.h
 - implement interface of sequence.h
 - implement interface of singly_list.h

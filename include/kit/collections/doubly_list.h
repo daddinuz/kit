@@ -6,6 +6,14 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Doubly linked lists are containers that allow constant time insert and erase operations
+ * anywhere within the sequence, and iteration in both directions.
+ * Doubly linked lists can store each of the elements they contain in different and unrelated storage locations.
+ * The ordering is kept internally by the association to each element of a link to the element preceding it
+ * and a link to the element following it.
+ */
+
 #ifndef KIT_DOUBLY_LIST_INCLUDED
 #define KIT_DOUBLY_LIST_INCLUDED
 
@@ -23,7 +31,7 @@ extern "C" {
 /**
  * kit_DoublyList interface.
  */
-extern struct kit_DoublyList;
+struct kit_DoublyList;
 
 /**
  * Creates a new instance of kit_DoublyList.
@@ -242,7 +250,7 @@ kit_DoublyList_isEmpty(struct kit_DoublyList *self) __attribute__((__nonnull__))
 /**
  * kit_DoublyList_Iterator interface.
  */
-extern struct kit_DoublyList_Iterator;
+struct kit_DoublyList_Iterator;
 
 /**
  * Creates a new instance of kit_DoublyList_Iterator.
