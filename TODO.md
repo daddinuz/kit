@@ -9,7 +9,7 @@
 - ~~implement interface of array.h~~
 - ~~implement interface of atom.h~~
 - implement interface of doubly_list.h
-- implement interface of pair.h
+- ~~implement interface of pair.h~~
 - implement interface of queue.h
 - implement interface of sequence.h
 - implement interface of singly_list.h

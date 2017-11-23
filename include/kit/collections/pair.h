@@ -19,7 +19,7 @@ extern "C" {
 /**
  * kit_Pair interface.
  */
-extern struct kit_Pair;
+struct kit_Pair;
 
 /**
  * Creates a new instance of kit_Pair.
