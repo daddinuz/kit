@@ -6,6 +6,11 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Sequence provides a common interface for mono-directional iterable containers with dynamic sizes
+ * that can be expanded or contracted on both ends (either its front or its back).
+ */
+
 #ifndef KIT_SEQUENCE_INCLUDED
 #define KIT_SEQUENCE_INCLUDED
 
@@ -22,7 +27,7 @@ extern "C" {
 /**
  * kit_Sequence interface.
  */
-extern struct kit_Sequence;
+struct kit_Sequence;
 
 /**
  * Creates a new instance of kit_Sequence using DoublyList as underlying container.
@@ -58,7 +63,7 @@ kit_Sequence_fromXorList(void);
  * @return A new instance of kit_Sequence or Option_None.
  */
 extern Optional(struct kit_Sequence *)
-kit_Sequence_fromVector(void);
+kit_Sequence_fromVector(size_t capacityHint);
 
 /**
  * Deletes an instance of kit_Sequence.
@@ -309,9 +314,9 @@ extern enum kit_Result
 kit_Sequence_shrink(struct kit_Sequence *self) __attribute__((__nonnull__));
 
 /**
- * Declaration of opaque kit_Sequence_Iterator_T type.
+ * kit_Sequence_Iterator interface.
  */
-extern struct kit_Sequence_Iterator;
+struct kit_Sequence_Iterator;
 
 /**
  * Creates a new instance of kit_Sequence_Iterator from begin of container.
