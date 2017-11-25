@@ -8,7 +8,8 @@
 
 /*
  * Sequence provides a common interface for mono-directional iterable containers with dynamic sizes
- * that can be expanded or contracted on both ends (either its front or its back).
+ * that can be expanded or contracted on both ends (either its front or its back) and allow insert 
+ * and erase operations anywhere within the sequence.
  */
 
 #ifndef KIT_SEQUENCE_INCLUDED
