@@ -6,6 +6,17 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * XOR linked lists is a data structure that takes advantage of the bitwise XOR operation to decrease storage
+ * requirements for doubly linked lists.
+ * XOR linked lists like doubly linked lists are containers that allow insert and erase operations anywhere
+ * within the sequence, and iteration in both directions.
+ * XOR linked lists can store each of the elements they contain in different and unrelated storage locations.
+ * The ordering is kept internally by the association to each element of a link that compresses the next and previous
+ * information into one address field by storing the bitwise XOR of the address for previous and the address
+ * for next in one field.
+ */
+
 #ifndef KIT_XOR_LIST_INCLUDED
 #define KIT_XOR_LIST_INCLUDED
 
@@ -23,7 +34,7 @@ extern "C" {
 /**
  * kit_XorList interface.
  */
-extern struct kit_XorList;
+struct kit_XorList;
 
 /**
  * Creates a new instance of kit_XorList.
@@ -242,7 +253,7 @@ kit_XorList_isEmpty(struct kit_XorList *self) __attribute__((__nonnull__));
 /**
  * kit_XorList_Iterator interface..
  */
-extern struct kit_XorList_Iterator;
+struct kit_XorList_Iterator;
 
 /**
  * Creates a new instance of kit_XorList_Iterator.
