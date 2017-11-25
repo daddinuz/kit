@@ -6,6 +6,13 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Singly linked lists are containers that allow insert and erase operations anywhere within the sequence,
+ * and iteration in forward direction.
+ * Singly linked lists can store each of the elements they contain in different and unrelated storage locations.
+ * The ordering is kept internally by the association to each element of a link to the element following it.
+ */
+
 #ifndef KIT_SINGLY_LIST_INCLUDED
 #define KIT_SINGLY_LIST_INCLUDED
 
@@ -22,7 +29,7 @@ extern "C" {
 /**
  * kit_SinglyList interface.
  */
-extern struct kit_SinglyList;
+struct kit_SinglyList;
 
 /**
  * Creates a new instance of kit_SinglyList.
@@ -241,7 +248,7 @@ kit_SinglyList_isEmpty(struct kit_SinglyList *self) __attribute__((__nonnull__))
 /**
  * kit_SinglyList_Iterator interface.
  */
-extern struct kit_SinglyList_Iterator;
+struct kit_SinglyList_Iterator;
 
 /**
  * Creates a new instance of kit_SinglyList_Iterator from begin of container.
