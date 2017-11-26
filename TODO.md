@@ -30,3 +30,7 @@
 - implement interface of http_request.h
 - implement interface of http_response.h
 - implement interface of http_status.h
+
+### Miscellaneous
+
+- rewrite collections sources to return options instead of NULL pointers
