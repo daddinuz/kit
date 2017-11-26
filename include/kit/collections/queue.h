@@ -6,6 +6,11 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Queues are a type of container adaptor, specifically designed to operate in a FIFO context (first-in first-out),
+ * where elements are inserted into one end of the container and extracted from the other.
+ */
+
 #ifndef KIT_QUEUE_INCLUDED
 #define KIT_QUEUE_INCLUDED
 
@@ -22,7 +27,7 @@ extern "C" {
 /**
  * kit_Queue interface.
  */
-extern struct kit_Queue;
+struct kit_Queue;
 
 /**
  * Creates a new instance of kit_Queue using DoublyList as underlying container.

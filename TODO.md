@@ -16,8 +16,7 @@
 - ~~implement interface of sequence.h~~
 - ~~implement interface of list.h~~
 - ~~implement interface of stack.h~~
-
-- implement interface of queue.h
+- ~~implement interface of queue.h~~
 
 - approve interface of map.h
 - implement interface of map.h
