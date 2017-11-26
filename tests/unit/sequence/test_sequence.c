@@ -9,6 +9,7 @@
 #include <traits-unit/traits-unit.h>
 #include "fixtures/fixture_sequence.h"
 #include "features/feature_getters.h"
+#include "features/feature_growable.h"
 #include "features/feature_insert.h"
 #include "features/feature_remove.h"
 #include "features/feature_setters.h"
@@ -31,6 +32,9 @@ Describe("Sequence",
                  Run(SequenceFront, SeededSequenceDoublyListFixture),
                  Run(SequenceSize, SeededSequenceDoublyListFixture),
                  Run(SequenceSet, SeededSequenceDoublyListFixture),
+                 Run(SequenceCapacity, EmptySequenceDoublyListFixture),
+                 Run(SequenceReserve, EmptySequenceDoublyListFixture),
+                 Run(SequenceShrink, SeededSequenceDoublyListFixture)
          ),
          Trait(
                  "SinglyList",
@@ -46,6 +50,9 @@ Describe("Sequence",
                  Run(SequenceFront, SeededSequenceSinglyListFixture),
                  Run(SequenceSize, SeededSequenceSinglyListFixture),
                  Run(SequenceSet, SeededSequenceSinglyListFixture),
+                 Run(SequenceCapacity, EmptySequenceSinglyListFixture),
+                 Run(SequenceReserve, EmptySequenceSinglyListFixture),
+                 Run(SequenceShrink, SeededSequenceSinglyListFixture)
          ),
          Trait(
                  "XorList",
@@ -61,6 +68,9 @@ Describe("Sequence",
                  Run(SequenceFront, SeededSequenceXorListFixture),
                  Run(SequenceSize, SeededSequenceXorListFixture),
                  Run(SequenceSet, SeededSequenceXorListFixture),
+                 Run(SequenceCapacity, EmptySequenceXorListFixture),
+                 Run(SequenceReserve, EmptySequenceXorListFixture),
+                 Run(SequenceShrink, SeededSequenceXorListFixture)
          ),
          Trait(
                  "Vector",
@@ -76,5 +86,8 @@ Describe("Sequence",
                  Run(SequenceFront, SeededSequenceVectorFixture),
                  Run(SequenceSize, SeededSequenceVectorFixture),
                  Run(SequenceSet, SeededSequenceVectorFixture),
+                 Run(SequenceCapacity, EmptySequenceVectorFixture),
+                 Run(SequenceReserve, EmptySequenceVectorFixture),
+                 Run(SequenceShrink, SeededSequenceVectorFixture)
          ),
 )

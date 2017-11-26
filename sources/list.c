@@ -39,6 +39,20 @@ typedef enum kit_Result (*kit_List_Super_Trait_fnBack)(kit_List_Super, void **);
 typedef enum kit_Result (*kit_List_Super_Trait_fnFront)(kit_List_Super, void **);
 typedef size_t (*kit_List_Super_Trait_fnSize)(kit_List_Super);
 typedef bool (*kit_List_Super_Trait_fnIsEmpty)(kit_List_Super);
+typedef size_t (*kit_List_Super_Trait_fnCapacity)(kit_List_Super);
+typedef enum kit_Result (*kit_List_Super_Trait_fnReserve)(kit_List_Super, size_t);
+typedef enum kit_Result (*kit_List_Super_Trait_fnShrink)(kit_List_Super);
+
+static enum kit_Result kit_List_Super_Trait_reserveNoOp(kit_List_Super p0, size_t p1) {
+    (void) p0;
+    (void) p1;
+    return KIT_RESULT_OK;
+}
+
+static enum kit_Result kit_List_Super_Trait_shrinkNoOp(kit_List_Super p0) {
+    (void) p0;
+    return KIT_RESULT_OK;
+}
 
 struct kit_List {
     kit_List_Super super;
@@ -57,6 +71,9 @@ struct kit_List {
     kit_List_Super_Trait_fnFront mFront;
     kit_List_Super_Trait_fnSize mSize;
     kit_List_Super_Trait_fnIsEmpty mIsEmpty;
+    kit_List_Super_Trait_fnCapacity mCapacity;
+    kit_List_Super_Trait_fnReserve mReserve;
+    kit_List_Super_Trait_fnShrink mShrink;
 };
 
 Optional(struct kit_List *) kit_List_fromDoublyList(void) {
@@ -81,6 +98,10 @@ Optional(struct kit_List *) kit_List_fromDoublyList(void) {
             self->mFront = (kit_List_Super_Trait_fnFront) kit_DoublyList_front;
             self->mSize = (kit_List_Super_Trait_fnSize) kit_DoublyList_size;
             self->mIsEmpty = (kit_List_Super_Trait_fnIsEmpty) kit_DoublyList_isEmpty;
+            /* fake methods - no ops */
+            self->mCapacity = (kit_List_Super_Trait_fnCapacity) kit_DoublyList_size;
+            self->mReserve = (kit_List_Super_Trait_fnReserve) kit_List_Super_Trait_reserveNoOp;
+            self->mShrink = (kit_List_Super_Trait_fnShrink) kit_List_Super_Trait_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
             self = NULL;
@@ -112,6 +133,10 @@ Optional(struct kit_List *) kit_List_fromXorList(void) {
             self->mFront = (kit_List_Super_Trait_fnFront) kit_XorList_front;
             self->mSize = (kit_List_Super_Trait_fnSize) kit_XorList_size;
             self->mIsEmpty = (kit_List_Super_Trait_fnIsEmpty) kit_XorList_isEmpty;
+            /* fake methods - no ops */
+            self->mCapacity = (kit_List_Super_Trait_fnCapacity) kit_XorList_size;
+            self->mReserve = (kit_List_Super_Trait_fnReserve) kit_List_Super_Trait_reserveNoOp;
+            self->mShrink = (kit_List_Super_Trait_fnShrink) kit_List_Super_Trait_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
             self = NULL;
@@ -143,6 +168,9 @@ Optional(struct kit_List *) kit_List_fromVector(size_t capacityHint) {
             self->mFront = (kit_List_Super_Trait_fnFront) kit_Vector_front;
             self->mSize = (kit_List_Super_Trait_fnSize) kit_Vector_size;
             self->mIsEmpty = (kit_List_Super_Trait_fnIsEmpty) kit_Vector_isEmpty;
+            self->mCapacity = (kit_List_Super_Trait_fnCapacity) kit_Vector_capacity;
+            self->mReserve = (kit_List_Super_Trait_fnReserve) kit_Vector_reserve;
+            self->mShrink = (kit_List_Super_Trait_fnShrink) kit_Vector_shrink;
         } else {
             kit_Allocator_free(self);
             self = NULL;
@@ -228,6 +256,21 @@ size_t kit_List_size(struct kit_List *self) {
 bool kit_List_isEmpty(struct kit_List *self) {
     assert(self);
     return self->mIsEmpty(self->super);
+}
+
+size_t kit_List_capacity(struct kit_List *self) {
+    assert(self);
+    return self->mCapacity(self->super);
+}
+
+enum kit_Result kit_List_reserve(struct kit_List *self, size_t size) {
+    assert(self);
+    return self->mReserve(self->super, size);
+}
+
+enum kit_Result kit_List_shrink(struct kit_List *self) {
+    assert(self);
+    return self->mShrink(self->super);
 }
 
 /*

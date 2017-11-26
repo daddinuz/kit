@@ -9,6 +9,7 @@
 #include <traits-unit/traits-unit.h>
 #include "fixtures/fixture_list.h"
 #include "features/feature_getters.h"
+#include "features/feature_growable.h"
 #include "features/feature_insert.h"
 #include "features/feature_remove.h"
 #include "features/feature_setters.h"
@@ -31,6 +32,9 @@ Describe("List",
                  Run(ListFront, SeededListDoublyListFixture),
                  Run(ListSize, SeededListDoublyListFixture),
                  Run(ListSet, SeededListDoublyListFixture),
+                 Run(ListCapacity, EmptyListDoublyListFixture),
+                 Run(ListReserve, EmptyListDoublyListFixture),
+                 Run(ListShrink, SeededListDoublyListFixture)
          ),
          Trait(
                  "XorList",
@@ -46,6 +50,9 @@ Describe("List",
                  Run(ListFront, SeededListXorListFixture),
                  Run(ListSize, SeededListXorListFixture),
                  Run(ListSet, SeededListXorListFixture),
+                 Run(ListCapacity, EmptyListXorListFixture),
+                 Run(ListReserve, EmptyListXorListFixture),
+                 Run(ListShrink, SeededListXorListFixture)
          ),
          Trait(
                  "Vector",
@@ -61,5 +68,8 @@ Describe("List",
                  Run(ListFront, SeededListVectorFixture),
                  Run(ListSize, SeededListVectorFixture),
                  Run(ListSet, SeededListVectorFixture),
+                 Run(ListCapacity, EmptyListVectorFixture),
+                 Run(ListReserve, EmptyListVectorFixture),
+                 Run(ListShrink, SeededListVectorFixture)
          ),
 )
