@@ -6,6 +6,11 @@
  * Date:   November 21, 2017 
  */
 
+/*
+ * Stacks are a type of container adaptor, specifically designed to operate in a LIFO context (last-in first-out),
+ * where elements are inserted and extracted only from one end of the container.
+ */
+
 #ifndef KIT_STACK_INCLUDED
 #define KIT_STACK_INCLUDED
 
@@ -22,7 +27,7 @@ extern "C" {
 /**
  * kit_Stack interface.
  */
-extern struct kit_Stack;
+struct kit_Stack;
 
 /**
  * Creates a new instance of kit_Stack using DoublyList as underlying container.
