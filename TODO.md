@@ -19,9 +19,10 @@
 - ~~implement interface of queue.h~~
 
 - implement interface of hat.h
-
-- define interface of deque.h
-- approve interface of deque.h
+- add hat implementation to list.h
+- add hat implementation to sequence.h
+- add hat implementation to stack.h
+- add hat implementation to queue.h
 - implement interface of deque.h
 
 - approve interface of map.h
