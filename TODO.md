@@ -20,6 +20,10 @@
 
 - implement interface of hat.h
 
+- define interface of deque.h
+- approve interface of deque.h
+- implement interface of deque.h
+
 - approve interface of map.h
 - implement interface of map.h
 
