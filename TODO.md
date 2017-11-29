@@ -18,8 +18,6 @@
 - ~~implement interface of stack.h~~
 - ~~implement interface of queue.h~~
 
-- define interface of hat.h
-- approve interface of hat.h
 - implement interface of hat.h
 
 - approve interface of map.h
