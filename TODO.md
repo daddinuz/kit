@@ -24,6 +24,7 @@
 - add hat implementation to stack.h
 - add hat implementation to queue.h
 - implement interface of deque.h
+- add variadic constructors
 
 - approve interface of map.h
 - implement interface of map.h
