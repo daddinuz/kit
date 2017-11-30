@@ -14,16 +14,10 @@
  * 
  */
 int main() {
-    size_t index;
-    struct kit_Array *array = Option_unwrap(kit_Array_new(4));
+    struct kit_Array *array = Option_unwrap(kit_Array_from("Hello", " ", "World", "!"));
+    const size_t capacity = kit_Array_capacity(array);
 
-    kit_Array_set(array, "World", 2);
-    kit_Array_set(array, "Hello", 0);
-    kit_Array_set(array, " ", 1);
-    kit_Array_set(array, "!", 3);
-
-    index = 0;
-    for (const size_t capacity = kit_Array_capacity(array); index < capacity; index++) {
+    for (size_t index = 0; index < capacity; index++) {
         void *element = NULL;
         kit_Array_get(array, &element, index);
         printf("[%zu]: %s\n", index, (char *) element);

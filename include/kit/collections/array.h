@@ -22,9 +22,11 @@
 extern "C" {
 #endif
 
+#include <stdarg.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <option/option.h>
+#include <kit/utils.h>
 #include <kit/compiler_steroids.h>
 #include <kit/collections/result.h>
 
@@ -42,6 +44,40 @@ struct kit_Array;
  */
 extern Optional(struct kit_Array *)
 kit_Array_new(size_t capacity);
+
+/**
+ * Creates a new instance of kit_Array from a fixed sequence of elements.
+ * In case of out of memory this function returns Option_None.
+ *
+ * WARNING:
+ *  This function iterates elements until Ellipsis is hit, so last value in @param pack must be Ellipsis.
+ *  Is an unchecked runtime error to pass a @param pack which does not contain Ellipsis as its last value.
+ *
+ * @param e0 The first element.
+ * @param ... Other elements.
+ * @return A new instance of kit_Array or Option_None.
+ */
+extern Optional(struct kit_Array *)
+__kit_Array_from(void *e0, ...);
+
+#define kit_Array_from(...) __kit_Array_from(__VA_ARGS__, Ellipsis)
+
+/**
+ * Creates a new instance of kit_Array from arguments pack.
+ * In case of out of memory this function returns Option_None.
+ *
+ * WARNING:
+ *  This function iterates the argument pack until Ellipsis is hit, so last value in @param pack must be Ellipsis.
+ *  Is an unchecked runtime error to pass a @param pack which does not contain Ellipsis as its last value.
+ *
+ * Checked runtime errors:
+ *      - @param pack must not be NULL.
+ *
+ * @param pack The arguments pack.
+ * @return A new instance of kit_Array or Option_None.
+ */
+extern Optional(struct kit_Array *)
+kit_Array_fromPack(va_list pack);
 
 /**
  * Deletes an instance of kit_Array.

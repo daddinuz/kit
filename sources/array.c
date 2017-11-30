@@ -31,6 +31,50 @@ Optional(struct kit_Array *) kit_Array_new(size_t capacity) {
     return Option_new(self);
 }
 
+Optional(struct kit_Array *) __kit_Array_from(void *e0, ...) {
+    Option self;
+    va_list pack;
+    va_list packCopy;
+
+    va_start(pack, e0);
+    va_copy(packCopy, pack);
+
+    self = kit_Array_new(1 + kit_packSize(packCopy));
+    if (Option_isSome(self)) {
+        size_t i = 0;
+        struct kit_Array *s = Option_unwrap(self);
+        for (void *e = e0; e != Ellipsis; e = va_arg(pack, void *)) {
+            kit_Array_set(s, e, i);
+            i++;
+        };
+    }
+
+    va_end(packCopy);
+    va_end(pack);
+
+    return self;
+}
+
+Optional(struct kit_Array *) kit_Array_fromPack(va_list pack) {
+    assert(pack);
+    Option self;
+    va_list packCopy;
+
+    va_copy(packCopy, pack);
+    self = kit_Array_new(kit_packSize(packCopy));
+    if (Option_isSome(self)) {
+        size_t i = 0;
+        struct kit_Array *s = Option_unwrap(self);
+        for (void *e = va_arg(pack, void *); e != Ellipsis; e = va_arg(pack, void *)) {
+            kit_Array_set(s, e, i);
+            i++;
+        };
+    }
+    va_end(packCopy);
+
+    return self;
+}
+
 void kit_Array_delete(struct kit_Array *self) {
     if (self) {
         kit_Allocator_free(self->raw);
