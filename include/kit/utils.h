@@ -18,6 +18,11 @@ extern "C" {
 #include <kit/compiler_steroids.h>
 
 /**
+ * @return The string representation of a boolean value.
+ */
+#define kit_truth(x)    (((x)) ? "true" : "false")
+
+/**
  * Ellipsis is used when a sentinel value is needed.
  * An example of usage is in variadic functions to detect end of inputs:
  * ```
@@ -77,6 +82,34 @@ kit_swap(void **a, void **b) __attribute__((__nonnull__));
  */
 extern void
 kit_invalidate(void **ref, void (*destructor)()) __attribute__((__nonnull__));
+
+/**
+ * This function should be treated as an helper when initializing collections that needs a comparator function.
+ * Internally this function performs a raw pointers comparison so should be used only to compare atom instances.  
+ * 
+ * Checked runtime errors:
+ *      - @param a must not be NULL.
+ *      - @param b must not be NULL.
+ * 
+ * @param a The first value.
+ * @param b The second value.
+ * @return -1 if a > b; 0 if a == 0; 1 if b > a;
+ */
+extern int
+kit_compareFn(const void *a, const void *b);
+
+/**
+ * This function should be treated as an helper when initializing collections that needs a hash function.
+ * Internally this function convert the raw pointer address to a number so should be used only to with atom instances.  
+ * 
+ * Checked runtime errors:
+ *      - @param key must not be NULL.
+ *      
+ * @param key The key to be hashed.
+ * @return The hash of the key.
+ */
+extern size_t
+kit_hashFn(const void *key);
 
 #ifdef __cplusplus
 }

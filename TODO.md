@@ -26,8 +26,10 @@
 - implement interface of deque.h
 - add variadic constructors
 
-- approve interface of map.h
-- implement interface of map.h
+- ~~implement interface of map.h~~
+- extend interface of map.h with iterators 
+- ~~implement interface of hash_map.h~~
+- extend interface of hash_map.h with iterators
 
 - approve interface of text.h
 - implement interface of text.h

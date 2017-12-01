@@ -3,15 +3,11 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 22, 2017 
+ * Date:   December 01, 2017 
  */
 
-/*
- * 
- */
-
-#ifndef KIT_MAP_INCLUDED
-#define KIT_MAP_INCLUDED
+#ifndef KIT_HASH_MAP_INCLUDED
+#define KIT_HASH_MAP_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,9 +20,9 @@ extern "C" {
 #include <kit/collections/result.h>
 
 /**
- * kit_Map interface.
+ * kit_HashMap interface.
  */
-struct kit_Map;
+struct kit_HashMap;
 
 /**
  *
@@ -35,8 +31,8 @@ struct kit_Map;
  * @param hashFn
  * @return
  */
-extern Optional(struct kit_Map *)
-kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *x, const void *y), size_t hashFn(const void *key))
+extern Optional(struct kit_HashMap *)
+kit_HashMap_new(size_t capacityHint, int compareFn(const void *x, const void *y), size_t hashFn(const void *key))
 __attribute__((__nonnull__));
 
 /**
@@ -44,7 +40,7 @@ __attribute__((__nonnull__));
  * @param self
  */
 extern void
-kit_Map_delete(struct kit_Map *self);
+kit_HashMap_delete(struct kit_HashMap *self);
 
 /**
  *
@@ -54,7 +50,7 @@ kit_Map_delete(struct kit_Map *self);
  * @return
  */
 extern enum kit_Result
-kit_Map_put(struct kit_Map *self, const void *key, void *value)
+kit_HashMap_put(struct kit_HashMap *self, const void *key, void *value)
 __attribute__((__nonnull__(1, 2)));
 
 /**
@@ -65,7 +61,7 @@ __attribute__((__nonnull__(1, 2)));
  * @return
  */
 extern enum kit_Result
-kit_Map_get(struct kit_Map *self, const void *key, void **out)
+kit_HashMap_get(struct kit_HashMap *self, const void *key, void **out)
 __attribute__((__nonnull__));
 
 /**
@@ -75,7 +71,7 @@ __attribute__((__nonnull__));
  * @return
  */
 extern bool
-kit_Map_has(struct kit_Map *self, const void *key)
+kit_HashMap_has(struct kit_HashMap *self, const void *key)
 __attribute__((__nonnull__));
 
 /**
@@ -86,7 +82,7 @@ __attribute__((__nonnull__));
  * @return
  */
 extern enum kit_Result
-kit_Map_pop(struct kit_Map *self, const void *key, void **out)
+kit_HashMap_pop(struct kit_HashMap *self, const void *key, void **out)
 __attribute__((__nonnull__));
 
 /**
@@ -94,7 +90,7 @@ __attribute__((__nonnull__));
  * @param self
  */
 extern void
-kit_Map_clear(struct kit_Map *self)
+kit_HashMap_clear(struct kit_HashMap *self)
 __attribute__((__nonnull__));
 
 /**
@@ -103,7 +99,7 @@ __attribute__((__nonnull__));
  * @return
  */
 extern size_t
-kit_Map_size(struct kit_Map *self)
+kit_HashMap_size(struct kit_HashMap *self)
 __attribute__((__nonnull__));
 
 /**
@@ -112,11 +108,11 @@ __attribute__((__nonnull__));
  * @return
  */
 extern bool
-kit_Map_isEmpty(struct kit_Map *self)
+kit_HashMap_isEmpty(struct kit_HashMap *self)
 __attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* KIT_MAP_INCLUDED */
+#endif /* KIT_HASH_MAP_INCLUDED */
