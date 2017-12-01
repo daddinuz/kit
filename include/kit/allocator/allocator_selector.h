@@ -33,8 +33,8 @@ extern "C" {
 #define __kit_Allocator_mallocFn(file, line, size)                           \
     malloc(size)
 
-#define __kit_Allocator_callocFn(file, line, memberSize, numberOfMembers)    \
-    calloc(memberSize, numberOfMembers)
+#define __kit_Allocator_callocFn(file, line, numberOfMembers, memberSize)    \
+    calloc(numberOfMembers, memberSize)
 
 #define __kit_Allocator_rallocFn(file, line, ptr, newSize)                   \
     realloc(ptr, newSize)

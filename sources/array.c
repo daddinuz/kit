@@ -19,7 +19,7 @@ Optional(struct kit_Array *) kit_Array_new(size_t capacity) {
     struct kit_Array *self = kit_Allocator_malloc(sizeof(*self));
 
     if (self) {
-        self->raw = kit_Allocator_calloc(sizeof(self->raw[0]), capacity);
+        self->raw = kit_Allocator_calloc(capacity, sizeof(self->raw[0]));
         if (self->raw) {
             self->capacity = capacity;
         } else {

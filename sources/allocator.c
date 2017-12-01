@@ -15,10 +15,10 @@ void *__kit_Allocator_malloc(const char *file, const int line, const size_t size
     return __kit_Allocator_mallocFn(file, line, size);
 }
 
-void *__kit_Allocator_calloc(const char *file, const int line, const size_t memberSize, const size_t numberOfMembers) {
+void *__kit_Allocator_calloc(const char *file, const int line, const size_t numberOfMembers, const size_t memberSize) {
     (void) file;
     (void) line;
-    return __kit_Allocator_callocFn(file, line, memberSize, numberOfMembers);
+    return __kit_Allocator_callocFn(file, line, numberOfMembers, memberSize);
 }
 
 void *__kit_Allocator_ralloc(const char *file, const int line, void *ptr, const size_t newSize) {

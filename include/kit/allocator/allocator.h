@@ -19,7 +19,7 @@ extern void *
 __kit_Allocator_malloc(const char *file, int line, size_t size);
 
 extern void *
-__kit_Allocator_calloc(const char *file, int line, size_t memberSize, size_t numberOfMembers);
+__kit_Allocator_calloc(const char *file, int line, size_t numberOfMembers, size_t memberSize);
 
 extern void *
 __kit_Allocator_ralloc(const char *file, int line, void *ptr, size_t newSize);
@@ -39,8 +39,8 @@ __kit_Allocator_free(const char *file, int line, void *ptr);
 #define kit_Allocator_malloc(size)                          \
     __kit_Allocator_malloc(__FILE__, __LINE__, (size))
 
-#define kit_Allocator_calloc(memberSize, numberOfMembers)   \
-    __kit_Allocator_calloc(__FILE__, __LINE__, (memberSize), (numberOfMembers))
+#define kit_Allocator_calloc(numberOfMembers, memberSize)   \
+    __kit_Allocator_calloc(__FILE__, __LINE__, (numberOfMembers), (memberSize))
 
 #define kit_Allocator_ralloc(ptr, newSize)                  \
     __kit_Allocator_ralloc(__FILE__, __LINE__, (ptr), (newSize))
