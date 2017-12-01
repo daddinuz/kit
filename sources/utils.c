@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <kit/utils.h>
 
 #ifndef NDEBUG
@@ -52,4 +53,15 @@ void kit_invalidate(void **ref, void (*destructor)()) {
     assert(destructor);
     destructor(*ref);
     *ref = NULL;
+}
+
+int kit_compareFn(const void *a, const void *b) {
+    assert(a);
+    assert(b);
+    return (int) ((intptr_t) b - (intptr_t) a);
+}
+
+size_t kit_hashFn(const void *key) {
+    assert(key);
+    return (size_t) ((uintptr_t) key >> 2);
 }
