@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-enum kit_http_Method {
+enum kit_HttpMethod {
     KIT_HTTP_METHOD_DELETE,
     KIT_HTTP_METHOD_GET,
     KIT_HTTP_METHOD_HEAD,
@@ -43,7 +43,7 @@ enum kit_http_Method {
 };
 
 extern const char *
-kit_http_Method_explanin(enum kit_http_Method method);
+kit_HttpMethod_explanin(enum kit_HttpMethod method);
 
 #ifdef __cplusplus
 }

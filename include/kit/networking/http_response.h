@@ -21,56 +21,56 @@ extern "C" {
 #include <kit/networking/http_request.h>
 
 /**
- * kit_http_Response interface.
+ * kit_HttpResponse interface.
  */
-extern struct kit_http_Response;
+extern struct kit_HttpResponse;
 
-extern const struct kit_http_Request *
-kit_http_Response_getRequest(const struct kit_http_Response *self);
+extern const struct kit_HttpRequest *
+kit_HttpResponse_getRequest(const struct kit_HttpResponse *self);
 
 extern kit_Atom
-kit_http_Response_getUrl(const struct kit_http_Response *self);
+kit_HttpResponse_getUrl(const struct kit_HttpResponse *self);
 
 extern const struct kit_Map *
-kit_http_Response_getHeaders(const struct kit_http_Response *self);
+kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self);
 
 extern const struct kit_Text *
-kit_http_Response_getBody(const struct kit_http_Response *self);
+kit_HttpResponse_getBody(const struct kit_HttpResponse *self);
 
-extern enum kit_http_Status
-kit_http_Response_getStatus(const struct kit_http_Response *self);
+extern enum kit_HttpStatus
+kit_HttpResponse_getStatus(const struct kit_HttpResponse *self);
 
 extern void
-kit_http_Response_delete(const struct kit_http_Response *self);
+kit_HttpResponse_delete(const struct kit_HttpResponse *self);
 
 /**
- * kit_http_ResponseBuilder interface.
+ * kit_HttpResponseBuilder interface.
  */
-extern struct kit_http_ResponseBuilder;
+extern struct kit_HttpResponseBuilder;
 
-extern struct kit_http_ResponseBuilder *
-kit_http_ResponseBuilder_new(const struct kit_http_Request *request);
+extern struct kit_HttpResponseBuilder *
+kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request);
 
-extern struct kit_http_ResponseBuilder *
-kit_http_ResponseBuilder_setRequest(struct kit_http_ResponseBuilder *self, const struct kit_http_Request *request);
+extern struct kit_HttpResponseBuilder *
+kit_HttpResponseBuilder_setRequest(struct kit_HttpResponseBuilder *self, const struct kit_HttpRequest *request);
 
-extern struct kit_http_ResponseBuilder *
-kit_http_ResponseBuilder_setUrl(struct kit_http_ResponseBuilder *self, kit_Atom url);
+extern struct kit_HttpResponseBuilder *
+kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom url);
 
-extern struct kit_http_ResponseBuilder *
-kit_http_ResponseBuilder_setHeaders(struct kit_http_ResponseBuilder *self, const struct kit_Map *headers);
+extern struct kit_HttpResponseBuilder *
+kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, const struct kit_Map *headers);
 
-extern struct kit_http_ResponseBuilder *
-kit_http_ResponseBuilder_setBody(struct kit_http_ResponseBuilder *self, const struct kit_Text *body);
+extern struct kit_HttpResponseBuilder *
+kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, const struct kit_Text *body);
 
-extern struct kit_http_ResponseBuilder *
-kit_http_ResponseBuilder_setStatus(struct kit_http_ResponseBuilder *self, enum kit_http_Status status);
+extern struct kit_HttpResponseBuilder *
+kit_HttpResponseBuilder_setStatus(struct kit_HttpResponseBuilder *self, enum kit_HttpStatus status);
 
-extern const struct kit_http_Response *
-kit_http_ResponseBuilder_build(struct kit_http_ResponseBuilder *self);
+extern const struct kit_HttpResponse *
+kit_HttpResponseBuilder_build(struct kit_HttpResponseBuilder *self);
 
 extern void
-kit_http_ResponseBuilder_delete(struct kit_http_ResponseBuilder *self);
+kit_HttpResponseBuilder_delete(struct kit_HttpResponseBuilder *self);
 
 #ifdef __cplusplus
 }

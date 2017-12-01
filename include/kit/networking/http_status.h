@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-enum kit_http_Status {
+enum kit_HttpStatus {
     KIT_HTTP_STATUS_CONTINUE = 100,                         /* Continue                        */
     KIT_HTTP_STATUS_SWITCHING_PROTOCOLS = 101,              /* Switching Protocols             */
     KIT_HTTP_STATUS_PROCESSING = 102,                       /* Processing                      */
@@ -76,7 +76,7 @@ enum kit_http_Status {
 };
 
 extern const char *
-kit_http_Status_explanin(enum kit_http_Status status);
+kit_HttpStatus_explanin(enum kit_HttpStatus status);
 
 #ifdef __cplusplus
 }
