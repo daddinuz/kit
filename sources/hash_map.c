@@ -31,24 +31,26 @@ struct kit_HashMap {
     struct kit_HashMap_Bucket **buckets;
 };
 
-Optional(struct kit_HashMap *)
-kit_HashMap_new(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
+Option kit_HashMap_new(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
     assert(compareFn);
     assert(hashFn);
     size_t i;
-    struct kit_HashMap *self = NULL;
+    Option selfOption;
+    struct kit_HashMap *self;
     static size_t primeNumbers[] = {269, 269, 509, 1021, 1021, 2053, 4093, 8191, 16381, 32771, 65521, INT_MAX};
 
     for (i = 1; primeNumbers[i] < capacityHint; i++);
-    self = kit_Allocator_calloc(1, sizeof(*self) + sizeof(self->buckets[0]) * primeNumbers[i - 1]);
-    if (self) {
+
+    selfOption = kit_Allocator_calloc(1, sizeof(*self) + sizeof(self->buckets[0]) * primeNumbers[i - 1]);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->capacity = primeNumbers[i - 1];
         self->hashFn = hashFn;
         self->compareFn = compareFn;
         self->buckets = (struct kit_HashMap_Bucket **) (self + 1);
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
 void kit_HashMap_delete(struct kit_HashMap *self) {
@@ -61,6 +63,7 @@ void kit_HashMap_delete(struct kit_HashMap *self) {
 enum kit_Result kit_HashMap_put(struct kit_HashMap *self, const void *key, void *value) {
     assert(self);
     assert(key);
+    Option bucketOption;
     struct kit_HashMap_Bucket *bucket;
     enum kit_Result result = KIT_RESULT_OK;
     const size_t index = self->hashFn(key) % self->capacity;
@@ -71,16 +74,25 @@ enum kit_Result kit_HashMap_put(struct kit_HashMap *self, const void *key, void 
         }
     }
 
-    if (NULL == bucket) {
-        bucket = kit_Allocator_calloc(1, sizeof(*bucket));
-        bucket->key = key;
-        bucket->next = self->buckets[index];
-        self->buckets[index] = bucket;
-        self->size += 1;
+    bucketOption = Option_new(bucket);
+    if (Option_isNone(bucketOption)) {
+        bucketOption = kit_Allocator_calloc(1, sizeof(*bucket));
+        if (Option_isSome(bucketOption)) {
+            bucket = Option_unwrap(bucketOption);
+            bucket->key = key;
+            bucket->next = self->buckets[index];
+            self->buckets[index] = bucket;
+            self->size += 1;
+        }
     }
 
-    bucket->value = value;
-    self->operationId += 1;
+    if (Option_isSome(bucketOption)) {
+        bucket = Option_unwrap(bucketOption);
+        bucket->value = value;
+        self->operationId += 1;
+    } else {
+        result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
+    }
 
     return result;
 }

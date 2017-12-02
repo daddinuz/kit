@@ -19,11 +19,12 @@ struct kit_SinglyList_Node {
     struct kit_SinglyList_Node *next;
 };
 
-static struct kit_SinglyList_Node *
+static Option
 kit_SinglyList_Node_new(void *e);
 
 static void *
-kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self) __attribute__((__nonnull__));
+kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self)
+__attribute__((__nonnull__));
 
 struct kit_SinglyList_Node_Pair {
     struct kit_SinglyList_Node *prev;
@@ -31,9 +32,8 @@ struct kit_SinglyList_Node_Pair {
 };
 
 static enum kit_Result
-kit_SinglyList_Node_Pair_fetch(
-        struct kit_SinglyList *list, struct kit_SinglyList_Node_Pair *out, size_t index
-) __attribute__((__nonnull__));
+kit_SinglyList_Node_Pair_fetch(struct kit_SinglyList *list, struct kit_SinglyList_Node_Pair *out, size_t index)
+__attribute__((__nonnull__));
 
 /*
  * Public
@@ -45,9 +45,9 @@ struct kit_SinglyList {
     struct kit_SinglyList_Node *back;
 };
 
-Optional(struct kit_SinglyList *) kit_SinglyList_new(void) {
-    struct kit_SinglyList *self = kit_Allocator_calloc(1, sizeof(*self));
-    return Option_new(self);
+Option kit_SinglyList_new(void) {
+    struct kit_SinglyList *self;
+    return kit_Allocator_calloc(1, sizeof(*self));
 }
 
 void kit_SinglyList_clear(struct kit_SinglyList *self) {
@@ -74,12 +74,14 @@ void kit_SinglyList_delete(struct kit_SinglyList *self) {
 
 enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, const size_t index) {
     assert(self);
+    Option optionNode;
+    struct kit_SinglyList_Node *newNode;
     enum kit_Result result = KIT_RESULT_OK;
-    struct kit_SinglyList_Node *newNode = NULL;
 
-    if (index == 0) {                       /* insert front */
-        newNode = kit_SinglyList_Node_new(e);
-        if (newNode) {
+    if (index == 0) {                           /* insert front */
+        optionNode = kit_SinglyList_Node_new(e);
+        if (Option_isSome(optionNode)) {
+            newNode = Option_unwrap(optionNode);
             if (self->front) {                  /* non-empty list */
                 struct kit_SinglyList_Node *oldFront = self->front;
                 self->front = newNode;
@@ -90,9 +92,10 @@ enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, cons
         } else {
             result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
         }
-    } else if (index == self->size) {       /* insert back */
-        newNode = kit_SinglyList_Node_new(e);
-        if (newNode) {
+    } else if (index == self->size) {           /* insert back */
+        optionNode = kit_SinglyList_Node_new(e);
+        if (Option_isSome(optionNode)) {
+            newNode = Option_unwrap(optionNode);
             if (self->back) {                   /* non-empty list */
                 self->back->next = newNode;
                 self->back = newNode;
@@ -102,12 +105,13 @@ enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, cons
         } else {
             result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
         }
-    } else {                                /* insert middle */
+    } else {                                    /* insert middle */
         struct kit_SinglyList_Node_Pair pair = {.prev=NULL, .base=NULL};
         result = kit_SinglyList_Node_Pair_fetch(self, &pair, index);  /* may return: KIT_RESULT_OUT_OF_RANGE */
         if (KIT_RESULT_OK == result) {
-            newNode = kit_SinglyList_Node_new(e);
-            if (newNode) {
+            optionNode = kit_SinglyList_Node_new(e);
+            if (Option_isSome(optionNode)) {
+                newNode = Option_unwrap(optionNode);
                 newNode->next = pair.base;
                 pair.prev->next = newNode;
             } else {
@@ -120,6 +124,7 @@ enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, cons
         self->size += 1;
         self->operationId += 1;
     };
+
     return result;
 }
 
@@ -224,16 +229,18 @@ struct kit_SinglyList_Iterator {
     struct kit_SinglyList_Node *next;
 };
 
-Optional(struct kit_SinglyList_Iterator *) kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) {
+Option kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) {
     assert(container);
-    struct kit_SinglyList_Iterator *self = kit_Allocator_calloc(1, sizeof(*self));
+    struct kit_SinglyList_Iterator *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (self) {
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->container = container;
         kit_SinglyList_Iterator_rewindToBegin(self);
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
 void kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self) {
@@ -293,17 +300,16 @@ bool kit_SinglyList_Iterator_isModified(struct kit_SinglyList_Iterator *self) {
 /*
  * Private implementations
  */
-struct kit_SinglyList_Node *kit_SinglyList_Node_new(void *e) {
-    struct kit_SinglyList_Node *self = kit_Allocator_calloc(1, sizeof(*self));
+Option kit_SinglyList_Node_new(void *e) {
+    struct kit_SinglyList_Node *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (self) {
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->element = e;
-    } else {
-        kit_Allocator_free(self);
-        self = NULL;
     }
 
-    return self;
+    return selfOption;
 }
 
 void *kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self) {

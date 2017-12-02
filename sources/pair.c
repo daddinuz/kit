@@ -15,19 +15,23 @@ struct kit_Pair {
     void *second;
 };
 
-Optional(struct kit_Pair *) kit_Pair_new(void *first, void *second) {
-    struct kit_Pair *self = kit_Allocator_malloc(sizeof(*self));
+Option kit_Pair_new(void *first, void *second) {
+    struct kit_Pair *self;
+    Option selfOption = kit_Allocator_malloc(sizeof(*self));
 
-    if (self) {
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->first = first;
         self->second = second;
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
 void kit_Pair_delete(struct kit_Pair *self) {
-    kit_Allocator_free(self);
+    if (self) {
+        kit_Allocator_free(self);
+    }
 }
 
 void *kit_Pair_first(struct kit_Pair *self) {

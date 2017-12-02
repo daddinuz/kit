@@ -25,11 +25,13 @@ struct kit_Atom_Node {
     char *atom;
 };
 
-static Optional(struct kit_Atom_Node *)
-kit_Atom_table_put(const char *s, size_t length, size_t hash) __attribute__((__nonnull__));
+static Option
+kit_Atom_table_put(const char *s, size_t length, size_t hash)
+__attribute__((__nonnull__));
 
-static Optional(struct kit_Atom_Node *)
-kit_Atom_table_fetch(const char *s, size_t length, size_t hash) __attribute__((__nonnull__));
+static Option
+kit_Atom_table_fetch(const char *s, size_t length, size_t hash)
+__attribute__((__nonnull__));
 
 static void
 kit_Atom_table_clear(void);
@@ -38,7 +40,8 @@ static void
 kit_Atom_assertValidInstance(kit_Atom atom);
 
 static size_t
-kit_Atom_hash(const char *s, size_t length)  __attribute__((__nonnull__));
+kit_Atom_hash(const char *s, size_t length)
+__attribute__((__nonnull__));
 
 static bool clearCallbackRegistered = false;
 static struct kit_Atom_Node *atomsTable[KIT_ATOM_NODE_TABLE_SIZE] = {0};
@@ -46,24 +49,24 @@ static struct kit_Atom_Node *atomsTable[KIT_ATOM_NODE_TABLE_SIZE] = {0};
 /*
  * Public
  */
-Optional(kit_Atom) kit_Atom_put(const char *const s, const size_t length) {
+Option kit_Atom_put(const char *const s, const size_t length) {
     assert(s);
-    Optional(struct kit_Atom_Node *) _ = kit_Atom_table_put(s, length, kit_Atom_hash(s, length));
+    Option nodeOption = kit_Atom_table_put(s, length, kit_Atom_hash(s, length));
 
-    if (Option_isSome(_)) {
-        struct kit_Atom_Node *node = Option_unwrap(_);
+    if (Option_isSome(nodeOption)) {
+        struct kit_Atom_Node *node = Option_unwrap(nodeOption);
         return Option_new(node->atom);
     } else {
         return Option_None;
     }
 }
 
-Optional(kit_Atom) kit_Atom_fromLiteral(const char *const s) {
+Option kit_Atom_fromLiteral(const char *const s) {
     assert(s);
     return kit_Atom_put(s, strlen(s));
 }
 
-Optional(kit_Atom) kit_Atom_fromInteger(long long n) {
+Option kit_Atom_fromInteger(long long n) {
     char buffer[32] = {0};
     const size_t bufferSize = sizeof(buffer) / sizeof(buffer[0]);
     const int length = snprintf(buffer, bufferSize, "%lld", n);
@@ -71,7 +74,7 @@ Optional(kit_Atom) kit_Atom_fromInteger(long long n) {
     return kit_Atom_put(buffer, (size_t) length);
 }
 
-Optional(kit_Atom) kit_Atom_fromFloating(long double n) {
+Option kit_Atom_fromFloating(long double n) {
     char buffer[32] = {0};
     const size_t bufferSize = sizeof(buffer) / sizeof(buffer[0]);
     const int length = snprintf(buffer, bufferSize, "%Lf", n);
@@ -89,15 +92,16 @@ size_t kit_Atom_length(kit_Atom atom) {
 /*
  * Private implementations
  */
-
-Optional(struct kit_Atom_Node *) kit_Atom_table_put(const char *const s, const size_t length, const size_t hash) {
+Option kit_Atom_table_put(const char *const s, const size_t length, const size_t hash) {
     assert(s);
-    Optional(struct kit_Atom_Node *) result = kit_Atom_table_fetch(s, length, hash);
+    Option nodeOption = kit_Atom_table_fetch(s, length, hash);
 
-    if (Option_isNone(result)) {
+    if (Option_isNone(nodeOption)) {
+        struct kit_Atom_Node *node;
         const size_t index = hash % KIT_ATOM_NODE_TABLE_SIZE;
-        struct kit_Atom_Node *node = kit_Allocator_malloc(sizeof(*node) + length + 1);
-        if (node) {
+        nodeOption = kit_Allocator_malloc(sizeof(*node) + length + 1);
+        if (Option_isSome(nodeOption)) {
+            node = Option_unwrap(nodeOption);
             /* construct node */
             node->hash = hash;
             node->length = length;
@@ -108,7 +112,6 @@ Optional(struct kit_Atom_Node *) kit_Atom_table_put(const char *const s, const s
             node->next = atomsTable[index];
             atomsTable[index] = node;
         }
-        result = Option_new(node);
     }
 
     if (!clearCallbackRegistered) {
@@ -116,13 +119,13 @@ Optional(struct kit_Atom_Node *) kit_Atom_table_put(const char *const s, const s
         clearCallbackRegistered = true;
     }
 
-    return result;
+    return nodeOption;
 }
 
-Optional(struct kit_Atom_Node *) kit_Atom_table_fetch(const char *const s, const size_t length, const size_t hash) {
+Option kit_Atom_table_fetch(const char *const s, const size_t length, const size_t hash) {
     assert(s);
     const size_t index = hash % KIT_ATOM_NODE_TABLE_SIZE;
-    Optional(struct kit_Atom_Node *) node = Option_None;
+    Option node = Option_None;
 
     for (struct kit_Atom_Node *current = atomsTable[index]; current; current = current->next) {
         if (length == current->length) {

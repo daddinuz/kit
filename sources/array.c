@@ -15,76 +15,70 @@ struct kit_Array {
     void **raw;
 };
 
-Optional(struct kit_Array *) kit_Array_new(size_t capacity) {
-    struct kit_Array *self = kit_Allocator_malloc(sizeof(*self));
+Option kit_Array_new(size_t capacity) {
+    struct kit_Array *self;
+    Option selfOption = kit_Allocator_malloc(sizeof(*self) + sizeof(self->raw[0]) * capacity);
 
-    if (self) {
-        self->raw = kit_Allocator_calloc(capacity, sizeof(self->raw[0]));
-        if (self->raw) {
-            self->capacity = capacity;
-        } else {
-            kit_Allocator_free(self);
-            self = NULL;
-        }
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        self->capacity = capacity;
+        self->raw = (void **) (self + 1);
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
-Optional(struct kit_Array *) __kit_Array_from(void *e0, ...) {
-    Option self;
+Option __kit_Array_from(void *e0, ...) {
+    Option selfOption;
     va_list pack;
     va_list packCopy;
 
     va_start(pack, e0);
     va_copy(packCopy, pack);
-
-    self = kit_Array_new(1 + kit_packSize(packCopy));
-    if (Option_isSome(self)) {
+    selfOption = kit_Array_new(1 + kit_packSize(packCopy));
+    if (Option_isSome(selfOption)) {
         size_t i = 0;
-        struct kit_Array *s = Option_unwrap(self);
+        struct kit_Array *self = Option_unwrap(selfOption);
         for (void *e = e0; e != Ellipsis; e = va_arg(pack, void *)) {
-            kit_Array_set(s, e, i);
+            kit_Array_set(self, e, i);
             i++;
         };
     }
-
     va_end(packCopy);
     va_end(pack);
 
-    return self;
+    return selfOption;
 }
 
-Optional(struct kit_Array *) kit_Array_fromPack(va_list pack) {
+Option kit_Array_fromPack(va_list pack) {
     assert(pack);
-    Option self;
+    Option selfOption;
     va_list packCopy;
 
     va_copy(packCopy, pack);
-    self = kit_Array_new(kit_packSize(packCopy));
-    if (Option_isSome(self)) {
+    selfOption = kit_Array_new(kit_packSize(packCopy));
+    if (Option_isSome(selfOption)) {
         size_t i = 0;
-        struct kit_Array *s = Option_unwrap(self);
+        struct kit_Array *self = Option_unwrap(selfOption);
         for (void *e = va_arg(pack, void *); e != Ellipsis; e = va_arg(pack, void *)) {
-            kit_Array_set(s, e, i);
+            kit_Array_set(self, e, i);
             i++;
         };
     }
     va_end(packCopy);
 
-    return self;
+    return selfOption;
 }
 
 void kit_Array_delete(struct kit_Array *self) {
     if (self) {
-        kit_Allocator_free(self->raw);
         kit_Allocator_free(self);
     }
 }
 
 void kit_Array_clear(struct kit_Array *self) {
     assert(self);
-    kit_Allocator_write(self->raw, 0, sizeof(void *) * self->capacity);
+    kit_Allocator_set(self->raw, 0, sizeof(void *) * self->capacity);
 }
 
 enum kit_Result kit_Array_set(struct kit_Array *self, void *e, const size_t index) {
