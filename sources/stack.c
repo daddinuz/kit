@@ -34,13 +34,15 @@ struct kit_Stack {
     kit_Stack_Super_Trait_fnIsEmpty mIsEmpty;
 };
 
-Optional(struct kit_Stack *) kit_Stack_fromDoublyList(void) {
-    struct kit_Stack *self = kit_Allocator_calloc(1, sizeof(*self));
+Option kit_Stack_fromDoublyList(void) {
+    struct kit_Stack *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (self) {
-        Option super = kit_DoublyList_new();
-        if (Option_isSome(super)) {
-            self->super = Option_unwrap(super);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        superOption = kit_DoublyList_new();
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->mDelete = (kit_Stack_Super_Trait_fnDelete) kit_DoublyList_delete;
             self->mPush = (kit_Stack_Super_Trait_fnPush) kit_DoublyList_pushBack;
             self->mPop = (kit_Stack_Super_Trait_fnPop) kit_DoublyList_popBack;
@@ -49,20 +51,21 @@ Optional(struct kit_Stack *) kit_Stack_fromDoublyList(void) {
             self->mIsEmpty = (kit_Stack_Super_Trait_fnIsEmpty) kit_DoublyList_isEmpty;
         } else {
             kit_Allocator_free(self);
-            self = NULL;
         }
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
-Optional(struct kit_Stack *) kit_Stack_fromSinglyList(void) {
-    struct kit_Stack *self = kit_Allocator_calloc(1, sizeof(*self));
+Option kit_Stack_fromSinglyList(void) {
+    struct kit_Stack *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (self) {
-        Option super = kit_SinglyList_new();
-        if (Option_isSome(super)) {
-            self->super = Option_unwrap(super);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        superOption = kit_SinglyList_new();
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->mDelete = (kit_Stack_Super_Trait_fnDelete) kit_SinglyList_delete;
             self->mPush = (kit_Stack_Super_Trait_fnPush) kit_SinglyList_pushFront;
             self->mPop = (kit_Stack_Super_Trait_fnPop) kit_SinglyList_popFront;
@@ -71,20 +74,21 @@ Optional(struct kit_Stack *) kit_Stack_fromSinglyList(void) {
             self->mIsEmpty = (kit_Stack_Super_Trait_fnIsEmpty) kit_SinglyList_isEmpty;
         } else {
             kit_Allocator_free(self);
-            self = NULL;
         }
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
-Optional(struct kit_Stack *) kit_Stack_fromXorList(void) {
-    struct kit_Stack *self = kit_Allocator_calloc(1, sizeof(*self));
+Option kit_Stack_fromXorList(void) {
+    struct kit_Stack *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (self) {
-        Option super = kit_XorList_new();
-        if (Option_isSome(super)) {
-            self->super = Option_unwrap(super);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        superOption = kit_XorList_new();
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->mDelete = (kit_Stack_Super_Trait_fnDelete) kit_XorList_delete;
             self->mPush = (kit_Stack_Super_Trait_fnPush) kit_XorList_pushBack;
             self->mPop = (kit_Stack_Super_Trait_fnPop) kit_XorList_popBack;
@@ -93,20 +97,21 @@ Optional(struct kit_Stack *) kit_Stack_fromXorList(void) {
             self->mIsEmpty = (kit_Stack_Super_Trait_fnIsEmpty) kit_XorList_isEmpty;
         } else {
             kit_Allocator_free(self);
-            self = NULL;
         }
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
-Optional(struct kit_Stack *) kit_Stack_fromVector(void) {
-    struct kit_Stack *self = kit_Allocator_calloc(1, sizeof(*self));
+Option kit_Stack_fromVector(void) {
+    struct kit_Stack *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (self) {
-        Option super = kit_Vector_new();
-        if (Option_isSome(super)) {
-            self->super = Option_unwrap(super);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        superOption = kit_Vector_new();
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->mDelete = (kit_Stack_Super_Trait_fnDelete) kit_Vector_delete;
             self->mPush = (kit_Stack_Super_Trait_fnPush) kit_Vector_pushBack;
             self->mPop = (kit_Stack_Super_Trait_fnPop) kit_Vector_popBack;
@@ -115,11 +120,10 @@ Optional(struct kit_Stack *) kit_Stack_fromVector(void) {
             self->mIsEmpty = (kit_Stack_Super_Trait_fnIsEmpty) kit_Vector_isEmpty;
         } else {
             kit_Allocator_free(self);
-            self = NULL;
         }
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
 void kit_Stack_delete(struct kit_Stack *self) {

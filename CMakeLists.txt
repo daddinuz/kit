@@ -54,13 +54,14 @@ include_directories(deps)
 # Dependencies
 ###
 include(${DEPENDENCIES_PATH}/traits-unit/traits-unit.cmake)
+include(${DEPENDENCIES_PATH}/alligator/alligator.cmake)
 include(${DEPENDENCIES_PATH}/option/option.cmake)
 
 #####
 # Library
 ###
 add_library(${LIBRARY} ${LIBRARY_HEADERS} ${LIBRARY_SOURCES})
-target_link_libraries(${LIBRARY} PRIVATE option)
+target_link_libraries(${LIBRARY} PRIVATE alligator option)
 
 #####
 # Seeds

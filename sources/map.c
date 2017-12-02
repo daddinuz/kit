@@ -40,15 +40,17 @@ struct kit_Map {
     kit_Map_Super_isEmptyFn fnIsEmpty;
 };
 
-Optional(struct kit_Map *)
+Option
 kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
-    struct kit_Map *self = kit_Allocator_malloc(sizeof(*self));
+    struct kit_Map *self;
+    Option selfOption = kit_Allocator_malloc(sizeof(*self)), superOption;
 
-    if (self) {
-        Option super = kit_HashMap_new(capacityHint, compareFn, hashFn);
-        if (Option_isSome(super)) {
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        superOption = kit_HashMap_new(capacityHint, compareFn, hashFn);
+        if (Option_isSome(superOption)) {
             self->trait = KIT_MAP_TRAIT_HASH_MAP;
-            self->super = Option_unwrap(super);
+            self->super = Option_unwrap(superOption);
             self->fnDelete = (kit_Map_Super_deleteFn) kit_HashMap_delete;
             self->fnPut = (kit_Map_Super_putFn) kit_HashMap_put;
             self->fnGet = (kit_Map_Super_getFn) kit_HashMap_get;
@@ -59,11 +61,10 @@ kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *, const void 
             self->fnIsEmpty = (kit_Map_Super_isEmptyFn) kit_HashMap_isEmpty;
         } else {
             kit_Allocator_free(self);
-            self = NULL;
         }
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
 void kit_Map_delete(struct kit_Map *self) {

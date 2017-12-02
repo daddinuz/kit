@@ -20,14 +20,15 @@ struct kit_XorList_Node {
     struct kit_XorList_Node *link;
 };
 
-static struct kit_XorList_Node *
+static Option
 kit_XorList_Node_new(void *e);
 
 static struct kit_XorList_Node *
 kit_XorList_Node_xor(struct kit_XorList_Node *p1, struct kit_XorList_Node *p2);
 
 static void *
-kit_XorList_Node_delete(struct kit_XorList_Node *self) __attribute__((__nonnull__));
+kit_XorList_Node_delete(struct kit_XorList_Node *self)
+__attribute__((__nonnull__));
 
 struct kit_XorList_Node_Pair {
     struct kit_XorList_Node *prev;
@@ -35,9 +36,8 @@ struct kit_XorList_Node_Pair {
 };
 
 static enum kit_Result
-kit_XorList_Node_Pair_fetch(
-        struct kit_XorList *list, struct kit_XorList_Node_Pair *out, size_t index
-) __attribute__((__nonnull__));
+kit_XorList_Node_Pair_fetch(struct kit_XorList *list, struct kit_XorList_Node_Pair *out, size_t index)
+__attribute__((__nonnull__));
 
 /*
  * Public
@@ -49,9 +49,9 @@ struct kit_XorList {
     struct kit_XorList_Node *back;
 };
 
-Optional(struct kit_XorList *) kit_XorList_new(void) {
-    struct kit_XorList *self = kit_Allocator_calloc(1, sizeof(*self));
-    return Option_new(self);
+Option kit_XorList_new(void) {
+    struct kit_XorList *self;
+    return kit_Allocator_calloc(1, sizeof(*self));
 }
 
 void kit_XorList_clear(struct kit_XorList *self) {
@@ -82,12 +82,14 @@ enum kit_Result kit_XorList_insert(struct kit_XorList *self, void *e, const size
      * A = X xor C
      * C = X xor A
      */
+    Option nodeOption;
+    struct kit_XorList_Node *newNode;
     enum kit_Result result = KIT_RESULT_OK;
-    struct kit_XorList_Node *newNode = NULL;
 
     if (index == 0) {                           /* insert front */
-        newNode = kit_XorList_Node_new(e);
-        if (newNode) {
+        nodeOption = kit_XorList_Node_new(e);
+        if (Option_isSome(nodeOption)) {
+            newNode = Option_unwrap(nodeOption);
             if (self->front) {                  /* non-empty list */
                 newNode->link = self->front;
                 self->front->link = kit_XorList_Node_xor(self->front->link, newNode);
@@ -99,8 +101,9 @@ enum kit_Result kit_XorList_insert(struct kit_XorList *self, void *e, const size
             result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
         }
     } else if (index == self->size) {           /* insert back */
-        newNode = kit_XorList_Node_new(e);
-        if (newNode) {
+        nodeOption = kit_XorList_Node_new(e);
+        if (Option_isSome(nodeOption)) {
+            newNode = Option_unwrap(nodeOption);
             newNode->link = self->back;
             self->back->link = kit_XorList_Node_xor(self->back->link, newNode);
             self->back = newNode;
@@ -111,8 +114,9 @@ enum kit_Result kit_XorList_insert(struct kit_XorList *self, void *e, const size
         struct kit_XorList_Node_Pair pair = {.prev=NULL, .base=NULL};
         result = kit_XorList_Node_Pair_fetch(self, &pair, index);  /* may return: KIT_RESULT_OUT_OF_RANGE */
         if (KIT_RESULT_OK == result) {
-            newNode = kit_XorList_Node_new(e);
-            if (newNode) {
+            nodeOption = kit_XorList_Node_new(e);
+            if (Option_isSome(nodeOption)) {
+                newNode = Option_unwrap(nodeOption);
                 struct kit_XorList_Node *nextNode = pair.base;
                 struct kit_XorList_Node *prevNode = pair.prev;
                 prevNode->link = kit_XorList_Node_xor(kit_XorList_Node_xor(nextNode, prevNode->link), newNode);
@@ -241,25 +245,27 @@ struct kit_XorList_Iterator {
     struct kit_XorList_Node *next;
 };
 
-Optional(struct kit_XorList_Iterator *) kit_XorList_Iterator_new(struct kit_XorList *container, enum kit_Bound bound) {
+Option kit_XorList_Iterator_new(struct kit_XorList *container, enum kit_Bound bound) {
     assert(container);
     assert(KIT_BOUND_BEGIN <= bound && bound <= KIT_BOUND_END);
-    struct kit_XorList_Iterator *self = kit_Allocator_calloc(1, sizeof(*self));
+    struct kit_XorList_Iterator *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (self) {
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->container = container;
         kit_XorList_Iterator_rewind(self, bound);
     }
 
-    return Option_new(self);
+    return selfOption;
 }
 
-Optional(struct kit_XorList_Iterator *) kit_XorList_Iterator_fromBegin(struct kit_XorList *container) {
+Option kit_XorList_Iterator_fromBegin(struct kit_XorList *container) {
     assert(container);
     return kit_XorList_Iterator_new(container, KIT_BOUND_BEGIN);
 }
 
-Optional(struct kit_XorList_Iterator *) kit_XorList_Iterator_fromEnd(struct kit_XorList *container) {
+Option kit_XorList_Iterator_fromEnd(struct kit_XorList *container) {
     assert(container);
     return kit_XorList_Iterator_new(container, KIT_BOUND_END);
 }
@@ -372,17 +378,16 @@ bool kit_XorList_Iterator_isModified(struct kit_XorList_Iterator *self) {
 /*
  * Private implementations
  */
-struct kit_XorList_Node *kit_XorList_Node_new(void *e) {
-    struct kit_XorList_Node *self = kit_Allocator_calloc(1, sizeof(*self));
+Option kit_XorList_Node_new(void *e) {
+    struct kit_XorList_Node *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (self) {
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->element = e;
-    } else {
-        kit_Allocator_free(self);
-        self = NULL;
     }
 
-    return self;
+    return selfOption;
 }
 
 void *kit_XorList_Node_delete(struct kit_XorList_Node *self) {
