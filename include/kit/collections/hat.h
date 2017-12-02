@@ -18,6 +18,8 @@
  * for the name hashed array tree.
  */
 
+// TODO
+
 #ifndef KIT_HAT_INCLUDED
 #define KIT_HAT_INCLUDED
 
