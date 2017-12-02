@@ -76,7 +76,8 @@ kit_List_delete(struct kit_List *self);
  * @param self The container instance.
  */
 extern void
-kit_List_clear(struct kit_List *self) __attribute__((__nonnull__));
+kit_List_clear(struct kit_List *self)
+__attribute__((__nonnull__));
 
 /**
  * Inserts elements at the given index of the container.
@@ -93,7 +94,8 @@ kit_List_clear(struct kit_List *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_List_insert(struct kit_List *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_List_insert(struct kit_List *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the back of the container.
@@ -108,7 +110,8 @@ kit_List_insert(struct kit_List *self, void *e, size_t index) __attribute__((__n
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_List_pushBack(struct kit_List *self, void *e) __attribute__((__nonnull__(1)));
+kit_List_pushBack(struct kit_List *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the front of the container.
@@ -123,7 +126,8 @@ kit_List_pushBack(struct kit_List *self, void *e) __attribute__((__nonnull__(1))
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_List_pushFront(struct kit_List *self, void *e) __attribute__((__nonnull__(1)));
+kit_List_pushFront(struct kit_List *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the back of the container.
@@ -139,7 +143,8 @@ kit_List_pushFront(struct kit_List *self, void *e) __attribute__((__nonnull__(1)
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_List_popBack(struct kit_List *self, void **out) __attribute__((__nonnull__));
+kit_List_popBack(struct kit_List *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the front of the container.
@@ -155,7 +160,8 @@ kit_List_popBack(struct kit_List *self, void **out) __attribute__((__nonnull__))
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_List_popFront(struct kit_List *self, void **out) __attribute__((__nonnull__));
+kit_List_popFront(struct kit_List *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the given index of the container.
@@ -172,7 +178,8 @@ kit_List_popFront(struct kit_List *self, void **out) __attribute__((__nonnull__)
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_List_remove(struct kit_List *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_List_remove(struct kit_List *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the element at the given index.
@@ -188,7 +195,8 @@ kit_List_remove(struct kit_List *self, void **out, size_t index) __attribute__((
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_List_set(struct kit_List *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_List_set(struct kit_List *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Gets the element stored at the given index.
@@ -205,7 +213,8 @@ kit_List_set(struct kit_List *self, void *e, size_t index) __attribute__((__nonn
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_List_get(struct kit_List *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_List_get(struct kit_List *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -221,7 +230,8 @@ kit_List_get(struct kit_List *self, void **out, size_t index) __attribute__((__n
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_List_back(struct kit_List *self, void **out) __attribute__((__nonnull__));
+kit_List_back(struct kit_List *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -237,7 +247,8 @@ kit_List_back(struct kit_List *self, void **out) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_List_front(struct kit_List *self, void **out) __attribute__((__nonnull__));
+kit_List_front(struct kit_List *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -249,7 +260,8 @@ kit_List_front(struct kit_List *self, void **out) __attribute__((__nonnull__));
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_List_size(struct kit_List *self) __attribute__((__nonnull__));
+kit_List_size(struct kit_List *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -261,7 +273,8 @@ kit_List_size(struct kit_List *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_List_isEmpty(struct kit_List *self) __attribute__((__nonnull__));
+kit_List_isEmpty(struct kit_List *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements the container can store before expansion.
@@ -274,7 +287,8 @@ kit_List_isEmpty(struct kit_List *self) __attribute__((__nonnull__));
  * @return The numbers of elements that can be stored before expansion.
  */
 extern size_t
-kit_List_capacity(struct kit_List *self) __attribute__((__nonnull__));
+kit_List_capacity(struct kit_List *self)
+__attribute__((__nonnull__));
 
 /**
  * Requests an expansion to hold at least @param size elements.
@@ -289,7 +303,8 @@ kit_List_capacity(struct kit_List *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_List_reserve(struct kit_List *self, size_t size) __attribute__((__nonnull__));
+kit_List_reserve(struct kit_List *self, size_t size)
+__attribute__((__nonnull__));
 
 /**
  * Requests the container to shrink in order to fit the stored elements freeing resources not used.
@@ -304,7 +319,8 @@ kit_List_reserve(struct kit_List *self, size_t size) __attribute__((__nonnull__)
  *      - KIT_RESULT_OUT_OF_MEMORY :   Unable to relocate memory, nothing has been done.
  */
 extern enum kit_Result
-kit_List_shrink(struct kit_List *self) __attribute__((__nonnull__));
+kit_List_shrink(struct kit_List *self)
+__attribute__((__nonnull__));
 
 /**
  * kit_List_Iterator interface.
@@ -324,7 +340,8 @@ struct kit_List_Iterator;
  * @return A new instance of kit_List_Iterator or Option_None.
  */
 extern Optional(struct kit_List_Iterator *)
-kit_List_Iterator_new(struct kit_List *container, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_List_Iterator_new(struct kit_List *container, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_List_Iterator from begin of container.
@@ -337,7 +354,8 @@ kit_List_Iterator_new(struct kit_List *container, enum kit_Bound bound) __attrib
  * @return A new instance of kit_List_Iterator or Option_None.
  */
 extern Optional(struct kit_List_Iterator *)
-kit_List_Iterator_fromBegin(struct kit_List *container) __attribute__((__nonnull__));
+kit_List_Iterator_fromBegin(struct kit_List *container)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_List_Iterator from end of container.
@@ -350,7 +368,8 @@ kit_List_Iterator_fromBegin(struct kit_List *container) __attribute__((__nonnull
  * @return A new instance of kit_List_Iterator or Option_None.
  */
 extern Optional(struct kit_List_Iterator *)
-kit_List_Iterator_fromEnd(struct kit_List *container) __attribute__((__nonnull__));
+kit_List_Iterator_fromEnd(struct kit_List *container)
+__attribute__((__nonnull__));
 
 /**
  * Deletes an instance of kit_List_Iterator.
@@ -372,7 +391,8 @@ kit_List_Iterator_delete(struct kit_List_Iterator *self);
  * @param bound The start bound.
  */
 extern void
-kit_List_Iterator_rewind(struct kit_List_Iterator *self, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_List_Iterator_rewind(struct kit_List_Iterator *self, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to begin of container.
@@ -383,7 +403,8 @@ kit_List_Iterator_rewind(struct kit_List_Iterator *self, enum kit_Bound bound) _
  * @param self The iterator instance.
  */
 extern void
-kit_List_Iterator_rewindToBegin(struct kit_List_Iterator *self) __attribute__((__nonnull__));
+kit_List_Iterator_rewindToBegin(struct kit_List_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to end of container.
@@ -394,7 +415,8 @@ kit_List_Iterator_rewindToBegin(struct kit_List_Iterator *self) __attribute__((_
  * @param self The iterator instance.
  */
 extern void
-kit_List_Iterator_rewindToEnd(struct kit_List_Iterator *self) __attribute__((__nonnull__));
+kit_List_Iterator_rewindToEnd(struct kit_List_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the next element moving forward in the container.
@@ -411,7 +433,8 @@ kit_List_Iterator_rewindToEnd(struct kit_List_Iterator *self) __attribute__((__n
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_List_Iterator_next(struct kit_List_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_List_Iterator_next(struct kit_List_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the previous element moving backward in the container.
@@ -428,7 +451,8 @@ kit_List_Iterator_next(struct kit_List_Iterator *self, void **out) __attribute__
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_List_Iterator_previous(struct kit_List_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_List_Iterator_previous(struct kit_List_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the last retrieved element.
@@ -444,7 +468,8 @@ kit_List_Iterator_previous(struct kit_List_Iterator *self, void **out) __attribu
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_List_Iterator_setLast(struct kit_List_Iterator *self, void *e) __attribute__((__nonnull__(1)));
+kit_List_Iterator_setLast(struct kit_List_Iterator *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Checks for associated container modifications.
@@ -456,7 +481,8 @@ kit_List_Iterator_setLast(struct kit_List_Iterator *self, void *e) __attribute__
  * @return true if the container has been modified else false
  */
 extern bool
-kit_List_Iterator_isModified(struct kit_List_Iterator *self) __attribute__((__nonnull__));
+kit_List_Iterator_isModified(struct kit_List_Iterator *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

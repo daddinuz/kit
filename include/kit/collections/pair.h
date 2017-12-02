@@ -56,7 +56,8 @@ kit_Pair_delete(struct kit_Pair *self);
  * @return The first element of the pair.
  */
 extern void *
-kit_Pair_first(struct kit_Pair *self) __attribute__((__nonnull__));
+kit_Pair_first(struct kit_Pair *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the second element of the container.
@@ -68,7 +69,8 @@ kit_Pair_first(struct kit_Pair *self) __attribute__((__nonnull__));
  * @return The second element of the pair.
  */
 extern void *
-kit_Pair_second(struct kit_Pair *self) __attribute__((__nonnull__));
+kit_Pair_second(struct kit_Pair *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

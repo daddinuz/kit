@@ -49,7 +49,8 @@ typedef const char *kit_Atom;
  * @return An Option containing a kit_Atom instance or Option_None in case of out of memory.
  */
 extern Optional(kit_Atom)
-kit_Atom_put(const char *s, size_t length) __attribute__((__nonnull__));
+kit_Atom_put(const char *s, size_t length)
+__attribute__((__nonnull__));
 
 /**
  * Behaves like kit_Atom_put but takes a string literal and converts it to an atom.
@@ -61,7 +62,8 @@ kit_Atom_put(const char *s, size_t length) __attribute__((__nonnull__));
  * @return An Option containing a kit_Atom instance or Option_None in case of out of memory.
  */
 extern Optional(kit_Atom)
-kit_Atom_fromLiteral(const char *s) __attribute__((__nonnull__));
+kit_Atom_fromLiteral(const char *s)
+__attribute__((__nonnull__));
 
 /**
  * Behaves like kit_Atom_put but takes an integer number and converts it to an atom.
@@ -97,7 +99,8 @@ kit_Atom_fromFloating(long double n);
  * @return The length of the atom.
  */
 extern size_t
-kit_Atom_length(kit_Atom atom) __attribute__((__nonnull__));
+kit_Atom_length(kit_Atom atom)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

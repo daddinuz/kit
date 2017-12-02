@@ -58,7 +58,8 @@ kit_SinglyList_delete(struct kit_SinglyList *self);
  * @param self The container instance.
  */
 extern void
-kit_SinglyList_clear(struct kit_SinglyList *self) __attribute__((__nonnull__));
+kit_SinglyList_clear(struct kit_SinglyList *self)
+__attribute__((__nonnull__));
 
 /**
  * Inserts elements at the given index of the container.
@@ -75,7 +76,8 @@ kit_SinglyList_clear(struct kit_SinglyList *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_insert(struct kit_SinglyList *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_SinglyList_insert(struct kit_SinglyList *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the back of the container.
@@ -90,7 +92,8 @@ kit_SinglyList_insert(struct kit_SinglyList *self, void *e, size_t index) __attr
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_pushBack(struct kit_SinglyList *self, void *e) __attribute__((__nonnull__(1)));
+kit_SinglyList_pushBack(struct kit_SinglyList *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the front of the container.
@@ -105,7 +108,8 @@ kit_SinglyList_pushBack(struct kit_SinglyList *self, void *e) __attribute__((__n
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_pushFront(struct kit_SinglyList *self, void *e) __attribute__((__nonnull__(1)));
+kit_SinglyList_pushFront(struct kit_SinglyList *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the back of the container.
@@ -121,7 +125,8 @@ kit_SinglyList_pushFront(struct kit_SinglyList *self, void *e) __attribute__((__
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_popBack(struct kit_SinglyList *self, void **out) __attribute__((__nonnull__));
+kit_SinglyList_popBack(struct kit_SinglyList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the front of the container.
@@ -137,7 +142,8 @@ kit_SinglyList_popBack(struct kit_SinglyList *self, void **out) __attribute__((_
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_popFront(struct kit_SinglyList *self, void **out) __attribute__((__nonnull__));
+kit_SinglyList_popFront(struct kit_SinglyList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the given index of the container.
@@ -154,7 +160,8 @@ kit_SinglyList_popFront(struct kit_SinglyList *self, void **out) __attribute__((
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_remove(struct kit_SinglyList *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_SinglyList_remove(struct kit_SinglyList *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the element at the given index.
@@ -170,7 +177,8 @@ kit_SinglyList_remove(struct kit_SinglyList *self, void **out, size_t index) __a
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_set(struct kit_SinglyList *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_SinglyList_set(struct kit_SinglyList *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Gets the element stored at the given index.
@@ -187,7 +195,8 @@ kit_SinglyList_set(struct kit_SinglyList *self, void *e, size_t index) __attribu
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_get(struct kit_SinglyList *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_SinglyList_get(struct kit_SinglyList *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -203,7 +212,8 @@ kit_SinglyList_get(struct kit_SinglyList *self, void **out, size_t index) __attr
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_back(struct kit_SinglyList *self, void **out) __attribute__((__nonnull__));
+kit_SinglyList_back(struct kit_SinglyList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -219,7 +229,8 @@ kit_SinglyList_back(struct kit_SinglyList *self, void **out) __attribute__((__no
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_front(struct kit_SinglyList *self, void **out) __attribute__((__nonnull__));
+kit_SinglyList_front(struct kit_SinglyList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -231,7 +242,8 @@ kit_SinglyList_front(struct kit_SinglyList *self, void **out) __attribute__((__n
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_SinglyList_size(struct kit_SinglyList *self) __attribute__((__nonnull__));
+kit_SinglyList_size(struct kit_SinglyList *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -243,7 +255,8 @@ kit_SinglyList_size(struct kit_SinglyList *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_SinglyList_isEmpty(struct kit_SinglyList *self) __attribute__((__nonnull__));
+kit_SinglyList_isEmpty(struct kit_SinglyList *self)
+__attribute__((__nonnull__));
 
 /**
  * kit_SinglyList_Iterator interface.
@@ -261,7 +274,8 @@ struct kit_SinglyList_Iterator;
  * @return A new instance of kit_SinglyList_Iterator or Option_None.
  */
 extern Optional(struct kit_SinglyList_Iterator *)
-kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) __attribute__((__nonnull__));
+kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container)
+__attribute__((__nonnull__));
 
 /**
  * Deletes an instance of kit_SinglyList_Iterator.
@@ -281,7 +295,8 @@ kit_SinglyList_Iterator_delete(struct kit_SinglyList_Iterator *self);
  * @param self The iterator instance.
  */
 extern void
-kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self) __attribute__((__nonnull__));
+kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the next element moving forward in the container.
@@ -298,7 +313,8 @@ kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self) __at
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_Iterator_next(struct kit_SinglyList_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_SinglyList_Iterator_next(struct kit_SinglyList_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the last retrieved element.
@@ -314,7 +330,8 @@ kit_SinglyList_Iterator_next(struct kit_SinglyList_Iterator *self, void **out) _
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_SinglyList_Iterator_setLast(struct kit_SinglyList_Iterator *self, void *e) __attribute__((__nonnull__(1)));
+kit_SinglyList_Iterator_setLast(struct kit_SinglyList_Iterator *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Checks for associated container modifications.
@@ -326,7 +343,8 @@ kit_SinglyList_Iterator_setLast(struct kit_SinglyList_Iterator *self, void *e) _
  * @return true if the container has been modified else false
  */
 extern bool
-kit_SinglyList_Iterator_isModified(struct kit_SinglyList_Iterator *self) __attribute__((__nonnull__));
+kit_SinglyList_Iterator_isModified(struct kit_SinglyList_Iterator *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

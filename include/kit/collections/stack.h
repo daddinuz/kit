@@ -87,7 +87,8 @@ kit_Stack_delete(struct kit_Stack *self);
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Stack_push(struct kit_Stack *self, void *e) __attribute__((__nonnull__(1)));
+kit_Stack_push(struct kit_Stack *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the back of the container.
@@ -103,7 +104,8 @@ kit_Stack_push(struct kit_Stack *self, void *e) __attribute__((__nonnull__(1)));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Stack_pop(struct kit_Stack *self, void **out) __attribute__((__nonnull__));
+kit_Stack_pop(struct kit_Stack *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -119,7 +121,8 @@ kit_Stack_pop(struct kit_Stack *self, void **out) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Stack_back(struct kit_Stack *self, void **out) __attribute__((__nonnull__));
+kit_Stack_back(struct kit_Stack *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -131,7 +134,8 @@ kit_Stack_back(struct kit_Stack *self, void **out) __attribute__((__nonnull__));
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_Stack_size(struct kit_Stack *self) __attribute__((__nonnull__));
+kit_Stack_size(struct kit_Stack *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -143,7 +147,8 @@ kit_Stack_size(struct kit_Stack *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_Stack_isEmpty(struct kit_Stack *self) __attribute__((__nonnull__));
+kit_Stack_isEmpty(struct kit_Stack *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

@@ -84,7 +84,8 @@ kit_Sequence_delete(struct kit_Sequence *self);
  * @param self The container instance.
  */
 extern void
-kit_Sequence_clear(struct kit_Sequence *self) __attribute__((__nonnull__));
+kit_Sequence_clear(struct kit_Sequence *self)
+__attribute__((__nonnull__));
 
 /**
  * Inserts elements at the given index of the container.
@@ -101,7 +102,8 @@ kit_Sequence_clear(struct kit_Sequence *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_insert(struct kit_Sequence *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_Sequence_insert(struct kit_Sequence *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the back of the container.
@@ -116,7 +118,8 @@ kit_Sequence_insert(struct kit_Sequence *self, void *e, size_t index) __attribut
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_pushBack(struct kit_Sequence *self, void *e) __attribute__((__nonnull__(1)));
+kit_Sequence_pushBack(struct kit_Sequence *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the front of the container.
@@ -131,7 +134,8 @@ kit_Sequence_pushBack(struct kit_Sequence *self, void *e) __attribute__((__nonnu
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_pushFront(struct kit_Sequence *self, void *e) __attribute__((__nonnull__(1)));
+kit_Sequence_pushFront(struct kit_Sequence *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the back of the container.
@@ -147,7 +151,8 @@ kit_Sequence_pushFront(struct kit_Sequence *self, void *e) __attribute__((__nonn
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_popBack(struct kit_Sequence *self, void **out) __attribute__((__nonnull__));
+kit_Sequence_popBack(struct kit_Sequence *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the front of the container.
@@ -163,7 +168,8 @@ kit_Sequence_popBack(struct kit_Sequence *self, void **out) __attribute__((__non
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_popFront(struct kit_Sequence *self, void **out) __attribute__((__nonnull__));
+kit_Sequence_popFront(struct kit_Sequence *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the given index of the container.
@@ -180,7 +186,8 @@ kit_Sequence_popFront(struct kit_Sequence *self, void **out) __attribute__((__no
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_remove(struct kit_Sequence *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_Sequence_remove(struct kit_Sequence *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the element at the given index.
@@ -196,7 +203,8 @@ kit_Sequence_remove(struct kit_Sequence *self, void **out, size_t index) __attri
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_set(struct kit_Sequence *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_Sequence_set(struct kit_Sequence *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Gets the element stored at the given index.
@@ -213,7 +221,8 @@ kit_Sequence_set(struct kit_Sequence *self, void *e, size_t index) __attribute__
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_get(struct kit_Sequence *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_Sequence_get(struct kit_Sequence *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -229,7 +238,8 @@ kit_Sequence_get(struct kit_Sequence *self, void **out, size_t index) __attribut
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_back(struct kit_Sequence *self, void **out) __attribute__((__nonnull__));
+kit_Sequence_back(struct kit_Sequence *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -245,7 +255,8 @@ kit_Sequence_back(struct kit_Sequence *self, void **out) __attribute__((__nonnul
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_front(struct kit_Sequence *self, void **out) __attribute__((__nonnull__));
+kit_Sequence_front(struct kit_Sequence *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -257,7 +268,8 @@ kit_Sequence_front(struct kit_Sequence *self, void **out) __attribute__((__nonnu
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_Sequence_size(struct kit_Sequence *self) __attribute__((__nonnull__));
+kit_Sequence_size(struct kit_Sequence *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -269,7 +281,8 @@ kit_Sequence_size(struct kit_Sequence *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_Sequence_isEmpty(struct kit_Sequence *self) __attribute__((__nonnull__));
+kit_Sequence_isEmpty(struct kit_Sequence *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements the container can store before expansion.
@@ -282,7 +295,8 @@ kit_Sequence_isEmpty(struct kit_Sequence *self) __attribute__((__nonnull__));
  * @return The numbers of elements that can be stored before expansion.
  */
 extern size_t
-kit_Sequence_capacity(struct kit_Sequence *self) __attribute__((__nonnull__));
+kit_Sequence_capacity(struct kit_Sequence *self)
+__attribute__((__nonnull__));
 
 /**
  * Requests an expansion to hold at least @param size elements.
@@ -297,7 +311,8 @@ kit_Sequence_capacity(struct kit_Sequence *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_reserve(struct kit_Sequence *self, size_t size) __attribute__((__nonnull__));
+kit_Sequence_reserve(struct kit_Sequence *self, size_t size)
+__attribute__((__nonnull__));
 
 /**
  * Requests the container to shrink in order to fit the stored elements freeing resources not used.
@@ -312,7 +327,8 @@ kit_Sequence_reserve(struct kit_Sequence *self, size_t size) __attribute__((__no
  *      - KIT_RESULT_OUT_OF_MEMORY :   Unable to relocate memory, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_shrink(struct kit_Sequence *self) __attribute__((__nonnull__));
+kit_Sequence_shrink(struct kit_Sequence *self)
+__attribute__((__nonnull__));
 
 /**
  * kit_Sequence_Iterator interface.
@@ -330,7 +346,8 @@ struct kit_Sequence_Iterator;
  * @return A new instance of kit_Sequence_Iterator or Option_None.
  */
 extern Optional(struct kit_Sequence_Iterator *)
-kit_Sequence_Iterator_new(struct kit_Sequence *container) __attribute__((__nonnull__));
+kit_Sequence_Iterator_new(struct kit_Sequence *container)
+__attribute__((__nonnull__));
 
 /**
  * Deletes an instance of kit_Sequence_Iterator.
@@ -350,7 +367,8 @@ kit_Sequence_Iterator_delete(struct kit_Sequence_Iterator *self);
  * @param self The iterator instance.
  */
 extern void
-kit_Sequence_Iterator_rewind(struct kit_Sequence_Iterator *self) __attribute__((__nonnull__));
+kit_Sequence_Iterator_rewind(struct kit_Sequence_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the next element moving forward in the container.
@@ -367,7 +385,8 @@ kit_Sequence_Iterator_rewind(struct kit_Sequence_Iterator *self) __attribute__((
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_Iterator_next(struct kit_Sequence_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_Sequence_Iterator_next(struct kit_Sequence_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the last retrieved element.
@@ -383,7 +402,8 @@ kit_Sequence_Iterator_next(struct kit_Sequence_Iterator *self, void **out) __att
  *      - KIT_RESULT_CONCURRENT_MODIFICATION    :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_Iterator_setLast(struct kit_Sequence_Iterator *self, void *e) __attribute__((__nonnull__(1)));
+kit_Sequence_Iterator_setLast(struct kit_Sequence_Iterator *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Checks for associated container modifications.
@@ -395,7 +415,8 @@ kit_Sequence_Iterator_setLast(struct kit_Sequence_Iterator *self, void *e) __att
  * @return true if the container has been modified else false
  */
 extern bool
-kit_Sequence_Iterator_isModified(struct kit_Sequence_Iterator *self) __attribute__((__nonnull__));
+kit_Sequence_Iterator_isModified(struct kit_Sequence_Iterator *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

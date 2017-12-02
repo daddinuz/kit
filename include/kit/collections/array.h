@@ -97,7 +97,8 @@ kit_Array_delete(struct kit_Array *self);
  * @param self The container instance.
  */
 extern void
-kit_Array_clear(struct kit_Array *self) __attribute__((__nonnull__));
+kit_Array_clear(struct kit_Array *self)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the element at the given index.
@@ -113,7 +114,8 @@ kit_Array_clear(struct kit_Array *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_Array_set(struct kit_Array *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_Array_set(struct kit_Array *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Gets the element stored at the given index.
@@ -130,7 +132,8 @@ kit_Array_set(struct kit_Array *self, void *e, size_t index) __attribute__((__no
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_Array_get(struct kit_Array *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_Array_get(struct kit_Array *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -146,7 +149,8 @@ kit_Array_get(struct kit_Array *self, void **out, size_t index) __attribute__((_
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Array_back(struct kit_Array *self, void **out) __attribute__((__nonnull__));
+kit_Array_back(struct kit_Array *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -162,7 +166,8 @@ kit_Array_back(struct kit_Array *self, void **out) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Array_front(struct kit_Array *self, void **out) __attribute__((__nonnull__));
+kit_Array_front(struct kit_Array *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -174,7 +179,8 @@ kit_Array_front(struct kit_Array *self, void **out) __attribute__((__nonnull__))
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_Array_capacity(struct kit_Array *self) __attribute__((__nonnull__));
+kit_Array_capacity(struct kit_Array *self)
+__attribute__((__nonnull__));
 
 /**
  * [Unsafe method]
@@ -188,7 +194,8 @@ kit_Array_capacity(struct kit_Array *self) __attribute__((__nonnull__));
  * @return The low level array of elements.
  */
 extern void **
-kit_Array_raw(struct kit_Array *self) __attribute__((__nonnull__));
+kit_Array_raw(struct kit_Array *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

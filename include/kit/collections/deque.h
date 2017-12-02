@@ -12,6 +12,8 @@
  * Deque are not guaranteed to store all its elements in contiguous storage locations.
  */
 
+// TODO
+
 #ifndef KIT_DEQUE_INCLUDED
 #define KIT_DEQUE_INCLUDED
 
@@ -94,7 +96,8 @@ kit_Deque_delete(struct kit_Deque *self);
  * @param self The container instance.
  */
 extern void
-kit_Deque_clear(struct kit_Deque *self) __attribute__((__nonnull__));
+kit_Deque_clear(struct kit_Deque *self)
+__attribute__((__nonnull__));
 
 /**
  * Inserts elements at the back of the container.
@@ -109,7 +112,8 @@ kit_Deque_clear(struct kit_Deque *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_pushBack(struct kit_Deque *self, void *e) __attribute__((__nonnull__(1)));
+kit_Deque_pushBack(struct kit_Deque *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the front of the container.
@@ -124,7 +128,8 @@ kit_Deque_pushBack(struct kit_Deque *self, void *e) __attribute__((__nonnull__(1
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_pushFront(struct kit_Deque *self, void *e) __attribute__((__nonnull__(1)));
+kit_Deque_pushFront(struct kit_Deque *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the back of the container.
@@ -140,7 +145,8 @@ kit_Deque_pushFront(struct kit_Deque *self, void *e) __attribute__((__nonnull__(
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_popBack(struct kit_Deque *self, void **out) __attribute__((__nonnull__));
+kit_Deque_popBack(struct kit_Deque *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the front of the container.
@@ -156,7 +162,8 @@ kit_Deque_popBack(struct kit_Deque *self, void **out) __attribute__((__nonnull__
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_popFront(struct kit_Deque *self, void **out) __attribute__((__nonnull__));
+kit_Deque_popFront(struct kit_Deque *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -172,7 +179,8 @@ kit_Deque_popFront(struct kit_Deque *self, void **out) __attribute__((__nonnull_
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_back(struct kit_Deque *self, void **out) __attribute__((__nonnull__));
+kit_Deque_back(struct kit_Deque *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -188,7 +196,8 @@ kit_Deque_back(struct kit_Deque *self, void **out) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_front(struct kit_Deque *self, void **out) __attribute__((__nonnull__));
+kit_Deque_front(struct kit_Deque *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -200,7 +209,8 @@ kit_Deque_front(struct kit_Deque *self, void **out) __attribute__((__nonnull__))
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_Deque_size(struct kit_Deque *self) __attribute__((__nonnull__));
+kit_Deque_size(struct kit_Deque *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -212,7 +222,8 @@ kit_Deque_size(struct kit_Deque *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_Deque_isEmpty(struct kit_Deque *self) __attribute__((__nonnull__));
+kit_Deque_isEmpty(struct kit_Deque *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements the container can store before expansion.
@@ -225,7 +236,8 @@ kit_Deque_isEmpty(struct kit_Deque *self) __attribute__((__nonnull__));
  * @return The numbers of elements that can be stored before expansion.
  */
 extern size_t
-kit_Deque_capacity(struct kit_Deque *self) __attribute__((__nonnull__));
+kit_Deque_capacity(struct kit_Deque *self)
+__attribute__((__nonnull__));
 
 /**
  * Requests an expansion to hold at least @param size elements.
@@ -240,7 +252,8 @@ kit_Deque_capacity(struct kit_Deque *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_reserve(struct kit_Deque *self, size_t size) __attribute__((__nonnull__));
+kit_Deque_reserve(struct kit_Deque *self, size_t size)
+__attribute__((__nonnull__));
 
 /**
  * Requests the container to shrink in order to fit the stored elements freeing resources not used.
@@ -255,7 +268,8 @@ kit_Deque_reserve(struct kit_Deque *self, size_t size) __attribute__((__nonnull_
  *      - KIT_RESULT_OUT_OF_MEMORY :   Unable to relocate memory, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_shrink(struct kit_Deque *self) __attribute__((__nonnull__));
+kit_Deque_shrink(struct kit_Deque *self)
+__attribute__((__nonnull__));
 
 /**
  * kit_Deque_Iterator interface.
@@ -275,7 +289,8 @@ struct kit_Deque_Iterator;
  * @return A new instance of kit_Deque_Iterator or Option_None.
  */
 extern Optional(struct kit_Deque_Iterator *)
-kit_Deque_Iterator_new(struct kit_Deque *container, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_Deque_Iterator_new(struct kit_Deque *container, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Deque_Iterator from begin of container.
@@ -288,7 +303,8 @@ kit_Deque_Iterator_new(struct kit_Deque *container, enum kit_Bound bound) __attr
  * @return A new instance of kit_Deque_Iterator or Option_None.
  */
 extern Optional(struct kit_Deque_Iterator *)
-kit_Deque_Iterator_fromBegin(struct kit_Deque *container) __attribute__((__nonnull__));
+kit_Deque_Iterator_fromBegin(struct kit_Deque *container)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Deque_Iterator from end of container.
@@ -301,7 +317,8 @@ kit_Deque_Iterator_fromBegin(struct kit_Deque *container) __attribute__((__nonnu
  * @return A new instance of kit_Deque_Iterator or Option_None.
  */
 extern Optional(struct kit_Deque_Iterator *)
-kit_Deque_Iterator_fromEnd(struct kit_Deque *container) __attribute__((__nonnull__));
+kit_Deque_Iterator_fromEnd(struct kit_Deque *container)
+__attribute__((__nonnull__));
 
 /**
  * Deletes an instance of kit_Deque_Iterator.
@@ -323,7 +340,8 @@ kit_Deque_Iterator_delete(struct kit_Deque_Iterator *self);
  * @param bound The start bound.
  */
 extern void
-kit_Deque_Iterator_rewind(struct kit_Deque_Iterator *self, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_Deque_Iterator_rewind(struct kit_Deque_Iterator *self, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to begin of container.
@@ -334,7 +352,8 @@ kit_Deque_Iterator_rewind(struct kit_Deque_Iterator *self, enum kit_Bound bound)
  * @param self The iterator instance.
  */
 extern void
-kit_Deque_Iterator_rewindToBegin(struct kit_Deque_Iterator *self) __attribute__((__nonnull__));
+kit_Deque_Iterator_rewindToBegin(struct kit_Deque_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to end of container.
@@ -345,7 +364,8 @@ kit_Deque_Iterator_rewindToBegin(struct kit_Deque_Iterator *self) __attribute__(
  * @param self The iterator instance.
  */
 extern void
-kit_Deque_Iterator_rewindToEnd(struct kit_Deque_Iterator *self) __attribute__((__nonnull__));
+kit_Deque_Iterator_rewindToEnd(struct kit_Deque_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the next element moving forward in the container.
@@ -362,7 +382,8 @@ kit_Deque_Iterator_rewindToEnd(struct kit_Deque_Iterator *self) __attribute__((_
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_Iterator_next(struct kit_Deque_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_Deque_Iterator_next(struct kit_Deque_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the previous element moving backward in the container.
@@ -379,7 +400,8 @@ kit_Deque_Iterator_next(struct kit_Deque_Iterator *self, void **out) __attribute
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_Iterator_previous(struct kit_Deque_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_Deque_Iterator_previous(struct kit_Deque_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the last retrieved element.
@@ -395,7 +417,8 @@ kit_Deque_Iterator_previous(struct kit_Deque_Iterator *self, void **out) __attri
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Deque_Iterator_setLast(struct kit_Deque_Iterator *self, void *e) __attribute__((__nonnull__(1)));
+kit_Deque_Iterator_setLast(struct kit_Deque_Iterator *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Checks for associated container modifications.
@@ -407,7 +430,8 @@ kit_Deque_Iterator_setLast(struct kit_Deque_Iterator *self, void *e) __attribute
  * @return true if the container has been modified else false
  */
 extern bool
-kit_Deque_Iterator_isModified(struct kit_Deque_Iterator *self) __attribute__((__nonnull__));
+kit_Deque_Iterator_isModified(struct kit_Deque_Iterator *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

@@ -61,7 +61,8 @@ kit_packSize(va_list pack);
  * @param b Second parameter.
  */
 extern void
-kit_swap(void **a, void **b) __attribute__((__nonnull__));
+kit_swap(void **a, void **b)
+__attribute__((__nonnull__));
 
 /**
  * Destructs data at (*ref) and assigns NULL invalidating the pointer.
@@ -81,7 +82,8 @@ kit_swap(void **a, void **b) __attribute__((__nonnull__));
  * @param destructor The destructor function to invoke.
  */
 extern void
-kit_invalidate(void **ref, void (*destructor)()) __attribute__((__nonnull__));
+kit_invalidate(void **ref, void (*destructor)())
+__attribute__((__nonnull__));
 
 /**
  * This function should be treated as an helper when initializing collections that needs a comparator function.

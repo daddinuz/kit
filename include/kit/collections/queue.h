@@ -87,7 +87,8 @@ kit_Queue_delete(struct kit_Queue *self);
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Queue_push(struct kit_Queue *self, void *e) __attribute__((__nonnull__(1)));
+kit_Queue_push(struct kit_Queue *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the front of the container.
@@ -103,7 +104,8 @@ kit_Queue_push(struct kit_Queue *self, void *e) __attribute__((__nonnull__(1)));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Queue_pop(struct kit_Queue *self, void **out) __attribute__((__nonnull__));
+kit_Queue_pop(struct kit_Queue *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -119,7 +121,8 @@ kit_Queue_pop(struct kit_Queue *self, void **out) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Queue_back(struct kit_Queue *self, void **out) __attribute__((__nonnull__));
+kit_Queue_back(struct kit_Queue *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -135,7 +138,8 @@ kit_Queue_back(struct kit_Queue *self, void **out) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Queue_front(struct kit_Queue *self, void **out) __attribute__((__nonnull__));
+kit_Queue_front(struct kit_Queue *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -147,7 +151,8 @@ kit_Queue_front(struct kit_Queue *self, void **out) __attribute__((__nonnull__))
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_Queue_size(struct kit_Queue *self) __attribute__((__nonnull__));
+kit_Queue_size(struct kit_Queue *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -159,7 +164,8 @@ kit_Queue_size(struct kit_Queue *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_Queue_isEmpty(struct kit_Queue *self) __attribute__((__nonnull__));
+kit_Queue_isEmpty(struct kit_Queue *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

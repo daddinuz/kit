@@ -75,7 +75,8 @@ kit_Vector_delete(struct kit_Vector *self);
  * @param self The container instance.
  */
 extern void
-kit_Vector_clear(struct kit_Vector *self) __attribute__((__nonnull__));
+kit_Vector_clear(struct kit_Vector *self)
+__attribute__((__nonnull__));
 
 /**
  * Inserts elements at the given index of the container.
@@ -92,7 +93,8 @@ kit_Vector_clear(struct kit_Vector *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_insert(struct kit_Vector *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_Vector_insert(struct kit_Vector *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the back of the container.
@@ -107,7 +109,8 @@ kit_Vector_insert(struct kit_Vector *self, void *e, size_t index) __attribute__(
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_pushBack(struct kit_Vector *self, void *e) __attribute__((__nonnull__(1)));
+kit_Vector_pushBack(struct kit_Vector *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the front of the container.
@@ -122,7 +125,8 @@ kit_Vector_pushBack(struct kit_Vector *self, void *e) __attribute__((__nonnull__
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_pushFront(struct kit_Vector *self, void *e) __attribute__((__nonnull__(1)));
+kit_Vector_pushFront(struct kit_Vector *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the back of the container.
@@ -138,7 +142,8 @@ kit_Vector_pushFront(struct kit_Vector *self, void *e) __attribute__((__nonnull_
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_popBack(struct kit_Vector *self, void **out) __attribute__((__nonnull__));
+kit_Vector_popBack(struct kit_Vector *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the front of the container.
@@ -154,7 +159,8 @@ kit_Vector_popBack(struct kit_Vector *self, void **out) __attribute__((__nonnull
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_popFront(struct kit_Vector *self, void **out) __attribute__((__nonnull__));
+kit_Vector_popFront(struct kit_Vector *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the given index of the container.
@@ -171,7 +177,8 @@ kit_Vector_popFront(struct kit_Vector *self, void **out) __attribute__((__nonnul
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_remove(struct kit_Vector *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_Vector_remove(struct kit_Vector *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the element at the given index.
@@ -187,7 +194,8 @@ kit_Vector_remove(struct kit_Vector *self, void **out, size_t index) __attribute
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_set(struct kit_Vector *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_Vector_set(struct kit_Vector *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Gets the element stored at the given index.
@@ -204,7 +212,8 @@ kit_Vector_set(struct kit_Vector *self, void *e, size_t index) __attribute__((__
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_get(struct kit_Vector *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_Vector_get(struct kit_Vector *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -220,7 +229,8 @@ kit_Vector_get(struct kit_Vector *self, void **out, size_t index) __attribute__(
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_back(struct kit_Vector *self, void **out) __attribute__((__nonnull__));
+kit_Vector_back(struct kit_Vector *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -236,7 +246,8 @@ kit_Vector_back(struct kit_Vector *self, void **out) __attribute__((__nonnull__)
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_front(struct kit_Vector *self, void **out) __attribute__((__nonnull__));
+kit_Vector_front(struct kit_Vector *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -248,7 +259,8 @@ kit_Vector_front(struct kit_Vector *self, void **out) __attribute__((__nonnull__
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_Vector_size(struct kit_Vector *self) __attribute__((__nonnull__));
+kit_Vector_size(struct kit_Vector *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -260,7 +272,8 @@ kit_Vector_size(struct kit_Vector *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_Vector_isEmpty(struct kit_Vector *self) __attribute__((__nonnull__));
+kit_Vector_isEmpty(struct kit_Vector *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements the container can store before expansion.
@@ -273,7 +286,8 @@ kit_Vector_isEmpty(struct kit_Vector *self) __attribute__((__nonnull__));
  * @return The numbers of elements that can be stored before expansion.
  */
 extern size_t
-kit_Vector_capacity(struct kit_Vector *self) __attribute__((__nonnull__));
+kit_Vector_capacity(struct kit_Vector *self)
+__attribute__((__nonnull__));
 
 /**
  * Explicitly request an expansion to hold at least size elements.
@@ -288,7 +302,8 @@ kit_Vector_capacity(struct kit_Vector *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_reserve(struct kit_Vector *self, size_t size) __attribute__((__nonnull__));
+kit_Vector_reserve(struct kit_Vector *self, size_t size)
+__attribute__((__nonnull__));
 
 /**
  * Requests the container to shrink in order to fit at least the stored elements freeing resources not used.
@@ -302,7 +317,8 @@ kit_Vector_reserve(struct kit_Vector *self, size_t size) __attribute__((__nonnul
  *      - KIT_RESULT_OUT_OF_MEMORY :   Unable to relocate memory, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_shrink(struct kit_Vector *self) __attribute__((__nonnull__));
+kit_Vector_shrink(struct kit_Vector *self)
+__attribute__((__nonnull__));
 
 /**
  * [Unsafe method]
@@ -315,7 +331,8 @@ kit_Vector_shrink(struct kit_Vector *self) __attribute__((__nonnull__));
  * @return The low level array of elements.
  */
 extern void **
-kit_Vector_raw(struct kit_Vector *self) __attribute__((__nonnull__));    /* unsafe */
+kit_Vector_raw(struct kit_Vector *self)
+__attribute__((__nonnull__));    /* unsafe */
 
 /**
  * kit_Vector_Iterator interface.
@@ -335,7 +352,8 @@ struct kit_Vector_Iterator;
  * @return A new instance of kit_Vector_Iterator or Option_None.
  */
 extern Optional(struct kit_Vector_Iterator *)
-kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Vector_Iterator from begin of container.
@@ -348,7 +366,8 @@ kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) __at
  * @return A new instance of kit_Vector_Iterator or Option_None.
  */
 extern Optional(struct kit_Vector_Iterator *)
-kit_Vector_Iterator_fromBegin(struct kit_Vector *container) __attribute__((__nonnull__));
+kit_Vector_Iterator_fromBegin(struct kit_Vector *container)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Vector_Iterator from end of container.
@@ -361,7 +380,8 @@ kit_Vector_Iterator_fromBegin(struct kit_Vector *container) __attribute__((__non
  * @return A new instance of kit_Vector_Iterator or Option_None.
  */
 extern Optional(struct kit_Vector_Iterator *)
-kit_Vector_Iterator_fromEnd(struct kit_Vector *container) __attribute__((__nonnull__));
+kit_Vector_Iterator_fromEnd(struct kit_Vector *container)
+__attribute__((__nonnull__));
 
 /**
  * Deletes an instance of kit_Vector_Iterator.
@@ -383,7 +403,8 @@ kit_Vector_Iterator_delete(struct kit_Vector_Iterator *self);
  * @param bound The start bound.
  */
 extern void
-kit_Vector_Iterator_rewind(struct kit_Vector_Iterator *self, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_Vector_Iterator_rewind(struct kit_Vector_Iterator *self, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to begin of container.
@@ -394,7 +415,8 @@ kit_Vector_Iterator_rewind(struct kit_Vector_Iterator *self, enum kit_Bound boun
  * @param self The iterator instance.
  */
 extern void
-kit_Vector_Iterator_rewindToBegin(struct kit_Vector_Iterator *self) __attribute__((__nonnull__));
+kit_Vector_Iterator_rewindToBegin(struct kit_Vector_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to end of container.
@@ -405,7 +427,8 @@ kit_Vector_Iterator_rewindToBegin(struct kit_Vector_Iterator *self) __attribute_
  * @param self The iterator instance.
  */
 extern void
-kit_Vector_Iterator_rewindToEnd(struct kit_Vector_Iterator *self) __attribute__((__nonnull__));
+kit_Vector_Iterator_rewindToEnd(struct kit_Vector_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the next element moving forward in the container.
@@ -422,7 +445,8 @@ kit_Vector_Iterator_rewindToEnd(struct kit_Vector_Iterator *self) __attribute__(
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_Iterator_next(struct kit_Vector_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_Vector_Iterator_next(struct kit_Vector_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the previous element moving backward in the container.
@@ -439,7 +463,8 @@ kit_Vector_Iterator_next(struct kit_Vector_Iterator *self, void **out) __attribu
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_Iterator_previous(struct kit_Vector_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_Vector_Iterator_previous(struct kit_Vector_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the last retrieved element.
@@ -455,7 +480,8 @@ kit_Vector_Iterator_previous(struct kit_Vector_Iterator *self, void **out) __att
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *self, void *e) __attribute__((__nonnull__(1)));
+kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Checks for associated container modifications.
@@ -467,7 +493,8 @@ kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *self, void *e) __attribu
  * @return true if the container has been modified else false
  */
 extern bool
-kit_Vector_Iterator_isModified(struct kit_Vector_Iterator *self) __attribute__((__nonnull__));
+kit_Vector_Iterator_isModified(struct kit_Vector_Iterator *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

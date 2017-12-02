@@ -63,7 +63,8 @@ kit_XorList_delete(struct kit_XorList *self);
  * @param self The container instance.
  */
 extern void
-kit_XorList_clear(struct kit_XorList *self) __attribute__((__nonnull__));
+kit_XorList_clear(struct kit_XorList *self)
+__attribute__((__nonnull__));
 
 /**
  * Inserts elements at the given index of the container.
@@ -80,7 +81,8 @@ kit_XorList_clear(struct kit_XorList *self) __attribute__((__nonnull__));
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_insert(struct kit_XorList *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_XorList_insert(struct kit_XorList *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the back of the container.
@@ -95,7 +97,8 @@ kit_XorList_insert(struct kit_XorList *self, void *e, size_t index) __attribute_
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_pushBack(struct kit_XorList *self, void *e) __attribute__((__nonnull__(1)));
+kit_XorList_pushBack(struct kit_XorList *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Inserts elements at the front of the container.
@@ -110,7 +113,8 @@ kit_XorList_pushBack(struct kit_XorList *self, void *e) __attribute__((__nonnull
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_pushFront(struct kit_XorList *self, void *e) __attribute__((__nonnull__(1)));
+kit_XorList_pushFront(struct kit_XorList *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Removes elements at the back of the container.
@@ -126,7 +130,8 @@ kit_XorList_pushFront(struct kit_XorList *self, void *e) __attribute__((__nonnul
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_popBack(struct kit_XorList *self, void **out) __attribute__((__nonnull__));
+kit_XorList_popBack(struct kit_XorList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the front of the container.
@@ -142,7 +147,8 @@ kit_XorList_popBack(struct kit_XorList *self, void **out) __attribute__((__nonnu
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_popFront(struct kit_XorList *self, void **out) __attribute__((__nonnull__));
+kit_XorList_popFront(struct kit_XorList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Removes elements at the given index of the container.
@@ -159,7 +165,8 @@ kit_XorList_popFront(struct kit_XorList *self, void **out) __attribute__((__nonn
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_remove(struct kit_XorList *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_XorList_remove(struct kit_XorList *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the element at the given index.
@@ -175,7 +182,8 @@ kit_XorList_remove(struct kit_XorList *self, void **out, size_t index) __attribu
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_set(struct kit_XorList *self, void *e, size_t index) __attribute__((__nonnull__(1)));
+kit_XorList_set(struct kit_XorList *self, void *e, size_t index)
+__attribute__((__nonnull__(1)));
 
 /**
  * Gets the element stored at the given index.
@@ -192,7 +200,8 @@ kit_XorList_set(struct kit_XorList *self, void *e, size_t index) __attribute__((
  *      - KIT_RESULT_OUT_OF_RANGE  :   The given index is out of range, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_get(struct kit_XorList *self, void **out, size_t index) __attribute__((__nonnull__));
+kit_XorList_get(struct kit_XorList *self, void **out, size_t index)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the back of the container.
@@ -208,7 +217,8 @@ kit_XorList_get(struct kit_XorList *self, void **out, size_t index) __attribute_
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_back(struct kit_XorList *self, void **out) __attribute__((__nonnull__));
+kit_XorList_back(struct kit_XorList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the element stored at the front of the container.
@@ -224,7 +234,8 @@ kit_XorList_back(struct kit_XorList *self, void **out) __attribute__((__nonnull_
  *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_front(struct kit_XorList *self, void **out) __attribute__((__nonnull__));
+kit_XorList_front(struct kit_XorList *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -236,7 +247,8 @@ kit_XorList_front(struct kit_XorList *self, void **out) __attribute__((__nonnull
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_XorList_size(struct kit_XorList *self) __attribute__((__nonnull__));
+kit_XorList_size(struct kit_XorList *self)
+__attribute__((__nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -248,7 +260,8 @@ kit_XorList_size(struct kit_XorList *self) __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_XorList_isEmpty(struct kit_XorList *self) __attribute__((__nonnull__));
+kit_XorList_isEmpty(struct kit_XorList *self)
+__attribute__((__nonnull__));
 
 /**
  * kit_XorList_Iterator interface..
@@ -268,7 +281,8 @@ struct kit_XorList_Iterator;
  * @return A new instance of kit_XorList_Iterator or Option_None.
  */
 extern Optional(struct kit_XorList_Iterator *)
-kit_XorList_Iterator_new(struct kit_XorList *container, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_XorList_Iterator_new(struct kit_XorList *container, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_XorList_Iterator from begin of container.
@@ -281,7 +295,8 @@ kit_XorList_Iterator_new(struct kit_XorList *container, enum kit_Bound bound) __
  * @return A new instance of kit_XorList_Iterator or Option_None.
  */
 extern Optional(struct kit_XorList_Iterator *)
-kit_XorList_Iterator_fromBegin(struct kit_XorList *container) __attribute__((__nonnull__));
+kit_XorList_Iterator_fromBegin(struct kit_XorList *container)
+__attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_XorList_Iterator from end of container.
@@ -294,7 +309,8 @@ kit_XorList_Iterator_fromBegin(struct kit_XorList *container) __attribute__((__n
  * @return A new instance of kit_XorList_Iterator or Option_None.
  */
 extern Optional(struct kit_XorList_Iterator *)
-kit_XorList_Iterator_fromEnd(struct kit_XorList *container) __attribute__((__nonnull__));
+kit_XorList_Iterator_fromEnd(struct kit_XorList *container)
+__attribute__((__nonnull__));
 
 /**
  * Deletes an instance of kit_XorList_Iterator.
@@ -316,7 +332,8 @@ kit_XorList_Iterator_delete(struct kit_XorList_Iterator *self);
  * @param bound The start bound.
  */
 extern void
-kit_XorList_Iterator_rewind(struct kit_XorList_Iterator *self, enum kit_Bound bound) __attribute__((__nonnull__));
+kit_XorList_Iterator_rewind(struct kit_XorList_Iterator *self, enum kit_Bound bound)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to begin of container.
@@ -327,7 +344,8 @@ kit_XorList_Iterator_rewind(struct kit_XorList_Iterator *self, enum kit_Bound bo
  * @param self The iterator instance.
  */
 extern void
-kit_XorList_Iterator_rewindToBegin(struct kit_XorList_Iterator *self) __attribute__((__nonnull__));
+kit_XorList_Iterator_rewindToBegin(struct kit_XorList_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Rewinds the iterator to end of container.
@@ -338,7 +356,8 @@ kit_XorList_Iterator_rewindToBegin(struct kit_XorList_Iterator *self) __attribut
  * @param self The iterator instance.
  */
 extern void
-kit_XorList_Iterator_rewindToEnd(struct kit_XorList_Iterator *self) __attribute__((__nonnull__));
+kit_XorList_Iterator_rewindToEnd(struct kit_XorList_Iterator *self)
+__attribute__((__nonnull__));
 
 /**
  * Gets the next element moving forward in the container.
@@ -355,7 +374,8 @@ kit_XorList_Iterator_rewindToEnd(struct kit_XorList_Iterator *self) __attribute_
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_Iterator_next(struct kit_XorList_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_XorList_Iterator_next(struct kit_XorList_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Gets the previous element moving backward in the container.
@@ -372,7 +392,8 @@ kit_XorList_Iterator_next(struct kit_XorList_Iterator *self, void **out) __attri
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_Iterator_previous(struct kit_XorList_Iterator *self, void **out) __attribute__((__nonnull__));
+kit_XorList_Iterator_previous(struct kit_XorList_Iterator *self, void **out)
+__attribute__((__nonnull__));
 
 /**
  * Replaces the last retrieved element.
@@ -388,7 +409,8 @@ kit_XorList_Iterator_previous(struct kit_XorList_Iterator *self, void **out) __a
  *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
-kit_XorList_Iterator_setLast(struct kit_XorList_Iterator *self, void *e) __attribute__((__nonnull__(1)));
+kit_XorList_Iterator_setLast(struct kit_XorList_Iterator *self, void *e)
+__attribute__((__nonnull__(1)));
 
 /**
  * Checks for associated container modifications.
@@ -400,7 +422,8 @@ kit_XorList_Iterator_setLast(struct kit_XorList_Iterator *self, void *e) __attri
  * @return true if the container has been modified else false
  */
 extern bool
-kit_XorList_Iterator_isModified(struct kit_XorList_Iterator *self) __attribute__((__nonnull__));
+kit_XorList_Iterator_isModified(struct kit_XorList_Iterator *self)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }
