@@ -18,65 +18,65 @@
 /*
  * kit_Sequence
  */
-typedef void *kit_Sequence_Super;
-
-enum kit_Sequence_Super_Trait {
-    KIT_SEQUENCE_SUPER_TRAIT_DOUBLY_LIST,
-    KIT_SEQUENCE_SUPER_TRAIT_SINGLY_LIST,
-    KIT_SEQUENCE_SUPER_TRAIT_XOR_LIST,
-    KIT_SEQUENCE_SUPER_TRAIT_VECTOR,
+enum kit_Sequence_Trait {
+    KIT_SEQUENCE_TRAIT_DOUBLY_LIST,
+    KIT_SEQUENCE_TRAIT_SINGLY_LIST,
+    KIT_SEQUENCE_TRAIT_XOR_LIST,
+    KIT_SEQUENCE_TRAIT_VECTOR,
 };
 
-typedef void (*kit_Sequence_Super_Trait_fnClear)(kit_Sequence_Super);
-typedef void (*kit_Sequence_Super_Trait_fnDelete)(kit_Sequence_Super);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnInsert)(kit_Sequence_Super, void *, size_t);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnPushBack)(kit_Sequence_Super, void *);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnPushFront)(kit_Sequence_Super, void *);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnPopBack)(kit_Sequence_Super, void **);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnPopFront)(kit_Sequence_Super, void **);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnRemove)(kit_Sequence_Super, void **, size_t);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnSet)(kit_Sequence_Super, void *, size_t);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnGet)(kit_Sequence_Super, void **, size_t);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnBack)(kit_Sequence_Super, void **);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnFront)(kit_Sequence_Super, void **);
-typedef size_t (*kit_Sequence_Super_Trait_fnSize)(kit_Sequence_Super);
-typedef bool (*kit_Sequence_Super_Trait_fnIsEmpty)(kit_Sequence_Super);
-typedef size_t (*kit_Sequence_Super_Trait_fnCapacity)(kit_Sequence_Super);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnReserve)(kit_Sequence_Super, size_t);
-typedef enum kit_Result (*kit_Sequence_Super_Trait_fnShrink)(kit_Sequence_Super);
+typedef void *kit_Sequence_Super;
 
-static enum kit_Result kit_Sequence_Super_Trait_reserveNoOp(kit_Sequence_Super p0, size_t p1) {
+typedef void (*kit_Sequence_Super_clearFn)(kit_Sequence_Super);
+typedef void (*kit_Sequence_Super_deleteFn)(kit_Sequence_Super);
+typedef enum kit_Result (*kit_Sequence_Super_insertFn)(kit_Sequence_Super, void *, size_t);
+typedef enum kit_Result (*kit_Sequence_Super_pushBackFn)(kit_Sequence_Super, void *);
+typedef enum kit_Result (*kit_Sequence_Super_pushFrontFn)(kit_Sequence_Super, void *);
+typedef enum kit_Result (*kit_Sequence_Super_popBackFn)(kit_Sequence_Super, void **);
+typedef enum kit_Result (*kit_Sequence_Super_popFrontFn)(kit_Sequence_Super, void **);
+typedef enum kit_Result (*kit_Sequence_Super_removeFn)(kit_Sequence_Super, void **, size_t);
+typedef enum kit_Result (*kit_Sequence_Super_setFn)(kit_Sequence_Super, void *, size_t);
+typedef enum kit_Result (*kit_Sequence_Super_getFn)(kit_Sequence_Super, void **, size_t);
+typedef enum kit_Result (*kit_Sequence_Super_backFn)(kit_Sequence_Super, void **);
+typedef enum kit_Result (*kit_Sequence_Super_frontFn)(kit_Sequence_Super, void **);
+typedef size_t (*kit_Sequence_Super_sizeFn)(kit_Sequence_Super);
+typedef bool (*kit_Sequence_Super_isEmptyFn)(kit_Sequence_Super);
+typedef size_t (*kit_Sequence_Super_capacityFn)(kit_Sequence_Super);
+typedef enum kit_Result (*kit_Sequence_Super_reserveFn)(kit_Sequence_Super, size_t);
+typedef enum kit_Result (*kit_Sequence_Super_shrinkFn)(kit_Sequence_Super);
+
+struct kit_Sequence {
+    enum kit_Sequence_Trait trait;
+    kit_Sequence_Super super;
+    kit_Sequence_Super_clearFn fnClear;
+    kit_Sequence_Super_deleteFn fnDelete;
+    kit_Sequence_Super_insertFn fnInsert;
+    kit_Sequence_Super_pushBackFn fnPushBack;
+    kit_Sequence_Super_pushFrontFn fnPushFront;
+    kit_Sequence_Super_popBackFn fnPopBack;
+    kit_Sequence_Super_popFrontFn fnPopFront;
+    kit_Sequence_Super_removeFn fnRemove;
+    kit_Sequence_Super_setFn fnSet;
+    kit_Sequence_Super_getFn fnGet;
+    kit_Sequence_Super_backFn fnBack;
+    kit_Sequence_Super_frontFn fnFront;
+    kit_Sequence_Super_sizeFn fnSize;
+    kit_Sequence_Super_isEmptyFn fnIsEmpty;
+    kit_Sequence_Super_capacityFn fnCapacity;
+    kit_Sequence_Super_reserveFn fnReserve;
+    kit_Sequence_Super_shrinkFn fnShrink;
+};
+
+static enum kit_Result kit_Sequence_Super_reserveNoOp(kit_Sequence_Super p0, size_t p1) {
     (void) p0;
     (void) p1;
     return KIT_RESULT_OK;
 }
 
-static enum kit_Result kit_Sequence_Super_Trait_shrinkNoOp(kit_Sequence_Super p0) {
+static enum kit_Result kit_Sequence_Super_shrinkNoOp(kit_Sequence_Super p0) {
     (void) p0;
     return KIT_RESULT_OK;
 }
-
-struct kit_Sequence {
-    kit_Sequence_Super super;
-    enum kit_Sequence_Super_Trait superTrait;
-    kit_Sequence_Super_Trait_fnClear mClear;
-    kit_Sequence_Super_Trait_fnDelete mDelete;
-    kit_Sequence_Super_Trait_fnInsert mInsert;
-    kit_Sequence_Super_Trait_fnPushBack mPushBack;
-    kit_Sequence_Super_Trait_fnPushFront mPushFront;
-    kit_Sequence_Super_Trait_fnPopBack mPopBack;
-    kit_Sequence_Super_Trait_fnPopFront mPopFront;
-    kit_Sequence_Super_Trait_fnRemove mRemove;
-    kit_Sequence_Super_Trait_fnSet mSet;
-    kit_Sequence_Super_Trait_fnGet mGet;
-    kit_Sequence_Super_Trait_fnBack mBack;
-    kit_Sequence_Super_Trait_fnFront mFront;
-    kit_Sequence_Super_Trait_fnSize mSize;
-    kit_Sequence_Super_Trait_fnIsEmpty mIsEmpty;
-    kit_Sequence_Super_Trait_fnCapacity mCapacity;
-    kit_Sequence_Super_Trait_fnReserve mReserve;
-    kit_Sequence_Super_Trait_fnShrink mShrink;
-};
 
 Option kit_Sequence_fromDoublyList(void) {
     struct kit_Sequence *self;
@@ -86,26 +86,26 @@ Option kit_Sequence_fromDoublyList(void) {
         self = Option_unwrap(selfOption);
         superOption = kit_DoublyList_new();
         if (Option_isSome(superOption)) {
+            self->trait = KIT_SEQUENCE_TRAIT_DOUBLY_LIST;
             self->super = Option_unwrap(superOption);
-            self->superTrait = KIT_SEQUENCE_SUPER_TRAIT_DOUBLY_LIST;
-            self->mClear = (kit_Sequence_Super_Trait_fnClear) kit_DoublyList_clear;
-            self->mDelete = (kit_Sequence_Super_Trait_fnDelete) kit_DoublyList_delete;
-            self->mInsert = (kit_Sequence_Super_Trait_fnInsert) kit_DoublyList_insert;
-            self->mPushBack = (kit_Sequence_Super_Trait_fnPushBack) kit_DoublyList_pushBack;
-            self->mPushFront = (kit_Sequence_Super_Trait_fnPushFront) kit_DoublyList_pushFront;
-            self->mPopBack = (kit_Sequence_Super_Trait_fnPopBack) kit_DoublyList_popBack;
-            self->mPopFront = (kit_Sequence_Super_Trait_fnPopFront) kit_DoublyList_popFront;
-            self->mRemove = (kit_Sequence_Super_Trait_fnRemove) kit_DoublyList_remove;
-            self->mSet = (kit_Sequence_Super_Trait_fnSet) kit_DoublyList_set;
-            self->mGet = (kit_Sequence_Super_Trait_fnGet) kit_DoublyList_get;
-            self->mBack = (kit_Sequence_Super_Trait_fnBack) kit_DoublyList_back;
-            self->mFront = (kit_Sequence_Super_Trait_fnFront) kit_DoublyList_front;
-            self->mSize = (kit_Sequence_Super_Trait_fnSize) kit_DoublyList_size;
-            self->mIsEmpty = (kit_Sequence_Super_Trait_fnIsEmpty) kit_DoublyList_isEmpty;
+            self->fnClear = (kit_Sequence_Super_clearFn) kit_DoublyList_clear;
+            self->fnDelete = (kit_Sequence_Super_deleteFn) kit_DoublyList_delete;
+            self->fnInsert = (kit_Sequence_Super_insertFn) kit_DoublyList_insert;
+            self->fnPushBack = (kit_Sequence_Super_pushBackFn) kit_DoublyList_pushBack;
+            self->fnPushFront = (kit_Sequence_Super_pushFrontFn) kit_DoublyList_pushFront;
+            self->fnPopBack = (kit_Sequence_Super_popBackFn) kit_DoublyList_popBack;
+            self->fnPopFront = (kit_Sequence_Super_popFrontFn) kit_DoublyList_popFront;
+            self->fnRemove = (kit_Sequence_Super_removeFn) kit_DoublyList_remove;
+            self->fnSet = (kit_Sequence_Super_setFn) kit_DoublyList_set;
+            self->fnGet = (kit_Sequence_Super_getFn) kit_DoublyList_get;
+            self->fnBack = (kit_Sequence_Super_backFn) kit_DoublyList_back;
+            self->fnFront = (kit_Sequence_Super_frontFn) kit_DoublyList_front;
+            self->fnSize = (kit_Sequence_Super_sizeFn) kit_DoublyList_size;
+            self->fnIsEmpty = (kit_Sequence_Super_isEmptyFn) kit_DoublyList_isEmpty;
             /* fake methods - no ops */
-            self->mCapacity = (kit_Sequence_Super_Trait_fnCapacity) kit_DoublyList_size;
-            self->mReserve = (kit_Sequence_Super_Trait_fnReserve) kit_Sequence_Super_Trait_reserveNoOp;
-            self->mShrink = (kit_Sequence_Super_Trait_fnShrink) kit_Sequence_Super_Trait_shrinkNoOp;
+            self->fnCapacity = (kit_Sequence_Super_capacityFn) kit_DoublyList_size;
+            self->fnReserve = (kit_Sequence_Super_reserveFn) kit_Sequence_Super_reserveNoOp;
+            self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Sequence_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
         }
@@ -122,26 +122,26 @@ Option kit_Sequence_fromSinglyList(void) {
         self = Option_unwrap(selfOption);
         superOption = kit_SinglyList_new();
         if (Option_isSome(superOption)) {
+            self->trait = KIT_SEQUENCE_TRAIT_SINGLY_LIST;
             self->super = Option_unwrap(superOption);
-            self->superTrait = KIT_SEQUENCE_SUPER_TRAIT_SINGLY_LIST;
-            self->mClear = (kit_Sequence_Super_Trait_fnClear) kit_SinglyList_clear;
-            self->mDelete = (kit_Sequence_Super_Trait_fnDelete) kit_SinglyList_delete;
-            self->mInsert = (kit_Sequence_Super_Trait_fnInsert) kit_SinglyList_insert;
-            self->mPushBack = (kit_Sequence_Super_Trait_fnPushBack) kit_SinglyList_pushBack;
-            self->mPushFront = (kit_Sequence_Super_Trait_fnPushFront) kit_SinglyList_pushFront;
-            self->mPopBack = (kit_Sequence_Super_Trait_fnPopBack) kit_SinglyList_popBack;
-            self->mPopFront = (kit_Sequence_Super_Trait_fnPopFront) kit_SinglyList_popFront;
-            self->mRemove = (kit_Sequence_Super_Trait_fnRemove) kit_SinglyList_remove;
-            self->mSet = (kit_Sequence_Super_Trait_fnSet) kit_SinglyList_set;
-            self->mGet = (kit_Sequence_Super_Trait_fnGet) kit_SinglyList_get;
-            self->mBack = (kit_Sequence_Super_Trait_fnBack) kit_SinglyList_back;
-            self->mFront = (kit_Sequence_Super_Trait_fnFront) kit_SinglyList_front;
-            self->mSize = (kit_Sequence_Super_Trait_fnSize) kit_SinglyList_size;
-            self->mIsEmpty = (kit_Sequence_Super_Trait_fnIsEmpty) kit_SinglyList_isEmpty;
+            self->fnClear = (kit_Sequence_Super_clearFn) kit_SinglyList_clear;
+            self->fnDelete = (kit_Sequence_Super_deleteFn) kit_SinglyList_delete;
+            self->fnInsert = (kit_Sequence_Super_insertFn) kit_SinglyList_insert;
+            self->fnPushBack = (kit_Sequence_Super_pushBackFn) kit_SinglyList_pushBack;
+            self->fnPushFront = (kit_Sequence_Super_pushFrontFn) kit_SinglyList_pushFront;
+            self->fnPopBack = (kit_Sequence_Super_popBackFn) kit_SinglyList_popBack;
+            self->fnPopFront = (kit_Sequence_Super_popFrontFn) kit_SinglyList_popFront;
+            self->fnRemove = (kit_Sequence_Super_removeFn) kit_SinglyList_remove;
+            self->fnSet = (kit_Sequence_Super_setFn) kit_SinglyList_set;
+            self->fnGet = (kit_Sequence_Super_getFn) kit_SinglyList_get;
+            self->fnBack = (kit_Sequence_Super_backFn) kit_SinglyList_back;
+            self->fnFront = (kit_Sequence_Super_frontFn) kit_SinglyList_front;
+            self->fnSize = (kit_Sequence_Super_sizeFn) kit_SinglyList_size;
+            self->fnIsEmpty = (kit_Sequence_Super_isEmptyFn) kit_SinglyList_isEmpty;
             /* fake methods - no ops */
-            self->mCapacity = (kit_Sequence_Super_Trait_fnCapacity) kit_SinglyList_size;
-            self->mReserve = (kit_Sequence_Super_Trait_fnReserve) kit_Sequence_Super_Trait_reserveNoOp;
-            self->mShrink = (kit_Sequence_Super_Trait_fnShrink) kit_Sequence_Super_Trait_shrinkNoOp;
+            self->fnCapacity = (kit_Sequence_Super_capacityFn) kit_SinglyList_size;
+            self->fnReserve = (kit_Sequence_Super_reserveFn) kit_Sequence_Super_reserveNoOp;
+            self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Sequence_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
         }
@@ -158,26 +158,26 @@ Option kit_Sequence_fromXorList(void) {
         self = Option_unwrap(selfOption);
         superOption = kit_XorList_new();
         if (Option_isSome(superOption)) {
+            self->trait = KIT_SEQUENCE_TRAIT_XOR_LIST;
             self->super = Option_unwrap(superOption);
-            self->superTrait = KIT_SEQUENCE_SUPER_TRAIT_XOR_LIST;
-            self->mClear = (kit_Sequence_Super_Trait_fnClear) kit_XorList_clear;
-            self->mDelete = (kit_Sequence_Super_Trait_fnDelete) kit_XorList_delete;
-            self->mInsert = (kit_Sequence_Super_Trait_fnInsert) kit_XorList_insert;
-            self->mPushBack = (kit_Sequence_Super_Trait_fnPushBack) kit_XorList_pushBack;
-            self->mPushFront = (kit_Sequence_Super_Trait_fnPushFront) kit_XorList_pushFront;
-            self->mPopBack = (kit_Sequence_Super_Trait_fnPopBack) kit_XorList_popBack;
-            self->mPopFront = (kit_Sequence_Super_Trait_fnPopFront) kit_XorList_popFront;
-            self->mRemove = (kit_Sequence_Super_Trait_fnRemove) kit_XorList_remove;
-            self->mSet = (kit_Sequence_Super_Trait_fnSet) kit_XorList_set;
-            self->mGet = (kit_Sequence_Super_Trait_fnGet) kit_XorList_get;
-            self->mBack = (kit_Sequence_Super_Trait_fnBack) kit_XorList_back;
-            self->mFront = (kit_Sequence_Super_Trait_fnFront) kit_XorList_front;
-            self->mSize = (kit_Sequence_Super_Trait_fnSize) kit_XorList_size;
-            self->mIsEmpty = (kit_Sequence_Super_Trait_fnIsEmpty) kit_XorList_isEmpty;
+            self->fnClear = (kit_Sequence_Super_clearFn) kit_XorList_clear;
+            self->fnDelete = (kit_Sequence_Super_deleteFn) kit_XorList_delete;
+            self->fnInsert = (kit_Sequence_Super_insertFn) kit_XorList_insert;
+            self->fnPushBack = (kit_Sequence_Super_pushBackFn) kit_XorList_pushBack;
+            self->fnPushFront = (kit_Sequence_Super_pushFrontFn) kit_XorList_pushFront;
+            self->fnPopBack = (kit_Sequence_Super_popBackFn) kit_XorList_popBack;
+            self->fnPopFront = (kit_Sequence_Super_popFrontFn) kit_XorList_popFront;
+            self->fnRemove = (kit_Sequence_Super_removeFn) kit_XorList_remove;
+            self->fnSet = (kit_Sequence_Super_setFn) kit_XorList_set;
+            self->fnGet = (kit_Sequence_Super_getFn) kit_XorList_get;
+            self->fnBack = (kit_Sequence_Super_backFn) kit_XorList_back;
+            self->fnFront = (kit_Sequence_Super_frontFn) kit_XorList_front;
+            self->fnSize = (kit_Sequence_Super_sizeFn) kit_XorList_size;
+            self->fnIsEmpty = (kit_Sequence_Super_isEmptyFn) kit_XorList_isEmpty;
             /* fake methods - no ops */
-            self->mCapacity = (kit_Sequence_Super_Trait_fnCapacity) kit_XorList_size;
-            self->mReserve = (kit_Sequence_Super_Trait_fnReserve) kit_Sequence_Super_Trait_reserveNoOp;
-            self->mShrink = (kit_Sequence_Super_Trait_fnShrink) kit_Sequence_Super_Trait_shrinkNoOp;
+            self->fnCapacity = (kit_Sequence_Super_capacityFn) kit_XorList_size;
+            self->fnReserve = (kit_Sequence_Super_reserveFn) kit_Sequence_Super_reserveNoOp;
+            self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Sequence_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
         }
@@ -194,25 +194,25 @@ Option kit_Sequence_fromVector(size_t capacityHint) {
         self = Option_unwrap(selfOption);
         superOption = kit_Vector_from(capacityHint);
         if (Option_isSome(superOption)) {
+            self->trait = KIT_SEQUENCE_TRAIT_VECTOR;
             self->super = Option_unwrap(superOption);
-            self->superTrait = KIT_SEQUENCE_SUPER_TRAIT_VECTOR;
-            self->mClear = (kit_Sequence_Super_Trait_fnClear) kit_Vector_clear;
-            self->mDelete = (kit_Sequence_Super_Trait_fnDelete) kit_Vector_delete;
-            self->mInsert = (kit_Sequence_Super_Trait_fnInsert) kit_Vector_insert;
-            self->mPushBack = (kit_Sequence_Super_Trait_fnPushBack) kit_Vector_pushBack;
-            self->mPushFront = (kit_Sequence_Super_Trait_fnPushFront) kit_Vector_pushFront;
-            self->mPopBack = (kit_Sequence_Super_Trait_fnPopBack) kit_Vector_popBack;
-            self->mPopFront = (kit_Sequence_Super_Trait_fnPopFront) kit_Vector_popFront;
-            self->mRemove = (kit_Sequence_Super_Trait_fnRemove) kit_Vector_remove;
-            self->mSet = (kit_Sequence_Super_Trait_fnSet) kit_Vector_set;
-            self->mGet = (kit_Sequence_Super_Trait_fnGet) kit_Vector_get;
-            self->mBack = (kit_Sequence_Super_Trait_fnBack) kit_Vector_back;
-            self->mFront = (kit_Sequence_Super_Trait_fnFront) kit_Vector_front;
-            self->mSize = (kit_Sequence_Super_Trait_fnSize) kit_Vector_size;
-            self->mIsEmpty = (kit_Sequence_Super_Trait_fnIsEmpty) kit_Vector_isEmpty;
-            self->mCapacity = (kit_Sequence_Super_Trait_fnCapacity) kit_Vector_capacity;
-            self->mReserve = (kit_Sequence_Super_Trait_fnReserve) kit_Vector_reserve;
-            self->mShrink = (kit_Sequence_Super_Trait_fnShrink) kit_Vector_shrink;
+            self->fnClear = (kit_Sequence_Super_clearFn) kit_Vector_clear;
+            self->fnDelete = (kit_Sequence_Super_deleteFn) kit_Vector_delete;
+            self->fnInsert = (kit_Sequence_Super_insertFn) kit_Vector_insert;
+            self->fnPushBack = (kit_Sequence_Super_pushBackFn) kit_Vector_pushBack;
+            self->fnPushFront = (kit_Sequence_Super_pushFrontFn) kit_Vector_pushFront;
+            self->fnPopBack = (kit_Sequence_Super_popBackFn) kit_Vector_popBack;
+            self->fnPopFront = (kit_Sequence_Super_popFrontFn) kit_Vector_popFront;
+            self->fnRemove = (kit_Sequence_Super_removeFn) kit_Vector_remove;
+            self->fnSet = (kit_Sequence_Super_setFn) kit_Vector_set;
+            self->fnGet = (kit_Sequence_Super_getFn) kit_Vector_get;
+            self->fnBack = (kit_Sequence_Super_backFn) kit_Vector_back;
+            self->fnFront = (kit_Sequence_Super_frontFn) kit_Vector_front;
+            self->fnSize = (kit_Sequence_Super_sizeFn) kit_Vector_size;
+            self->fnIsEmpty = (kit_Sequence_Super_isEmptyFn) kit_Vector_isEmpty;
+            self->fnCapacity = (kit_Sequence_Super_capacityFn) kit_Vector_capacity;
+            self->fnReserve = (kit_Sequence_Super_reserveFn) kit_Vector_reserve;
+            self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Vector_shrink;
         } else {
             kit_Allocator_free(self);
         }
@@ -223,95 +223,95 @@ Option kit_Sequence_fromVector(size_t capacityHint) {
 
 void kit_Sequence_clear(struct kit_Sequence *self) {
     assert(self);
-    self->mClear(self->super);
+    self->fnClear(self->super);
 }
 
 void kit_Sequence_delete(struct kit_Sequence *self) {
     if (self) {
-        self->mDelete(self->super);
+        self->fnDelete(self->super);
         kit_Allocator_free(self);
     }
 }
 
 enum kit_Result kit_Sequence_insert(struct kit_Sequence *self, void *e, size_t index) {
     assert(self);
-    return self->mInsert(self->super, e, index);
+    return self->fnInsert(self->super, e, index);
 }
 
 enum kit_Result kit_Sequence_pushBack(struct kit_Sequence *self, void *e) {
     assert(self);
-    return self->mPushBack(self->super, e);
+    return self->fnPushBack(self->super, e);
 }
 
 enum kit_Result kit_Sequence_pushFront(struct kit_Sequence *self, void *e) {
     assert(self);
-    return self->mPushFront(self->super, e);
+    return self->fnPushFront(self->super, e);
 }
 
 enum kit_Result kit_Sequence_popBack(struct kit_Sequence *self, void **out) {
     assert(self);
     assert(out);
-    return self->mPopBack(self->super, out);
+    return self->fnPopBack(self->super, out);
 }
 
 enum kit_Result kit_Sequence_popFront(struct kit_Sequence *self, void **out) {
     assert(self);
     assert(out);
-    return self->mPopFront(self->super, out);
+    return self->fnPopFront(self->super, out);
 }
 
 enum kit_Result kit_Sequence_remove(struct kit_Sequence *self, void **out, size_t index) {
     assert(self);
     assert(out);
-    return self->mRemove(self->super, out, index);
+    return self->fnRemove(self->super, out, index);
 }
 
 enum kit_Result kit_Sequence_set(struct kit_Sequence *self, void *e, size_t index) {
     assert(self);
-    return self->mSet(self->super, e, index);
+    return self->fnSet(self->super, e, index);
 }
 
 enum kit_Result kit_Sequence_get(struct kit_Sequence *self, void **out, size_t index) {
     assert(self);
     assert(out);
-    return self->mGet(self->super, out, index);
+    return self->fnGet(self->super, out, index);
 }
 
 enum kit_Result kit_Sequence_back(struct kit_Sequence *self, void **out) {
     assert(self);
     assert(out);
-    return self->mBack(self->super, out);
+    return self->fnBack(self->super, out);
 }
 
 enum kit_Result kit_Sequence_front(struct kit_Sequence *self, void **out) {
     assert(self);
     assert(out);
-    return self->mFront(self->super, out);
+    return self->fnFront(self->super, out);
 }
 
 size_t kit_Sequence_size(struct kit_Sequence *self) {
     assert(self);
-    return self->mSize(self->super);
+    return self->fnSize(self->super);
 }
 
 bool kit_Sequence_isEmpty(struct kit_Sequence *self) {
     assert(self);
-    return self->mIsEmpty(self->super);
+    return self->fnIsEmpty(self->super);
 }
 
 size_t kit_Sequence_capacity(struct kit_Sequence *self) {
     assert(self);
-    return self->mCapacity(self->super);
+    return self->fnCapacity(self->super);
 }
 
 enum kit_Result kit_Sequence_reserve(struct kit_Sequence *self, size_t size) {
     assert(self);
-    return self->mReserve(self->super, size);
+    return self->fnReserve(self->super, size);
 }
 
 enum kit_Result kit_Sequence_shrink(struct kit_Sequence *self) {
     assert(self);
-    return self->mShrink(self->super);
+    return self->fnShrink(self->super);
 }
 
 /*
@@ -319,19 +319,19 @@ enum kit_Result kit_Sequence_shrink(struct kit_Sequence *self) {
  */
 typedef void *kit_Sequence_Iterator_Super;
 
-typedef void (*kit_Sequence_Iterator_Super_Trait_fnDelete)(kit_Sequence_Iterator_Super);
-typedef void (*kit_Sequence_Iterator_Super_Trait_fnRewind)(kit_Sequence_Iterator_Super);
-typedef enum kit_Result (*kit_Sequence_Iterator_Super_Trait_fnNext)(kit_Sequence_Iterator_Super, void **);
-typedef enum kit_Result (*kit_Sequence_Iterator_Super_Trait_fnSetLast)(kit_Sequence_Iterator_Super, void *);
-typedef bool (*kit_Sequence_Iterator_Super_Trait_fnIsModified)(kit_Sequence_Iterator_Super);
+typedef void (*kit_Sequence_Iterator_Super_deleteFn)(kit_Sequence_Iterator_Super);
+typedef void (*kit_Sequence_Iterator_Super_rewindFn)(kit_Sequence_Iterator_Super);
+typedef enum kit_Result (*kit_Sequence_Iterator_Super_nextFn)(kit_Sequence_Iterator_Super, void **);
+typedef enum kit_Result (*kit_Sequence_Iterator_Super_setLastFn)(kit_Sequence_Iterator_Super, void *);
+typedef bool (*kit_Sequence_Iterator_Super_isModifiedFn)(kit_Sequence_Iterator_Super);
 
 struct kit_Sequence_Iterator {
     kit_Sequence_Iterator_Super super;
-    kit_Sequence_Iterator_Super_Trait_fnDelete mDelete;
-    kit_Sequence_Iterator_Super_Trait_fnRewind mRewind;
-    kit_Sequence_Iterator_Super_Trait_fnNext mNext;
-    kit_Sequence_Iterator_Super_Trait_fnSetLast mSetLast;
-    kit_Sequence_Iterator_Super_Trait_fnIsModified mIsModified;
+    kit_Sequence_Iterator_Super_deleteFn fnDelete;
+    kit_Sequence_Iterator_Super_rewindFn fnRewind;
+    kit_Sequence_Iterator_Super_nextFn fnNext;
+    kit_Sequence_Iterator_Super_setLastFn fnSetLast;
+    kit_Sequence_Iterator_Super_isModifiedFn fnIsModified;
 };
 
 static Option kit_Sequence_Iterator_fromDoublyList(struct kit_DoublyList *container) {
@@ -344,11 +344,11 @@ static Option kit_Sequence_Iterator_fromDoublyList(struct kit_DoublyList *contai
         superOption = kit_DoublyList_Iterator_fromBegin(container);
         if (Option_isSome(superOption)) {
             self->super = Option_unwrap(superOption);
-            self->mDelete = (kit_Sequence_Iterator_Super_Trait_fnDelete) kit_DoublyList_Iterator_delete;
-            self->mRewind = (kit_Sequence_Iterator_Super_Trait_fnRewind) kit_DoublyList_Iterator_rewindToBegin;
-            self->mNext = (kit_Sequence_Iterator_Super_Trait_fnNext) kit_DoublyList_Iterator_next;
-            self->mSetLast = (kit_Sequence_Iterator_Super_Trait_fnSetLast) kit_DoublyList_Iterator_setLast;
-            self->mIsModified = (kit_Sequence_Iterator_Super_Trait_fnIsModified) kit_DoublyList_Iterator_isModified;
+            self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_DoublyList_Iterator_delete;
+            self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_DoublyList_Iterator_rewindToBegin;
+            self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_DoublyList_Iterator_next;
+            self->fnSetLast = (kit_Sequence_Iterator_Super_setLastFn) kit_DoublyList_Iterator_setLast;
+            self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_DoublyList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
         }
@@ -367,11 +367,11 @@ static Option kit_Sequence_Iterator_fromSinglyList(struct kit_SinglyList *contai
         superOption = kit_SinglyList_Iterator_fromBegin(container);
         if (Option_isSome(superOption)) {
             self->super = Option_unwrap(superOption);
-            self->mDelete = (kit_Sequence_Iterator_Super_Trait_fnDelete) kit_SinglyList_Iterator_delete;
-            self->mRewind = (kit_Sequence_Iterator_Super_Trait_fnRewind) kit_SinglyList_Iterator_rewindToBegin;
-            self->mNext = (kit_Sequence_Iterator_Super_Trait_fnNext) kit_SinglyList_Iterator_next;
-            self->mSetLast = (kit_Sequence_Iterator_Super_Trait_fnSetLast) kit_SinglyList_Iterator_setLast;
-            self->mIsModified = (kit_Sequence_Iterator_Super_Trait_fnIsModified) kit_SinglyList_Iterator_isModified;
+            self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_SinglyList_Iterator_delete;
+            self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_SinglyList_Iterator_rewindToBegin;
+            self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_SinglyList_Iterator_next;
+            self->fnSetLast = (kit_Sequence_Iterator_Super_setLastFn) kit_SinglyList_Iterator_setLast;
+            self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_SinglyList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
         }
@@ -390,11 +390,11 @@ static Option kit_Sequence_Iterator_fromXorList(struct kit_XorList *container) {
         superOption = kit_XorList_Iterator_fromBegin(container);
         if (Option_isSome(superOption)) {
             self->super = Option_unwrap(superOption);
-            self->mDelete = (kit_Sequence_Iterator_Super_Trait_fnDelete) kit_XorList_Iterator_delete;
-            self->mRewind = (kit_Sequence_Iterator_Super_Trait_fnRewind) kit_XorList_Iterator_rewindToBegin;
-            self->mNext = (kit_Sequence_Iterator_Super_Trait_fnNext) kit_XorList_Iterator_next;
-            self->mSetLast = (kit_Sequence_Iterator_Super_Trait_fnSetLast) kit_XorList_Iterator_setLast;
-            self->mIsModified = (kit_Sequence_Iterator_Super_Trait_fnIsModified) kit_XorList_Iterator_isModified;
+            self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_XorList_Iterator_delete;
+            self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_XorList_Iterator_rewindToBegin;
+            self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_XorList_Iterator_next;
+            self->fnSetLast = (kit_Sequence_Iterator_Super_setLastFn) kit_XorList_Iterator_setLast;
+            self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_XorList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
         }
@@ -413,11 +413,11 @@ static Option kit_Sequence_Iterator_fromVector(struct kit_Vector *container) {
         superOption = kit_Vector_Iterator_fromBegin(container);
         if (Option_isSome(superOption)) {
             self->super = Option_unwrap(superOption);
-            self->mDelete = (kit_Sequence_Iterator_Super_Trait_fnDelete) kit_Vector_Iterator_delete;
-            self->mRewind = (kit_Sequence_Iterator_Super_Trait_fnRewind) kit_Vector_Iterator_rewindToBegin;
-            self->mNext = (kit_Sequence_Iterator_Super_Trait_fnNext) kit_Vector_Iterator_next;
-            self->mSetLast = (kit_Sequence_Iterator_Super_Trait_fnSetLast) kit_Vector_Iterator_setLast;
-            self->mIsModified = (kit_Sequence_Iterator_Super_Trait_fnIsModified) kit_Vector_Iterator_isModified;
+            self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_Vector_Iterator_delete;
+            self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_Vector_Iterator_rewindToBegin;
+            self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_Vector_Iterator_next;
+            self->fnSetLast = (kit_Sequence_Iterator_Super_setLastFn) kit_Vector_Iterator_setLast;
+            self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_Vector_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
         }
@@ -428,17 +428,17 @@ static Option kit_Sequence_Iterator_fromVector(struct kit_Vector *container) {
 
 Option kit_Sequence_Iterator_new(struct kit_Sequence *container) {
     assert(container);
-    switch (container->superTrait) {
-        case KIT_SEQUENCE_SUPER_TRAIT_DOUBLY_LIST: {
+    switch (container->trait) {
+        case KIT_SEQUENCE_TRAIT_DOUBLY_LIST: {
             return kit_Sequence_Iterator_fromDoublyList(container->super);
         }
-        case KIT_SEQUENCE_SUPER_TRAIT_SINGLY_LIST: {
+        case KIT_SEQUENCE_TRAIT_SINGLY_LIST: {
             return kit_Sequence_Iterator_fromSinglyList(container->super);
         }
-        case KIT_SEQUENCE_SUPER_TRAIT_XOR_LIST: {
+        case KIT_SEQUENCE_TRAIT_XOR_LIST: {
             return kit_Sequence_Iterator_fromXorList(container->super);
         }
-        case KIT_SEQUENCE_SUPER_TRAIT_VECTOR: {
+        case KIT_SEQUENCE_TRAIT_VECTOR: {
             return kit_Sequence_Iterator_fromVector(container->super);
         }
         default: {
@@ -450,12 +450,12 @@ Option kit_Sequence_Iterator_new(struct kit_Sequence *container) {
 
 void kit_Sequence_Iterator_rewind(struct kit_Sequence_Iterator *self) {
     assert(self);
-    self->mRewind(self->super);
+    self->fnRewind(self->super);
 }
 
 void kit_Sequence_Iterator_delete(struct kit_Sequence_Iterator *self) {
     if (self) {
-        self->mDelete(self->super);
+        self->fnDelete(self->super);
         kit_Allocator_free(self);
     }
 }
@@ -463,15 +463,15 @@ void kit_Sequence_Iterator_delete(struct kit_Sequence_Iterator *self) {
 enum kit_Result kit_Sequence_Iterator_next(struct kit_Sequence_Iterator *self, void **out) {
     assert(self);
     assert(out);
-    return self->mNext(self->super, out);
+    return self->fnNext(self->super, out);
 }
 
 enum kit_Result kit_Sequence_Iterator_setLast(struct kit_Sequence_Iterator *self, void *e) {
     assert(self);
-    return self->mSetLast(self->super, e);
+    return self->fnSetLast(self->super, e);
 }
 
 bool kit_Sequence_Iterator_isModified(struct kit_Sequence_Iterator *self) {
     assert(self);
-    return self->mIsModified(self->super);
+    return self->fnIsModified(self->super);
 }
