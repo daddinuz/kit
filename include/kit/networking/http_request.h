@@ -31,7 +31,7 @@ extern enum kit_HttpMethod
 kit_HttpRequest_getMethod(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern kit_Atom
+extern kit_Atom *
 kit_HttpRequest_getUrl(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
@@ -74,11 +74,11 @@ kit_HttpRequest_delete(const struct kit_HttpRequest *self);
 struct kit_HttpRequestBuilder;
 
 extern MutableOptional(struct kit_HttpRequestBuilder *)
-kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url)
+kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom *url)
 __attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_putHeader(struct kit_HttpRequestBuilder *self, kit_Atom key, kit_Atom value)
+kit_HttpRequestBuilder_putHeader(struct kit_HttpRequestBuilder *self, kit_Atom *key, kit_Atom *value)
 __attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *

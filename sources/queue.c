@@ -54,6 +54,7 @@ MutableOption kit_Queue_fromDoublyList(void) {
             self->fnIsEmpty = (kit_Queue_Super_isEmptyFn) kit_DoublyList_isEmpty;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -78,6 +79,7 @@ MutableOption kit_Queue_fromSinglyList(void) {
             self->fnIsEmpty = (kit_Queue_Super_isEmptyFn) kit_SinglyList_isEmpty;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -102,6 +104,7 @@ MutableOption kit_Queue_fromXorList(void) {
             self->fnIsEmpty = (kit_Queue_Super_isEmptyFn) kit_XorList_isEmpty;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -126,6 +129,7 @@ MutableOption kit_Queue_fromVector(void) {
             self->fnIsEmpty = (kit_Queue_Super_isEmptyFn) kit_Vector_isEmpty;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 

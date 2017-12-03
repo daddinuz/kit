@@ -29,7 +29,7 @@ struct kit_HttpResponse;
 extern const struct kit_HttpRequest *
 kit_HttpResponse_getRequest(const struct kit_HttpResponse *self);
 
-extern kit_Atom
+extern kit_Atom *
 kit_HttpResponse_getUrl(const struct kit_HttpResponse *self);
 
 extern const struct kit_Map *
@@ -53,10 +53,10 @@ extern MutableOptional(struct kit_HttpResponseBuilder *)
 kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request);
 
 extern struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom url);
+kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom *url);
 
 extern struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_putHeader(struct kit_HttpResponseBuilder *self, kit_Atom key, kit_Atom value);
+kit_HttpResponseBuilder_putHeader(struct kit_HttpResponseBuilder *self, kit_Atom *key, kit_Atom *value);
 
 extern struct kit_HttpResponseBuilder *
 kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, const struct kit_Text *body);

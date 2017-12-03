@@ -11,8 +11,8 @@
 #include <kit/utils.h>
 #include <kit/networking/http.h>
 
-#define _M(x)   MutableOption_unwrap((x))
-#define _I(x)   ImmutableOption_unwrap((x))
+#define M(x)   MutableOption_unwrap((x))
+#define I(x)   ImmutableOption_unwrap((x))
 
 void printRequest(const struct kit_HttpRequest *request) __attribute__((__nonnull__));
 void printResponse(const struct kit_HttpResponse *response) __attribute__((__nonnull__));
@@ -23,16 +23,16 @@ void printResponse(const struct kit_HttpResponse *response) __attribute__((__non
 int main() {
     const struct kit_HttpRequest *request;
     const struct kit_HttpResponse *response;
-    struct kit_HttpRequestBuilder *builder = _M(kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, _M(kit_Atom_fromLiteral("https://github.com"))));
+    struct kit_HttpRequestBuilder *builder = M(kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, I(kit_Atom_fromLiteral("https://github.com"))));
 
     kit_HttpRequestBuilder_setTimeout(builder, 60);
-    kit_HttpRequestBuilder_putHeader(builder, _M(kit_Atom_fromLiteral("Accept")), _M(kit_Atom_fromLiteral("application/json")));
+    kit_HttpRequestBuilder_putHeader(builder, I(kit_Atom_fromLiteral("Accept")), I(kit_Atom_fromLiteral("application/json")));    kit_HttpRequestBuilder_putHeader(builder, I(kit_Atom_fromLiteral("Accept")), I(kit_Atom_fromLiteral("application/json")));
 
-    request = _I(kit_HttpRequestBuilder_build(&builder)); // moves ownership deleting and invalidating builder.
+    request = I(kit_HttpRequestBuilder_build(&builder)); // moves ownership deleting and invalidating builder.
     assert(NULL == builder);
     printRequest(request);
 
-    response = _I(kit_HttpRequest_fire(&request)); // moves ownership invalidating request.
+    response = I(kit_HttpRequest_fire(&request)); // moves ownership invalidating request.
     assert(NULL == request);
     printResponse(response);
 
@@ -48,7 +48,7 @@ void printRequest(const struct kit_HttpRequest *request) {
 
     // --- TODO -----------------------------------------------------------
     void *value;
-    kit_Atom accept = _M(kit_Atom_fromLiteral("Accept"));
+    kit_Atom *accept = I(kit_Atom_fromLiteral("Accept"));
     const struct kit_Map *headers = kit_HttpRequest_getHeaders(request);
     kit_Map_get((void *) headers, accept, &value);
     printf("headers:\n");

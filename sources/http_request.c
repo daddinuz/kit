@@ -13,7 +13,7 @@
 
 struct kit_HttpRequest {
     enum kit_HttpMethod method;
-    kit_Atom url;
+    kit_Atom *url;
     struct kit_Map *headers;
     ImmutableOptional(const struct kit_Text *) body;
     long timeout;
@@ -27,7 +27,7 @@ enum kit_HttpMethod kit_HttpRequest_getMethod(const struct kit_HttpRequest *self
     return self->method;
 }
 
-kit_Atom kit_HttpRequest_getUrl(const struct kit_HttpRequest *self) {
+kit_Atom *kit_HttpRequest_getUrl(const struct kit_HttpRequest *self) {
     assert(self);
     return self->url;
 }
@@ -81,7 +81,7 @@ struct kit_HttpRequestBuilder {
     struct kit_HttpRequest request;
 };
 
-MutableOption kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url) {
+MutableOption kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom *url) {
     assert(url);
     struct kit_HttpRequestBuilder *self;
     MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), headersOption;
@@ -108,7 +108,7 @@ MutableOption kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom ur
 }
 
 struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_putHeader(struct kit_HttpRequestBuilder *self, kit_Atom key, kit_Atom value) {
+kit_HttpRequestBuilder_putHeader(struct kit_HttpRequestBuilder *self, kit_Atom *key, kit_Atom *value) {
     assert(self);
     assert(key);
     assert(value);
