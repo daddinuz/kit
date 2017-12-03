@@ -76,16 +76,16 @@ static enum kit_Result kit_List_Super_shrinkNoOp(kit_List_Super p0) {
     return KIT_RESULT_OK;
 }
 
-Option kit_List_fromDoublyList(void) {
+MutableOption kit_List_fromDoublyList(void) {
     struct kit_List *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_DoublyList_new();
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_LIST_TRAIT_DOUBLY_LIST;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnClear = (kit_List_Super_clearFn) kit_DoublyList_clear;
             self->fnDelete = (kit_List_Super_deleteFn) kit_DoublyList_delete;
             self->fnInsert = (kit_List_Super_insertFn) kit_DoublyList_insert;
@@ -112,16 +112,16 @@ Option kit_List_fromDoublyList(void) {
     return selfOption;
 }
 
-Option kit_List_fromXorList(void) {
+MutableOption kit_List_fromXorList(void) {
     struct kit_List *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_XorList_new();
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_LIST_TRAIT_XOR_LIST;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnClear = (kit_List_Super_clearFn) kit_XorList_clear;
             self->fnDelete = (kit_List_Super_deleteFn) kit_XorList_delete;
             self->fnInsert = (kit_List_Super_insertFn) kit_XorList_insert;
@@ -148,16 +148,16 @@ Option kit_List_fromXorList(void) {
     return selfOption;
 }
 
-Option kit_List_fromVector(size_t capacityHint) {
+MutableOption kit_List_fromVector(size_t capacityHint) {
     struct kit_List *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_Vector_from(capacityHint);
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_LIST_TRAIT_VECTOR;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnClear = (kit_List_Super_clearFn) kit_Vector_clear;
             self->fnDelete = (kit_List_Super_deleteFn) kit_Vector_delete;
             self->fnInsert = (kit_List_Super_insertFn) kit_Vector_insert;
@@ -302,16 +302,16 @@ struct kit_List_Iterator {
     kit_List_Iterator_Super_isModifiedFn fnIsModified;
 };
 
-static Option kit_List_Iterator_fromDoublyList(struct kit_DoublyList *container, enum kit_Bound bound) {
+static MutableOption kit_List_Iterator_fromDoublyList(struct kit_DoublyList *container, enum kit_Bound bound) {
     assert(container);
     struct kit_List_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_DoublyList_Iterator_new(container, bound);
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_List_Iterator_Super_deleteFn) kit_DoublyList_Iterator_delete;
             self->fnRewind = (kit_List_Iterator_Super_rewindFn) kit_DoublyList_Iterator_rewind;
             self->fnRewindToBegin = (kit_List_Iterator_Super_rewindToBeginFn) kit_DoublyList_Iterator_rewindToBegin;
@@ -328,16 +328,16 @@ static Option kit_List_Iterator_fromDoublyList(struct kit_DoublyList *container,
     return selfOption;
 }
 
-static Option kit_List_Iterator_fromXorList(struct kit_XorList *container, enum kit_Bound bound) {
+static MutableOption kit_List_Iterator_fromXorList(struct kit_XorList *container, enum kit_Bound bound) {
     assert(container);
     struct kit_List_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_XorList_Iterator_new(container, bound);
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_List_Iterator_Super_deleteFn) kit_XorList_Iterator_delete;
             self->fnRewind = (kit_List_Iterator_Super_rewindFn) kit_XorList_Iterator_rewind;
             self->fnRewindToBegin = (kit_List_Iterator_Super_rewindToBeginFn) kit_XorList_Iterator_rewindToBegin;
@@ -354,16 +354,16 @@ static Option kit_List_Iterator_fromXorList(struct kit_XorList *container, enum 
     return selfOption;
 }
 
-static Option kit_List_Iterator_fromVector(struct kit_Vector *container, enum kit_Bound bound) {
+static MutableOption kit_List_Iterator_fromVector(struct kit_Vector *container, enum kit_Bound bound) {
     assert(container);
     struct kit_List_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_Vector_Iterator_new(container, bound);
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_List_Iterator_Super_deleteFn) kit_Vector_Iterator_delete;
             self->fnRewind = (kit_List_Iterator_Super_rewindFn) kit_Vector_Iterator_rewind;
             self->fnRewindToBegin = (kit_List_Iterator_Super_rewindToBeginFn) kit_Vector_Iterator_rewindToBegin;
@@ -380,7 +380,7 @@ static Option kit_List_Iterator_fromVector(struct kit_Vector *container, enum ki
     return selfOption;
 }
 
-Option kit_List_Iterator_new(struct kit_List *container, enum kit_Bound bound) {
+MutableOption kit_List_Iterator_new(struct kit_List *container, enum kit_Bound bound) {
     assert(container);
     switch (container->trait) {
         case KIT_LIST_TRAIT_DOUBLY_LIST: {
@@ -399,12 +399,12 @@ Option kit_List_Iterator_new(struct kit_List *container, enum kit_Bound bound) {
     }
 }
 
-Option kit_List_Iterator_fromBegin(struct kit_List *container) {
+MutableOption kit_List_Iterator_fromBegin(struct kit_List *container) {
     assert(container);
     return kit_List_Iterator_new(container, KIT_BOUND_BEGIN);
 }
 
-Option kit_List_Iterator_fromEnd(struct kit_List *container) {
+MutableOption kit_List_Iterator_fromEnd(struct kit_List *container) {
     assert(container);
     return kit_List_Iterator_new(container, KIT_BOUND_END);
 }

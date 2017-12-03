@@ -28,13 +28,13 @@ struct kit_Pair;
 
 /**
  * Creates a new instance of kit_Pair.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * @param first The first element.
  * @param second The second element.
- * @return A new instance of kit_Pair or Option_None.
+ * @return A new instance of kit_Pair or MutableOption_None.
  */
-extern Optional(struct kit_Pair *)
+extern MutableOptional(struct kit_Pair *)
 kit_Pair_new(void *first, void *second);
 
 /**

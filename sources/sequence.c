@@ -78,16 +78,16 @@ static enum kit_Result kit_Sequence_Super_shrinkNoOp(kit_Sequence_Super p0) {
     return KIT_RESULT_OK;
 }
 
-Option kit_Sequence_fromDoublyList(void) {
+MutableOption kit_Sequence_fromDoublyList(void) {
     struct kit_Sequence *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_DoublyList_new();
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_SEQUENCE_TRAIT_DOUBLY_LIST;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnClear = (kit_Sequence_Super_clearFn) kit_DoublyList_clear;
             self->fnDelete = (kit_Sequence_Super_deleteFn) kit_DoublyList_delete;
             self->fnInsert = (kit_Sequence_Super_insertFn) kit_DoublyList_insert;
@@ -114,16 +114,16 @@ Option kit_Sequence_fromDoublyList(void) {
     return selfOption;
 }
 
-Option kit_Sequence_fromSinglyList(void) {
+MutableOption kit_Sequence_fromSinglyList(void) {
     struct kit_Sequence *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_SinglyList_new();
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_SEQUENCE_TRAIT_SINGLY_LIST;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnClear = (kit_Sequence_Super_clearFn) kit_SinglyList_clear;
             self->fnDelete = (kit_Sequence_Super_deleteFn) kit_SinglyList_delete;
             self->fnInsert = (kit_Sequence_Super_insertFn) kit_SinglyList_insert;
@@ -150,16 +150,16 @@ Option kit_Sequence_fromSinglyList(void) {
     return selfOption;
 }
 
-Option kit_Sequence_fromXorList(void) {
+MutableOption kit_Sequence_fromXorList(void) {
     struct kit_Sequence *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_XorList_new();
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_SEQUENCE_TRAIT_XOR_LIST;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnClear = (kit_Sequence_Super_clearFn) kit_XorList_clear;
             self->fnDelete = (kit_Sequence_Super_deleteFn) kit_XorList_delete;
             self->fnInsert = (kit_Sequence_Super_insertFn) kit_XorList_insert;
@@ -186,16 +186,16 @@ Option kit_Sequence_fromXorList(void) {
     return selfOption;
 }
 
-Option kit_Sequence_fromVector(size_t capacityHint) {
+MutableOption kit_Sequence_fromVector(size_t capacityHint) {
     struct kit_Sequence *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_Vector_from(capacityHint);
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_SEQUENCE_TRAIT_VECTOR;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnClear = (kit_Sequence_Super_clearFn) kit_Vector_clear;
             self->fnDelete = (kit_Sequence_Super_deleteFn) kit_Vector_delete;
             self->fnInsert = (kit_Sequence_Super_insertFn) kit_Vector_insert;
@@ -334,16 +334,16 @@ struct kit_Sequence_Iterator {
     kit_Sequence_Iterator_Super_isModifiedFn fnIsModified;
 };
 
-static Option kit_Sequence_Iterator_fromDoublyList(struct kit_DoublyList *container) {
+static MutableOption kit_Sequence_Iterator_fromDoublyList(struct kit_DoublyList *container) {
     assert(container);
     struct kit_Sequence_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_DoublyList_Iterator_fromBegin(container);
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_DoublyList_Iterator_delete;
             self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_DoublyList_Iterator_rewindToBegin;
             self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_DoublyList_Iterator_next;
@@ -357,16 +357,16 @@ static Option kit_Sequence_Iterator_fromDoublyList(struct kit_DoublyList *contai
     return selfOption;
 }
 
-static Option kit_Sequence_Iterator_fromSinglyList(struct kit_SinglyList *container) {
+static MutableOption kit_Sequence_Iterator_fromSinglyList(struct kit_SinglyList *container) {
     assert(container);
     struct kit_Sequence_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_SinglyList_Iterator_fromBegin(container);
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_SinglyList_Iterator_delete;
             self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_SinglyList_Iterator_rewindToBegin;
             self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_SinglyList_Iterator_next;
@@ -380,16 +380,16 @@ static Option kit_Sequence_Iterator_fromSinglyList(struct kit_SinglyList *contai
     return selfOption;
 }
 
-static Option kit_Sequence_Iterator_fromXorList(struct kit_XorList *container) {
+static MutableOption kit_Sequence_Iterator_fromXorList(struct kit_XorList *container) {
     assert(container);
     struct kit_Sequence_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_XorList_Iterator_fromBegin(container);
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_XorList_Iterator_delete;
             self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_XorList_Iterator_rewindToBegin;
             self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_XorList_Iterator_next;
@@ -403,16 +403,16 @@ static Option kit_Sequence_Iterator_fromXorList(struct kit_XorList *container) {
     return selfOption;
 }
 
-static Option kit_Sequence_Iterator_fromVector(struct kit_Vector *container) {
+static MutableOption kit_Sequence_Iterator_fromVector(struct kit_Vector *container) {
     assert(container);
     struct kit_Sequence_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_Vector_Iterator_fromBegin(container);
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Sequence_Iterator_Super_deleteFn) kit_Vector_Iterator_delete;
             self->fnRewind = (kit_Sequence_Iterator_Super_rewindFn) kit_Vector_Iterator_rewindToBegin;
             self->fnNext = (kit_Sequence_Iterator_Super_nextFn) kit_Vector_Iterator_next;
@@ -426,7 +426,7 @@ static Option kit_Sequence_Iterator_fromVector(struct kit_Vector *container) {
     return selfOption;
 }
 
-Option kit_Sequence_Iterator_new(struct kit_Sequence *container) {
+MutableOption kit_Sequence_Iterator_new(struct kit_Sequence *container) {
     assert(container);
     switch (container->trait) {
         case KIT_SEQUENCE_TRAIT_DOUBLY_LIST: {

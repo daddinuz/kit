@@ -31,7 +31,7 @@ struct kit_HashMap;
  * @param hashFn
  * @return
  */
-extern Optional(struct kit_HashMap *)
+extern MutableOptional(struct kit_HashMap *)
 kit_HashMap_new(size_t capacityHint, int compareFn(const void *x, const void *y), size_t hashFn(const void *key))
 __attribute__((__nonnull__));
 

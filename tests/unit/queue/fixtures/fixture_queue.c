@@ -93,16 +93,16 @@ struct kit_Queue *setup_helper(enum kit_QueueType type, const char *const seeds[
 
     switch (type) {
         case KIT_QUEUE_TYPE_DOUBLY_LIST:
-            sut = Option_unwrap(kit_Queue_fromDoublyList());
+            sut = MutableOption_unwrap(kit_Queue_fromDoublyList());
             break;
         case KIT_QUEUE_TYPE_SINGLY_LIST:
-            sut = Option_unwrap(kit_Queue_fromSinglyList());
+            sut = MutableOption_unwrap(kit_Queue_fromSinglyList());
             break;
         case KIT_QUEUE_TYPE_XOR_LIST:
-            sut = Option_unwrap(kit_Queue_fromXorList());
+            sut = MutableOption_unwrap(kit_Queue_fromXorList());
             break;
         case KIT_QUEUE_TYPE_VECTOR:
-            sut = Option_unwrap(kit_Queue_fromVector());
+            sut = MutableOption_unwrap(kit_Queue_fromVector());
             break;
         default:
             traits_assert(false);

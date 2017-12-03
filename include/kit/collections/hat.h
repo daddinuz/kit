@@ -41,21 +41,21 @@ struct kit_Hat;
 
 /**
  * Creates a new instance of kit_Hat.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Hat or Option_None.
+ * @return A new instance of kit_Hat or MutableOption_None.
  */
-extern Optional(struct kit_Hat *)
+extern MutableOptional(struct kit_Hat *)
 kit_Hat_new(void);
 
 /**
  * Creates a new instance of kit_Hat giving hits about initial capacity.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * @param capacityHint The hint about the initial capacity.
- * @return A new instance of kit_Hat or Option_None.
+ * @return A new instance of kit_Hat or MutableOption_None.
  */
-extern Optional(struct kit_Hat *)
+extern MutableOptional(struct kit_Hat *)
 kit_Hat_from(size_t capacityHint);
 
 /**
@@ -342,7 +342,7 @@ struct kit_Hat_Iterator;
 
 /**
  * Creates a new instance of kit_Hat_Iterator.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
@@ -350,37 +350,37 @@ struct kit_Hat_Iterator;
  *
  * @param container The instance of the container to iterate.
  * @param bound The start bound.
- * @return A new instance of kit_Hat_Iterator or Option_None.
+ * @return A new instance of kit_Hat_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Hat_Iterator *)
+extern MutableOptional(struct kit_Hat_Iterator *)
 kit_Hat_Iterator_new(struct kit_Hat *container, enum kit_Bound bound)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Hat_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_Hat_Iterator or Option_None.
+ * @return A new instance of kit_Hat_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Hat_Iterator *)
+extern MutableOptional(struct kit_Hat_Iterator *)
 kit_Hat_Iterator_fromBegin(struct kit_Hat *container)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Hat_Iterator from end of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_Hat_Iterator or Option_None.
+ * @return A new instance of kit_Hat_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Hat_Iterator *)
+extern MutableOptional(struct kit_Hat_Iterator *)
 kit_Hat_Iterator_fromEnd(struct kit_Hat *container)
 __attribute__((__nonnull__));
 

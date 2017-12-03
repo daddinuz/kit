@@ -18,7 +18,7 @@ void report(struct kit_Map *map, struct kit_Array *keys);
  *
  */
 int main() {
-#define _(x)    Option_unwrap((x))
+#define _(x)    MutableOption_unwrap((x))
 
     void *e = NULL;
     kit_Atom accept = _(kit_Atom_fromLiteral("Accept"));

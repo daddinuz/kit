@@ -40,21 +40,21 @@ struct kit_Vector;
 
 /**
  * Creates a new instance of kit_Vector.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Vector or Option_None.
+ * @return A new instance of kit_Vector or MutableOption_None.
  */
-extern Optional(struct kit_Vector *)
+extern MutableOptional(struct kit_Vector *)
 kit_Vector_new(void);
 
 /**
  * Creates a new instance of kit_Vector giving hits about initial capacity.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * @param capacityHint The hint about the initial capacity.
- * @return A new instance of kit_Vector or Option_None.
+ * @return A new instance of kit_Vector or MutableOption_None.
  */
-extern Optional(struct kit_Vector *)
+extern MutableOptional(struct kit_Vector *)
 kit_Vector_from(size_t capacityHint);
 
 /**
@@ -341,7 +341,7 @@ struct kit_Vector_Iterator;
 
 /**
  * Creates a new instance of kit_Vector_Iterator.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
@@ -349,37 +349,37 @@ struct kit_Vector_Iterator;
  *
  * @param container The instance of the container to iterate.
  * @param bound The start bound.
- * @return A new instance of kit_Vector_Iterator or Option_None.
+ * @return A new instance of kit_Vector_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Vector_Iterator *)
+extern MutableOptional(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Vector_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_Vector_Iterator or Option_None.
+ * @return A new instance of kit_Vector_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Vector_Iterator *)
+extern MutableOptional(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromBegin(struct kit_Vector *container)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Vector_Iterator from end of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_Vector_Iterator or Option_None.
+ * @return A new instance of kit_Vector_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Vector_Iterator *)
+extern MutableOptional(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromEnd(struct kit_Vector *container)
 __attribute__((__nonnull__));
 

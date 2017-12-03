@@ -34,15 +34,15 @@ struct kit_Stack {
     kit_Stack_Super_isEmptyFn fnIsEmpty;
 };
 
-Option kit_Stack_fromDoublyList(void) {
+MutableOption kit_Stack_fromDoublyList(void) {
     struct kit_Stack *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_DoublyList_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Stack_Super_deleteFn) kit_DoublyList_delete;
             self->fnPush = (kit_Stack_Super_pushFn) kit_DoublyList_pushBack;
             self->fnPop = (kit_Stack_Super_popFn) kit_DoublyList_popBack;
@@ -57,15 +57,15 @@ Option kit_Stack_fromDoublyList(void) {
     return selfOption;
 }
 
-Option kit_Stack_fromSinglyList(void) {
+MutableOption kit_Stack_fromSinglyList(void) {
     struct kit_Stack *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_SinglyList_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Stack_Super_deleteFn) kit_SinglyList_delete;
             self->fnPush = (kit_Stack_Super_pushFn) kit_SinglyList_pushFront;
             self->fnPop = (kit_Stack_Super_popFn) kit_SinglyList_popFront;
@@ -80,15 +80,15 @@ Option kit_Stack_fromSinglyList(void) {
     return selfOption;
 }
 
-Option kit_Stack_fromXorList(void) {
+MutableOption kit_Stack_fromXorList(void) {
     struct kit_Stack *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_XorList_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Stack_Super_deleteFn) kit_XorList_delete;
             self->fnPush = (kit_Stack_Super_pushFn) kit_XorList_pushBack;
             self->fnPop = (kit_Stack_Super_popFn) kit_XorList_popBack;
@@ -103,15 +103,15 @@ Option kit_Stack_fromXorList(void) {
     return selfOption;
 }
 
-Option kit_Stack_fromVector(void) {
+MutableOption kit_Stack_fromVector(void) {
     struct kit_Stack *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_Vector_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Stack_Super_deleteFn) kit_Vector_delete;
             self->fnPush = (kit_Stack_Super_pushFn) kit_Vector_pushBack;
             self->fnPop = (kit_Stack_Super_popFn) kit_Vector_popBack;

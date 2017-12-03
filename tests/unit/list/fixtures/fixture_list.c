@@ -130,13 +130,13 @@ setup_list_helper(enum kit_ListType type, const char *const seeds[], const size_
 
     switch (type) {
         case KIT_LIST_TYPE_DOUBLY_LIST:
-            sut = Option_unwrap(kit_List_fromDoublyList());
+            sut = MutableOption_unwrap(kit_List_fromDoublyList());
             break;
         case KIT_LIST_TYPE_XOR_LIST:
-            sut = Option_unwrap(kit_List_fromXorList());
+            sut = MutableOption_unwrap(kit_List_fromXorList());
             break;
         case KIT_LIST_TYPE_VECTOR:
-            sut = Option_unwrap(kit_List_fromVector(16));
+            sut = MutableOption_unwrap(kit_List_fromVector(16));
             break;
         default:
             traits_assert(false);
@@ -163,7 +163,7 @@ setup_list_iterator_helper(enum kit_ListType type, const char *const *seeds, siz
     context->list = setup_list_helper(type, seeds, seeds_size);
     assert_not_null(context->list);
 
-    context->sut = Option_unwrap(kit_List_Iterator_fromBegin(context->list));
+    context->sut = MutableOption_unwrap(kit_List_Iterator_fromBegin(context->list));
     assert_not_null(context->sut);
 
     return context;

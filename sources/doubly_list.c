@@ -20,7 +20,7 @@ struct kit_DoublyList_Node {
     struct kit_DoublyList_Node *next;
 };
 
-static Option
+static MutableOption
 kit_DoublyList_Node_new(void *e);
 
 static void *
@@ -41,7 +41,7 @@ struct kit_DoublyList {
     struct kit_DoublyList_Node *back;
 };
 
-Option kit_DoublyList_new(void) {
+MutableOption kit_DoublyList_new(void) {
     struct kit_DoublyList *self;
     return kit_Allocator_calloc(1, sizeof(*self));
 }
@@ -71,14 +71,14 @@ void kit_DoublyList_delete(struct kit_DoublyList *self) {
 
 enum kit_Result kit_DoublyList_insert(struct kit_DoublyList *self, void *e, const size_t index) {
     assert(self);
-    Option nodeOption;
+    MutableOption nodeMutableOption;
     struct kit_DoublyList_Node *newNode;
     enum kit_Result result = KIT_RESULT_OK;
 
     if (index == 0) {                           /* insert front */
-        nodeOption = kit_DoublyList_Node_new(e);
-        if (Option_isSome(nodeOption)) {
-            newNode = Option_unwrap(nodeOption);
+        nodeMutableOption = kit_DoublyList_Node_new(e);
+        if (MutableOption_isSome(nodeMutableOption)) {
+            newNode = MutableOption_unwrap(nodeMutableOption);
             if (self->front) {                  /* non-empty list */
                 self->front->prev = newNode;
                 newNode->next = self->front;
@@ -90,9 +90,9 @@ enum kit_Result kit_DoublyList_insert(struct kit_DoublyList *self, void *e, cons
             result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
         }
     } else if (index == self->size) {           /* insert back */
-        nodeOption = kit_DoublyList_Node_new(e);
-        if (Option_isSome(nodeOption)) {
-            newNode = Option_unwrap(nodeOption);
+        nodeMutableOption = kit_DoublyList_Node_new(e);
+        if (MutableOption_isSome(nodeMutableOption)) {
+            newNode = MutableOption_unwrap(nodeMutableOption);
             newNode->prev = self->back;
             self->back->next = newNode;
             self->back = newNode;
@@ -100,9 +100,9 @@ enum kit_Result kit_DoublyList_insert(struct kit_DoublyList *self, void *e, cons
             result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
         }
     } else {                                    /* insert middle */
-        nodeOption = kit_DoublyList_Node_new(e);
-        if (Option_isSome(nodeOption)) {
-            newNode = Option_unwrap(nodeOption);
+        nodeMutableOption = kit_DoublyList_Node_new(e);
+        if (MutableOption_isSome(nodeMutableOption)) {
+            newNode = MutableOption_unwrap(nodeMutableOption);
             struct kit_DoublyList_Node *nextNode = NULL;
             result = kit_DoublyList_Node_fetch(self, &nextNode, index);
             if (KIT_RESULT_OK == result) {
@@ -235,14 +235,14 @@ struct kit_DoublyList_Iterator {
     struct kit_DoublyList_Node *next;
 };
 
-Option kit_DoublyList_Iterator_new(struct kit_DoublyList *container, enum kit_Bound bound) {
+MutableOption kit_DoublyList_Iterator_new(struct kit_DoublyList *container, enum kit_Bound bound) {
     assert(container);
     assert(KIT_BOUND_BEGIN <= bound && bound <= KIT_BOUND_END);
     struct kit_DoublyList_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         self->container = container;
         kit_DoublyList_Iterator_rewind(self, bound);
     }
@@ -250,12 +250,12 @@ Option kit_DoublyList_Iterator_new(struct kit_DoublyList *container, enum kit_Bo
     return selfOption;
 }
 
-Option kit_DoublyList_Iterator_fromBegin(struct kit_DoublyList *container) {
+MutableOption kit_DoublyList_Iterator_fromBegin(struct kit_DoublyList *container) {
     assert(container);
     return kit_DoublyList_Iterator_new(container, KIT_BOUND_BEGIN);
 }
 
-Option kit_DoublyList_Iterator_fromEnd(struct kit_DoublyList *container) {
+MutableOption kit_DoublyList_Iterator_fromEnd(struct kit_DoublyList *container) {
     assert(container);
     return kit_DoublyList_Iterator_new(container, KIT_BOUND_END);
 }
@@ -353,12 +353,12 @@ bool kit_DoublyList_Iterator_isModified(struct kit_DoublyList_Iterator *self) {
 /*
  * Private implementations
  */
-Option kit_DoublyList_Node_new(void *e) {
+MutableOption kit_DoublyList_Node_new(void *e) {
     struct kit_DoublyList_Node *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         self->element = e;
     }
 

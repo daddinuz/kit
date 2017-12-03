@@ -31,38 +31,38 @@ struct kit_Queue;
 
 /**
  * Creates a new instance of kit_Queue using DoublyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Queue or Option_None.
+ * @return A new instance of kit_Queue or MutableOption_None.
  */
-extern Optional(struct kit_Queue *)
+extern MutableOptional(struct kit_Queue *)
 kit_Queue_fromDoublyList(void);
 
 /**
  * Creates a new instance of kit_Queue using SinglyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Queue or Option_None.
+ * @return A new instance of kit_Queue or MutableOption_None.
  */
-extern Optional(struct kit_Queue *)
+extern MutableOptional(struct kit_Queue *)
 kit_Queue_fromSinglyList(void);
 
 /**
  * Creates a new instance of kit_Queue using XorList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Queue or Option_None.
+ * @return A new instance of kit_Queue or MutableOption_None.
  */
-extern Optional(struct kit_Queue *)
+extern MutableOptional(struct kit_Queue *)
 kit_Queue_fromXorList(void);
 
 /**
  * Creates a new instance of kit_Queue using Vector as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Queue or Option_None.
+ * @return A new instance of kit_Queue or MutableOption_None.
  */
-extern Optional(struct kit_Queue *)
+extern MutableOptional(struct kit_Queue *)
 kit_Queue_fromVector(void);
 
 /**

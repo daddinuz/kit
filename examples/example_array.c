@@ -14,7 +14,7 @@
  * 
  */
 int main() {
-    struct kit_Array *array = Option_unwrap(kit_Array_from("Hello", " ", "World", "!"));
+    struct kit_Array *array = MutableOption_unwrap(kit_Array_from("Hello", " ", "World", "!"));
     const size_t capacity = kit_Array_capacity(array);
 
     for (size_t index = 0; index < capacity; index++) {

@@ -19,7 +19,7 @@ struct kit_SinglyList_Node {
     struct kit_SinglyList_Node *next;
 };
 
-static Option
+static MutableOption
 kit_SinglyList_Node_new(void *e);
 
 static void *
@@ -45,7 +45,7 @@ struct kit_SinglyList {
     struct kit_SinglyList_Node *back;
 };
 
-Option kit_SinglyList_new(void) {
+MutableOption kit_SinglyList_new(void) {
     struct kit_SinglyList *self;
     return kit_Allocator_calloc(1, sizeof(*self));
 }
@@ -74,14 +74,14 @@ void kit_SinglyList_delete(struct kit_SinglyList *self) {
 
 enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, const size_t index) {
     assert(self);
-    Option optionNode;
+    MutableOption optionNode;
     struct kit_SinglyList_Node *newNode;
     enum kit_Result result = KIT_RESULT_OK;
 
     if (index == 0) {                           /* insert front */
         optionNode = kit_SinglyList_Node_new(e);
-        if (Option_isSome(optionNode)) {
-            newNode = Option_unwrap(optionNode);
+        if (MutableOption_isSome(optionNode)) {
+            newNode = MutableOption_unwrap(optionNode);
             if (self->front) {                  /* non-empty list */
                 struct kit_SinglyList_Node *oldFront = self->front;
                 self->front = newNode;
@@ -94,8 +94,8 @@ enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, cons
         }
     } else if (index == self->size) {           /* insert back */
         optionNode = kit_SinglyList_Node_new(e);
-        if (Option_isSome(optionNode)) {
-            newNode = Option_unwrap(optionNode);
+        if (MutableOption_isSome(optionNode)) {
+            newNode = MutableOption_unwrap(optionNode);
             if (self->back) {                   /* non-empty list */
                 self->back->next = newNode;
                 self->back = newNode;
@@ -110,8 +110,8 @@ enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, cons
         result = kit_SinglyList_Node_Pair_fetch(self, &pair, index);  /* may return: KIT_RESULT_OUT_OF_RANGE */
         if (KIT_RESULT_OK == result) {
             optionNode = kit_SinglyList_Node_new(e);
-            if (Option_isSome(optionNode)) {
-                newNode = Option_unwrap(optionNode);
+            if (MutableOption_isSome(optionNode)) {
+                newNode = MutableOption_unwrap(optionNode);
                 newNode->next = pair.base;
                 pair.prev->next = newNode;
             } else {
@@ -229,13 +229,13 @@ struct kit_SinglyList_Iterator {
     struct kit_SinglyList_Node *next;
 };
 
-Option kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) {
+MutableOption kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) {
     assert(container);
     struct kit_SinglyList_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         self->container = container;
         kit_SinglyList_Iterator_rewindToBegin(self);
     }
@@ -300,12 +300,12 @@ bool kit_SinglyList_Iterator_isModified(struct kit_SinglyList_Iterator *self) {
 /*
  * Private implementations
  */
-Option kit_SinglyList_Node_new(void *e) {
+MutableOption kit_SinglyList_Node_new(void *e) {
     struct kit_SinglyList_Node *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         self->element = e;
     }
 

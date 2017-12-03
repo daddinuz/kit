@@ -33,29 +33,29 @@ struct kit_List;
 
 /**
  * Creates a new instance of kit_List using DoublyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_List or Option_None.
+ * @return A new instance of kit_List or MutableOption_None.
  */
-extern Optional(struct kit_List *)
+extern MutableOptional(struct kit_List *)
 kit_List_fromDoublyList(void);
 
 /**
  * Creates a new instance of kit_List using XorList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_List or Option_None.
+ * @return A new instance of kit_List or MutableOption_None.
  */
-extern Optional(struct kit_List *)
+extern MutableOptional(struct kit_List *)
 kit_List_fromXorList(void);
 
 /**
  * Creates a new instance of kit_List using Vector as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_List or Option_None.
+ * @return A new instance of kit_List or MutableOption_None.
  */
-extern Optional(struct kit_List *)
+extern MutableOptional(struct kit_List *)
 kit_List_fromVector(size_t capacityHint);
 
 /**
@@ -329,7 +329,7 @@ struct kit_List_Iterator;
 
 /**
  * Creates a new instance of kit_List_Iterator.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
@@ -337,37 +337,37 @@ struct kit_List_Iterator;
  *
  * @param container The instance of the container to iterate.
  * @param bound The start bound.
- * @return A new instance of kit_List_Iterator or Option_None.
+ * @return A new instance of kit_List_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_List_Iterator *)
+extern MutableOptional(struct kit_List_Iterator *)
 kit_List_Iterator_new(struct kit_List *container, enum kit_Bound bound)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_List_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_List_Iterator or Option_None.
+ * @return A new instance of kit_List_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_List_Iterator *)
+extern MutableOptional(struct kit_List_Iterator *)
 kit_List_Iterator_fromBegin(struct kit_List *container)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_List_Iterator from end of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_List_Iterator or Option_None.
+ * @return A new instance of kit_List_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_List_Iterator *)
+extern MutableOptional(struct kit_List_Iterator *)
 kit_List_Iterator_fromEnd(struct kit_List *container)
 __attribute__((__nonnull__));
 

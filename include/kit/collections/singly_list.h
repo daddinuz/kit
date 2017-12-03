@@ -33,11 +33,11 @@ struct kit_SinglyList;
 
 /**
  * Creates a new instance of kit_SinglyList.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_SinglyList or Option_None.
+ * @return A new instance of kit_SinglyList or MutableOption_None.
  */
-extern Optional(struct kit_SinglyList *)
+extern MutableOptional(struct kit_SinglyList *)
 kit_SinglyList_new(void);
 
 /**
@@ -265,15 +265,15 @@ struct kit_SinglyList_Iterator;
 
 /**
  * Creates a new instance of kit_SinglyList_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_SinglyList_Iterator or Option_None.
+ * @return A new instance of kit_SinglyList_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_SinglyList_Iterator *)
+extern MutableOptional(struct kit_SinglyList_Iterator *)
 kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container)
 __attribute__((__nonnull__));
 

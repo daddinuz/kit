@@ -35,11 +35,11 @@ struct kit_DoublyList;
 
 /**
  * Creates a new instance of kit_DoublyList.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_DoublyList or Option_None.
+ * @return A new instance of kit_DoublyList or MutableOption_None.
  */
-extern Optional(struct kit_DoublyList *)
+extern MutableOptional(struct kit_DoublyList *)
 kit_DoublyList_new(void);
 
 /**
@@ -267,7 +267,7 @@ struct kit_DoublyList_Iterator;
 
 /**
  * Creates a new instance of kit_DoublyList_Iterator.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
@@ -275,37 +275,37 @@ struct kit_DoublyList_Iterator;
  *
  * @param container The instance of the container to iterate.
  * @param bound The start bound.
- * @return A new instance of kit_DoublyList_Iterator or Option_None.
+ * @return A new instance of kit_DoublyList_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_DoublyList_Iterator *)
+extern MutableOptional(struct kit_DoublyList_Iterator *)
 kit_DoublyList_Iterator_new(struct kit_DoublyList *container, enum kit_Bound bound)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_DoublyList_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_DoublyList_Iterator or Option_None.
+ * @return A new instance of kit_DoublyList_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_DoublyList_Iterator *)
+extern MutableOptional(struct kit_DoublyList_Iterator *)
 kit_DoublyList_Iterator_fromBegin(struct kit_DoublyList *container)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_DoublyList_Iterator from end of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_DoublyList_Iterator or Option_None.
+ * @return A new instance of kit_DoublyList_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_DoublyList_Iterator *)
+extern MutableOptional(struct kit_DoublyList_Iterator *)
 kit_DoublyList_Iterator_fromEnd(struct kit_DoublyList *container)
 __attribute__((__nonnull__));
 

@@ -31,38 +31,38 @@ struct kit_Stack;
 
 /**
  * Creates a new instance of kit_Stack using DoublyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Stack or Option_None.
+ * @return A new instance of kit_Stack or MutableOption_None.
  */
-extern Optional(struct kit_Stack *)
+extern MutableOptional(struct kit_Stack *)
 kit_Stack_fromDoublyList(void);
 
 /**
  * Creates a new instance of kit_Stack using SinglyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Stack or Option_None.
+ * @return A new instance of kit_Stack or MutableOption_None.
  */
-extern Optional(struct kit_Stack *)
+extern MutableOptional(struct kit_Stack *)
 kit_Stack_fromSinglyList(void);
 
 /**
  * Creates a new instance of kit_Stack using XorList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Stack or Option_None.
+ * @return A new instance of kit_Stack or MutableOption_None.
  */
-extern Optional(struct kit_Stack *)
+extern MutableOptional(struct kit_Stack *)
 kit_Stack_fromXorList(void);
 
 /**
  * Creates a new instance of kit_Stack using Vector as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Stack or Option_None.
+ * @return A new instance of kit_Stack or MutableOption_None.
  */
-extern Optional(struct kit_Stack *)
+extern MutableOptional(struct kit_Stack *)
 kit_Stack_fromVector(void);
 
 /**

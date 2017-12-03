@@ -153,16 +153,16 @@ setup_sequence_helper(enum kit_SequenceType type, const char *const seeds[], con
 
     switch (type) {
         case KIT_SEQUENCE_TYPE_DOUBLY_LIST:
-            sut = Option_unwrap(kit_Sequence_fromDoublyList());
+            sut = MutableOption_unwrap(kit_Sequence_fromDoublyList());
             break;
         case KIT_SEQUENCE_TYPE_SINGLY_LIST:
-            sut = Option_unwrap(kit_Sequence_fromSinglyList());
+            sut = MutableOption_unwrap(kit_Sequence_fromSinglyList());
             break;
         case KIT_SEQUENCE_TYPE_XOR_LIST:
-            sut = Option_unwrap(kit_Sequence_fromXorList());
+            sut = MutableOption_unwrap(kit_Sequence_fromXorList());
             break;
         case KIT_SEQUENCE_TYPE_VECTOR:
-            sut = Option_unwrap(kit_Sequence_fromVector(16));
+            sut = MutableOption_unwrap(kit_Sequence_fromVector(16));
             break;
         default:
             traits_assert(false);
@@ -189,7 +189,7 @@ setup_sequence_iterator_helper(enum kit_SequenceType type, const char *const *se
     context->sequence = setup_sequence_helper(type, seeds, seeds_size);
     assert_not_null(context->sequence);
 
-    context->sut = Option_unwrap(kit_Sequence_Iterator_new(context->sequence));
+    context->sut = MutableOption_unwrap(kit_Sequence_Iterator_new(context->sequence));
     assert_not_null(context->sut);
 
     return context;

@@ -16,8 +16,8 @@
  */
 int main() {
     size_t index;
-    struct kit_List *list = Option_unwrap(kit_List_fromVector(16));
-    struct kit_List_Iterator *iterator = Option_unwrap(kit_List_Iterator_fromBegin(list));
+    struct kit_List *list = MutableOption_unwrap(kit_List_fromVector(16));
+    struct kit_List_Iterator *iterator = MutableOption_unwrap(kit_List_Iterator_fromBegin(list));
 
     kit_List_pushBack(list, "World");
     kit_List_pushFront(list, "Hello");

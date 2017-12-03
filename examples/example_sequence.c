@@ -16,8 +16,8 @@
  */
 int main() {
     size_t index;
-    struct kit_Sequence *sequence = Option_unwrap(kit_Sequence_fromSinglyList());
-    struct kit_Sequence_Iterator *iterator = Option_unwrap(kit_Sequence_Iterator_new(sequence));
+    struct kit_Sequence *sequence = MutableOption_unwrap(kit_Sequence_fromSinglyList());
+    struct kit_Sequence_Iterator *iterator = MutableOption_unwrap(kit_Sequence_Iterator_new(sequence));
 
     kit_Sequence_pushBack(sequence, "World");
     kit_Sequence_pushFront(sequence, "Hello");

@@ -14,7 +14,7 @@
  *
  */
 int main() {
-#define _(x)    Option_unwrap((x))
+#define _(x)    MutableOption_unwrap((x))
 
     kit_Atom literal = _(kit_Atom_fromLiteral("Hello World!"));
     kit_Atom integer = _(kit_Atom_fromInteger(-865765909809282));
