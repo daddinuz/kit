@@ -14,6 +14,8 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include <option/option.h>
+#include <kit/compiler_steroids.h>
 #include <kit/collections/map.h>
 #include <kit/collections/atom.h>
 #include <kit/collections/text.h>
@@ -23,34 +25,45 @@ extern "C" {
 /**
  * kit_HttpRequest interface.
  */
-extern struct kit_HttpRequest;
+struct kit_HttpRequest;
 
 extern enum kit_HttpMethod
-kit_HttpRequest_getMethod(const struct kit_HttpRequest *self);
+kit_HttpRequest_getMethod(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
 extern kit_Atom
-kit_HttpRequest_getUrl(const struct kit_HttpRequest *self);
+kit_HttpRequest_getUrl(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
 extern const struct kit_Map *
-kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self);
+kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
-extern const struct kit_Text *
-kit_HttpRequest_getBody(const struct kit_HttpRequest *self);
+extern ImmutableOptional(const struct kit_Text *)
+kit_HttpRequest_getBody(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
 extern long
-kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self);
+kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
 extern bool
-kit_HttpRequest_getFollowLocation(const struct kit_HttpRequest *self);
+kit_HttpRequest_getFollowLocation(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
 extern bool
-kit_HttpRequest_getPeerVerification(const struct kit_HttpRequest *self);
+kit_HttpRequest_getPeerVerification(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
 extern bool
-kit_HttpRequest_getHostVerification(const struct kit_HttpRequest *self);
+kit_HttpRequest_getHostVerification(const struct kit_HttpRequest *self)
+__attribute__((__nonnull__));
 
-extern const struct kit_HttpResponse *
-kit_HttpRequest_fire(const struct kit_HttpRequest *self);
+// TODO
+// moves ownership invalidating ref.
+extern ImmutableOptional(const struct kit_HttpResponse *)
+kit_HttpRequest_fire(const struct kit_HttpRequest **ref)
+__attribute__((__nonnull__));
 
 extern void
 kit_HttpRequest_delete(const struct kit_HttpRequest *self);
@@ -58,37 +71,40 @@ kit_HttpRequest_delete(const struct kit_HttpRequest *self);
 /**
  * kit_HttpRequestBuilder interface.
  */
-extern struct kit_HttpRequestBuilder;
+struct kit_HttpRequestBuilder;
+
+extern MutableOptional(struct kit_HttpRequestBuilder *)
+kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url)
+__attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url);
+kit_HttpRequestBuilder_putHeader(struct kit_HttpRequestBuilder *self, kit_Atom key, kit_Atom value)
+__attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setMethod(struct kit_HttpRequestBuilder *self, enum kit_HttpMethod method);
+kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, const struct kit_Text *body)
+__attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setUrl(struct kit_HttpRequestBuilder *self, kit_Atom url);
+kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, long timeout)
+__attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, const struct kit_Map *headers);
+kit_HttpRequestBuilder_setFollowLocation(struct kit_HttpRequestBuilder *self, bool followLocation)
+__attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, const struct kit_Text *body);
+kit_HttpRequestBuilder_setPeerVerification(struct kit_HttpRequestBuilder *self, bool peerVerification)
+__attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, long timeout);
+kit_HttpRequestBuilder_setHostVerification(struct kit_HttpRequestBuilder *self, bool hostVerification)
+__attribute__((__nonnull__));
 
-extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setFollowLocation(struct kit_HttpRequestBuilder *self, bool followLocation);
-
-extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setPeerVerification(struct kit_HttpRequestBuilder *self, bool peerVerification);
-
-extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setHostVerification(struct kit_HttpRequestBuilder *self, bool hostVerification);
-
-extern const struct kit_HttpRequest *
-kit_HttpRequestBuilder_build(struct kit_HttpRequestBuilder *self);
+// moves ownership invalidating ref.
+extern ImmutableOptional(const struct kit_HttpRequest *)
+kit_HttpRequestBuilder_build(struct kit_HttpRequestBuilder **ref)
+__attribute__((__nonnull__));
 
 extern void
 kit_HttpRequestBuilder_delete(struct kit_HttpRequestBuilder *self);

@@ -18,7 +18,7 @@ extern "C" {
 /**
  * kit_Text interface.
  */
-extern struct kit_Text;
+struct kit_Text;
 
 #ifdef __cplusplus
 }

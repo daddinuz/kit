@@ -86,6 +86,19 @@ kit_invalidate(void **ref, void (*destructor)())
 __attribute__((__nonnull__));
 
 /**
+ * Moves ownership invalidating ref.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL.
+ *
+ * @param ref The reference to the pointer to be destructed.
+ * @return data to be moved.
+ */
+extern void *
+kit_move(void **ref)
+__attribute__((__nonnull__));
+
+/**
  * This function should be treated as an helper when initializing collections that needs a comparator function.
  * Internally this function performs a raw pointers comparison so should be used only to compare atom instances.  
  * 

@@ -55,6 +55,13 @@ void kit_invalidate(void **ref, void (*destructor)()) {
     *ref = NULL;
 }
 
+void *kit_move(void **ref) {
+    assert(ref);
+    void *data = *ref;
+    *ref = NULL;
+    return data;
+}
+
 int kit_compareFn(const void *a, const void *b) {
     assert(a);
     assert(b);
