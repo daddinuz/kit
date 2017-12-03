@@ -30,7 +30,7 @@ extern "C" {
 /**
  * kit_Atom interface.
  */
-typedef const char *kit_Atom;
+typedef const char kit_Atom;
 
 /**
  * Gets the kit_Atom instance or creates if not exists from a pointer
@@ -48,7 +48,7 @@ typedef const char *kit_Atom;
  * @param length The length of the sequence.
  * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern MutableOptional(kit_Atom)
+extern ImmutableOptional(kit_Atom *)
 kit_Atom_put(const char *s, size_t length)
 __attribute__((__nonnull__));
 
@@ -61,7 +61,7 @@ __attribute__((__nonnull__));
  * @param s The string literal to be converted.
  * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern MutableOptional(kit_Atom)
+extern ImmutableOptional(kit_Atom *)
 kit_Atom_fromLiteral(const char *s)
 __attribute__((__nonnull__));
 
@@ -74,7 +74,7 @@ __attribute__((__nonnull__));
  * @param n The integer number to be converted.
  * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern MutableOptional(kit_Atom)
+extern ImmutableOptional(kit_Atom *)
 kit_Atom_fromInteger(long long n);
 
 /**
@@ -86,7 +86,7 @@ kit_Atom_fromInteger(long long n);
  * @param n The floating number to be converted.
  * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern MutableOptional(kit_Atom)
+extern ImmutableOptional(kit_Atom *)
 kit_Atom_fromFloating(long double n);
 
 /**
@@ -99,7 +99,7 @@ kit_Atom_fromFloating(long double n);
  * @return The length of the atom.
  */
 extern size_t
-kit_Atom_length(kit_Atom atom)
+kit_Atom_length(kit_Atom *atom)
 __attribute__((__nonnull__));
 
 #ifdef __cplusplus

@@ -22,14 +22,14 @@ struct kit_Atom_Node {
     size_t hash;
     size_t length;
     struct kit_Atom_Node *next;
-    char *atom;
+    kit_Atom *atom;
 };
 
-static MutableOption
+static ImmutableOption
 kit_Atom_table_put(const char *s, size_t length, size_t hash)
 __attribute__((__nonnull__));
 
-static MutableOption
+static ImmutableOption
 kit_Atom_table_fetch(const char *s, size_t length, size_t hash)
 __attribute__((__nonnull__));
 
@@ -37,7 +37,7 @@ static void
 kit_Atom_table_clear(void);
 
 static void
-kit_Atom_assertValidInstance(kit_Atom atom);
+kit_Atom_assertValidInstance(kit_Atom *atom);
 
 static size_t
 kit_Atom_hash(const char *s, size_t length)
@@ -49,24 +49,24 @@ static struct kit_Atom_Node *atomsTable[KIT_ATOM_NODE_TABLE_SIZE] = {0};
 /*
  * Public
  */
-MutableOption kit_Atom_put(const char *const s, const size_t length) {
+ImmutableOption kit_Atom_put(const char *const s, const size_t length) {
     assert(s);
-    MutableOption nodeMutableOption = kit_Atom_table_put(s, length, kit_Atom_hash(s, length));
+    ImmutableOption nodeOption = kit_Atom_table_put(s, length, kit_Atom_hash(s, length));
 
-    if (MutableOption_isSome(nodeMutableOption)) {
-        struct kit_Atom_Node *node = MutableOption_unwrap(nodeMutableOption);
-        return MutableOption_new(node->atom);
+    if (ImmutableOption_isSome(nodeOption)) {
+        const struct kit_Atom_Node *node = ImmutableOption_unwrap(nodeOption);
+        return ImmutableOption_new((void *) node->atom);
     } else {
-        return MutableOption_None;
+        return ImmutableOption_None;
     }
 }
 
-MutableOption kit_Atom_fromLiteral(const char *const s) {
+ImmutableOption kit_Atom_fromLiteral(const char *const s) {
     assert(s);
     return kit_Atom_put(s, strlen(s));
 }
 
-MutableOption kit_Atom_fromInteger(long long n) {
+ImmutableOption kit_Atom_fromInteger(long long n) {
     char buffer[32] = {0};
     const size_t bufferSize = sizeof(buffer) / sizeof(buffer[0]);
     const int length = snprintf(buffer, bufferSize, "%lld", n);
@@ -74,7 +74,7 @@ MutableOption kit_Atom_fromInteger(long long n) {
     return kit_Atom_put(buffer, (size_t) length);
 }
 
-MutableOption kit_Atom_fromFloating(long double n) {
+ImmutableOption kit_Atom_fromFloating(long double n) {
     char buffer[32] = {0};
     const size_t bufferSize = sizeof(buffer) / sizeof(buffer[0]);
     const int length = snprintf(buffer, bufferSize, "%Lf", n);
@@ -82,7 +82,7 @@ MutableOption kit_Atom_fromFloating(long double n) {
     return kit_Atom_put(buffer, (size_t) length);
 }
 
-size_t kit_Atom_length(kit_Atom atom) {
+size_t kit_Atom_length(kit_Atom *atom) {
     assert(atom);
     kit_Atom_assertValidInstance(atom);
     struct kit_Atom_Node *node = ((struct kit_Atom_Node *) atom) - 1;
@@ -92,26 +92,27 @@ size_t kit_Atom_length(kit_Atom atom) {
 /*
  * Private implementations
  */
-MutableOption kit_Atom_table_put(const char *const s, const size_t length, const size_t hash) {
+ImmutableOption kit_Atom_table_put(const char *const s, const size_t length, const size_t hash) {
     assert(s);
-    MutableOption nodeMutableOption = kit_Atom_table_fetch(s, length, hash);
+    MutableOption mutableOption;
+    ImmutableOption nodeOption = kit_Atom_table_fetch(s, length, hash);
 
-    if (MutableOption_isNone(nodeMutableOption)) {
-        struct kit_Atom_Node *node;
+    if (ImmutableOption_isNone(nodeOption)) {
+        struct kit_Atom_Node *node = NULL;
         const size_t index = hash % KIT_ATOM_NODE_TABLE_SIZE;
-        nodeMutableOption = kit_Allocator_malloc(sizeof(*node) + length + 1);
-        if (MutableOption_isSome(nodeMutableOption)) {
-            node = MutableOption_unwrap(nodeMutableOption);
+        mutableOption = kit_Allocator_calloc(1, sizeof(*node) + length + 1);
+        if (MutableOption_isSome(mutableOption)) {
+            node = MutableOption_unwrap(mutableOption);
             /* construct node */
             node->hash = hash;
             node->length = length;
             node->atom = (char *) (node + 1);
             kit_Allocator_copy((void *) node->atom, s, length);
-            node->atom[length] = '\0';
             /* add to table */
             node->next = atomsTable[index];
             atomsTable[index] = node;
         }
+        nodeOption = ImmutableOption_new(node);
     }
 
     if (!clearCallbackRegistered) {
@@ -119,13 +120,13 @@ MutableOption kit_Atom_table_put(const char *const s, const size_t length, const
         clearCallbackRegistered = true;
     }
 
-    return nodeMutableOption;
+    return nodeOption;
 }
 
-MutableOption kit_Atom_table_fetch(const char *const s, const size_t length, const size_t hash) {
+ImmutableOption kit_Atom_table_fetch(const char *const s, const size_t length, const size_t hash) {
     assert(s);
     const size_t index = hash % KIT_ATOM_NODE_TABLE_SIZE;
-    MutableOption node = MutableOption_None;
+    ImmutableOption node = ImmutableOption_None;
 
     for (struct kit_Atom_Node *current = atomsTable[index]; current; current = current->next) {
         if (length == current->length) {
@@ -134,7 +135,7 @@ MutableOption kit_Atom_table_fetch(const char *const s, const size_t length, con
                 i++;
             }
             if (length == i) {
-                node = MutableOption_new(current);
+                node = ImmutableOption_new(current);
                 break;
             }
         }
@@ -155,12 +156,12 @@ void kit_Atom_table_clear(void) {
     }
 }
 
-void kit_Atom_assertValidInstance(kit_Atom atom) {
+void kit_Atom_assertValidInstance(kit_Atom *atom) {
     assert(atom);
     (void) atom;
 #ifndef NDEBUG
     struct kit_Atom_Node *node = ((struct kit_Atom_Node *) atom) - 1;
-    MutableOption_expect(kit_Atom_table_fetch(node->atom, node->length, node->hash), "Expected a valid atom instance.");
+    ImmutableOption_expect(kit_Atom_table_fetch(node->atom, node->length, node->hash), "Expected a valid atom instance.");
 #endif
 }
 
