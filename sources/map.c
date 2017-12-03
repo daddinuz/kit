@@ -61,6 +61,7 @@ kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *, const void 
             self->fnIsEmpty = (kit_Map_Super_isEmptyFn) kit_HashMap_isEmpty;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 

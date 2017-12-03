@@ -108,6 +108,7 @@ MutableOption kit_Sequence_fromDoublyList(void) {
             self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Sequence_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -144,6 +145,7 @@ MutableOption kit_Sequence_fromSinglyList(void) {
             self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Sequence_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -180,6 +182,7 @@ MutableOption kit_Sequence_fromXorList(void) {
             self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Sequence_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -215,6 +218,7 @@ MutableOption kit_Sequence_fromVector(size_t capacityHint) {
             self->fnShrink = (kit_Sequence_Super_shrinkFn) kit_Vector_shrink;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -351,6 +355,7 @@ static MutableOption kit_Sequence_Iterator_fromDoublyList(struct kit_DoublyList 
             self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_DoublyList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -374,6 +379,7 @@ static MutableOption kit_Sequence_Iterator_fromSinglyList(struct kit_SinglyList 
             self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_SinglyList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -397,6 +403,7 @@ static MutableOption kit_Sequence_Iterator_fromXorList(struct kit_XorList *conta
             self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_XorList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -420,6 +427,7 @@ static MutableOption kit_Sequence_Iterator_fromVector(struct kit_Vector *contain
             self->fnIsModified = (kit_Sequence_Iterator_Super_isModifiedFn) kit_Vector_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 

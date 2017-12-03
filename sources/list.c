@@ -106,6 +106,7 @@ MutableOption kit_List_fromDoublyList(void) {
             self->fnShrink = (kit_List_Super_shrinkFn) kit_List_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -142,6 +143,7 @@ MutableOption kit_List_fromXorList(void) {
             self->fnShrink = (kit_List_Super_shrinkFn) kit_List_Super_shrinkNoOp;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -177,6 +179,7 @@ MutableOption kit_List_fromVector(size_t capacityHint) {
             self->fnShrink = (kit_List_Super_shrinkFn) kit_Vector_shrink;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -322,6 +325,7 @@ static MutableOption kit_List_Iterator_fromDoublyList(struct kit_DoublyList *con
             self->fnIsModified = (kit_List_Iterator_Super_isModifiedFn) kit_DoublyList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -348,6 +352,7 @@ static MutableOption kit_List_Iterator_fromXorList(struct kit_XorList *container
             self->fnIsModified = (kit_List_Iterator_Super_isModifiedFn) kit_XorList_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
@@ -374,6 +379,7 @@ static MutableOption kit_List_Iterator_fromVector(struct kit_Vector *container, 
             self->fnIsModified = (kit_List_Iterator_Super_isModifiedFn) kit_Vector_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 

@@ -45,6 +45,7 @@ MutableOption kit_Vector_from(const size_t capacityHint) {
             self->capacity = capacity;
         } else {
             kit_Allocator_free(self);
+            selfOption = MutableOption_None;
         }
     }
 
