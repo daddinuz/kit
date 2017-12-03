@@ -40,17 +40,17 @@ struct kit_Map {
     kit_Map_Super_isEmptyFn fnIsEmpty;
 };
 
-Option
+MutableOption
 kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
     struct kit_Map *self;
-    Option selfOption = kit_Allocator_malloc(sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_malloc(sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_HashMap_new(capacityHint, compareFn, hashFn);
-        if (Option_isSome(superOption)) {
+        if (MutableOption_isSome(superOption)) {
             self->trait = KIT_MAP_TRAIT_HASH_MAP;
-            self->super = Option_unwrap(superOption);
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Map_Super_deleteFn) kit_HashMap_delete;
             self->fnPut = (kit_Map_Super_putFn) kit_HashMap_put;
             self->fnGet = (kit_Map_Super_getFn) kit_HashMap_get;

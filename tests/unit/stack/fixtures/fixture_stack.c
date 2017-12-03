@@ -93,16 +93,16 @@ struct kit_Stack *setup_helper(enum kit_StackType type, const char *const seeds[
 
     switch (type) {
         case KIT_STACK_TYPE_DOUBLY_LIST:
-            sut = Option_unwrap(kit_Stack_fromDoublyList());
+            sut = MutableOption_unwrap(kit_Stack_fromDoublyList());
             break;
         case KIT_STACK_TYPE_SINGLY_LIST:
-            sut = Option_unwrap(kit_Stack_fromSinglyList());
+            sut = MutableOption_unwrap(kit_Stack_fromSinglyList());
             break;
         case KIT_STACK_TYPE_XOR_LIST:
-            sut = Option_unwrap(kit_Stack_fromXorList());
+            sut = MutableOption_unwrap(kit_Stack_fromXorList());
             break;
         case KIT_STACK_TYPE_VECTOR:
-            sut = Option_unwrap(kit_Stack_fromVector());
+            sut = MutableOption_unwrap(kit_Stack_fromVector());
             break;
         default:
             traits_assert(false);

@@ -38,11 +38,11 @@ struct kit_XorList;
 
 /**
  * Creates a new instance of kit_XorList.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_XorList or Option_None.
+ * @return A new instance of kit_XorList or MutableOption_None.
  */
-extern Optional(struct kit_XorList *)
+extern MutableOptional(struct kit_XorList *)
 kit_XorList_new(void);
 
 /**
@@ -270,7 +270,7 @@ struct kit_XorList_Iterator;
 
 /**
  * Creates a new instance of kit_XorList_Iterator.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
@@ -278,37 +278,37 @@ struct kit_XorList_Iterator;
  *
  * @param container The instance of the container to iterate.
  * @param bound The start bound.
- * @return A new instance of kit_XorList_Iterator or Option_None.
+ * @return A new instance of kit_XorList_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_XorList_Iterator *)
+extern MutableOptional(struct kit_XorList_Iterator *)
 kit_XorList_Iterator_new(struct kit_XorList *container, enum kit_Bound bound)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_XorList_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_XorList_Iterator or Option_None.
+ * @return A new instance of kit_XorList_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_XorList_Iterator *)
+extern MutableOptional(struct kit_XorList_Iterator *)
 kit_XorList_Iterator_fromBegin(struct kit_XorList *container)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_XorList_Iterator from end of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_XorList_Iterator or Option_None.
+ * @return A new instance of kit_XorList_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_XorList_Iterator *)
+extern MutableOptional(struct kit_XorList_Iterator *)
 kit_XorList_Iterator_fromEnd(struct kit_XorList *container)
 __attribute__((__nonnull__));
 

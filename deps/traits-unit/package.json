@@ -1,7 +1,7 @@
 {
   "name": "traits-unit",
   "repo": "daddinuz/traits-unit",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "description": "Unittest framework written in C99.",
   "keywords": [
@@ -17,8 +17,8 @@
     "daddinuz/traits": "2.1.0"
   },
   "src": [
-    "src/traits-unit.h",
-    "src/traits-unit.c"
+    "sources/traits-unit.c",
+    "sources/traits-unit.h"
   ],
   "makefile": "traits-unit.cmake"
 }

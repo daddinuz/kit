@@ -15,7 +15,7 @@ FeatureDefine(SequenceIteratorFromEmptySequenceBoundaries) {
     void *e;
     struct kit_Sequence *sequence = traits_context;
     assert_not_null(sequence);
-    struct kit_Sequence_Iterator *sut = Option_unwrap(kit_Sequence_Iterator_new(sequence));
+    struct kit_Sequence_Iterator *sut = MutableOption_unwrap(kit_Sequence_Iterator_new(sequence));
 
     e = NULL;
     assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Sequence_Iterator_next(sut, &e));
@@ -28,7 +28,7 @@ FeatureDefine(SequenceIteratorFromSeededSequenceBoundaries) {
     void *e;
     struct kit_Sequence *sequence = traits_context;
     assert_not_null(sequence);
-    struct kit_Sequence_Iterator *sut = Option_unwrap(kit_Sequence_Iterator_new(sequence));
+    struct kit_Sequence_Iterator *sut = MutableOption_unwrap(kit_Sequence_Iterator_new(sequence));
 
     assert_equal(KIT_RESULT_ILLEGAL_STATE_ERROR, kit_Sequence_Iterator_setLast(sut, "x"));
     e = NULL;

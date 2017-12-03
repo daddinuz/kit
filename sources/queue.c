@@ -36,15 +36,15 @@ struct kit_Queue {
     kit_Queue_Super_isEmptyFn fnIsEmpty;
 };
 
-Option kit_Queue_fromDoublyList(void) {
+MutableOption kit_Queue_fromDoublyList(void) {
     struct kit_Queue *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_DoublyList_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Queue_Super_deleteFn) kit_DoublyList_delete;
             self->fnPush = (kit_Queue_Super_pushFn) kit_DoublyList_pushBack;
             self->fnPop = (kit_Queue_Super_popFn) kit_DoublyList_popFront;
@@ -60,15 +60,15 @@ Option kit_Queue_fromDoublyList(void) {
     return selfOption;
 }
 
-Option kit_Queue_fromSinglyList(void) {
+MutableOption kit_Queue_fromSinglyList(void) {
     struct kit_Queue *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_SinglyList_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Queue_Super_deleteFn) kit_SinglyList_delete;
             self->fnPush = (kit_Queue_Super_pushFn) kit_SinglyList_pushBack;
             self->fnPop = (kit_Queue_Super_popFn) kit_SinglyList_popFront;
@@ -84,15 +84,15 @@ Option kit_Queue_fromSinglyList(void) {
     return selfOption;
 }
 
-Option kit_Queue_fromXorList(void) {
+MutableOption kit_Queue_fromXorList(void) {
     struct kit_Queue *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_XorList_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Queue_Super_deleteFn) kit_XorList_delete;
             self->fnPush = (kit_Queue_Super_pushFn) kit_XorList_pushBack;
             self->fnPop = (kit_Queue_Super_popFn) kit_XorList_popFront;
@@ -108,15 +108,15 @@ Option kit_Queue_fromXorList(void) {
     return selfOption;
 }
 
-Option kit_Queue_fromVector(void) {
+MutableOption kit_Queue_fromVector(void) {
     struct kit_Queue *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         superOption = kit_Vector_new();
-        if (Option_isSome(superOption)) {
-            self->super = Option_unwrap(superOption);
+        if (MutableOption_isSome(superOption)) {
+            self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Queue_Super_deleteFn) kit_Vector_delete;
             self->fnPush = (kit_Queue_Super_pushFn) kit_Vector_pushBack;
             self->fnPop = (kit_Queue_Super_popFn) kit_Vector_popFront;

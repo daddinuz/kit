@@ -28,20 +28,20 @@ static size_t applyLoadFactor(size_t size) {
     return nextEven(size + (size / 2));
 }
 
-Option kit_Vector_new(void) {
+MutableOption kit_Vector_new(void) {
     return kit_Vector_from(KIT_VECTOR_MINIMUM_SIZE);
 }
 
-Option kit_Vector_from(const size_t capacityHint) {
+MutableOption kit_Vector_from(const size_t capacityHint) {
     struct kit_Vector *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), rawOption;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), rawMutableOption;
     const size_t capacity = (capacityHint > KIT_VECTOR_MINIMUM_SIZE) ? nextEven(capacityHint) : KIT_VECTOR_MINIMUM_SIZE;
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
-        rawOption = kit_Allocator_malloc(capacity * sizeof(*self->raw));
-        if (Option_isSome(rawOption)) {
-            self->raw = Option_unwrap(rawOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
+        rawMutableOption = kit_Allocator_malloc(capacity * sizeof(*self->raw));
+        if (MutableOption_isSome(rawMutableOption)) {
+            self->raw = MutableOption_unwrap(rawMutableOption);
             self->capacity = capacity;
         } else {
             kit_Allocator_free(self);
@@ -71,9 +71,9 @@ enum kit_Result kit_Vector_insert(struct kit_Vector *self, void *e, const size_t
     if (index <= self->size) {
         if (self->size >= self->capacity) {
             const size_t newCapacity = applyLoadFactor(self->size);
-            Option rawOption = kit_Allocator_ralloc(self->raw, newCapacity * sizeof(void *));
-            if (Option_isSome(rawOption)) {
-                self->raw = Option_unwrap(rawOption);
+            MutableOption rawMutableOption = kit_Allocator_ralloc(self->raw, newCapacity * sizeof(void *));
+            if (MutableOption_isSome(rawMutableOption)) {
+                self->raw = MutableOption_unwrap(rawMutableOption);
                 self->capacity = newCapacity;
             } else {
                 result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
@@ -195,9 +195,9 @@ enum kit_Result kit_Vector_reserve(struct kit_Vector *self, const size_t size) {
 
     if (size > self->capacity) {
         const size_t newCapacity = nextEven(size);
-        Option rawOption = kit_Allocator_ralloc(self->raw, newCapacity * sizeof(void *));
-        if (Option_isSome(rawOption)) {
-            self->raw = Option_unwrap(rawOption);
+        MutableOption rawMutableOption = kit_Allocator_ralloc(self->raw, newCapacity * sizeof(void *));
+        if (MutableOption_isSome(rawMutableOption)) {
+            self->raw = MutableOption_unwrap(rawMutableOption);
             self->capacity = newCapacity;
         } else {
             result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
@@ -211,10 +211,10 @@ enum kit_Result kit_Vector_shrink(struct kit_Vector *self) {
     assert(self);
     enum kit_Result result = KIT_RESULT_OK;
     const size_t newCapacity = (self->size > KIT_VECTOR_MINIMUM_SIZE) ? nextEven(self->size) : KIT_VECTOR_MINIMUM_SIZE;
-    Option rawOption = kit_Allocator_ralloc(self->raw, newCapacity * sizeof(void *));
+    MutableOption rawMutableOption = kit_Allocator_ralloc(self->raw, newCapacity * sizeof(void *));
 
-    if (Option_isSome(rawOption)) {
-        self->raw = Option_unwrap(rawOption);
+    if (MutableOption_isSome(rawMutableOption)) {
+        self->raw = MutableOption_unwrap(rawMutableOption);
         self->capacity = newCapacity;
     } else {
         result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
@@ -239,14 +239,14 @@ struct kit_Vector_Iterator {
     size_t nextIndex;
 };
 
-Option kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) {
+MutableOption kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) {
     assert(container);
     assert(KIT_BOUND_BEGIN <= bound && bound <= KIT_BOUND_END);
     struct kit_Vector_Iterator *self;
-    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         self->container = container;
         kit_Vector_Iterator_rewind(self, bound);
     }
@@ -254,12 +254,12 @@ Option kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound boun
     return selfOption;
 }
 
-Option kit_Vector_Iterator_fromBegin(struct kit_Vector *container) {
+MutableOption kit_Vector_Iterator_fromBegin(struct kit_Vector *container) {
     assert(container);
     return kit_Vector_Iterator_new(container, KIT_BOUND_BEGIN);
 }
 
-Option kit_Vector_Iterator_fromEnd(struct kit_Vector *container) {
+MutableOption kit_Vector_Iterator_fromEnd(struct kit_Vector *container) {
     assert(container);
     return kit_Vector_Iterator_new(container, KIT_BOUND_END);
 }

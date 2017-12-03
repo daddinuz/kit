@@ -37,17 +37,17 @@ struct kit_Array;
 
 /**
  * Creates a new instance of kit_Array.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * @param capacity The capacity of the array.
- * @return A new instance of kit_Array or Option_None.
+ * @return A new instance of kit_Array or MutableOption_None.
  */
-extern Optional(struct kit_Array *)
+extern MutableOptional(struct kit_Array *)
 kit_Array_new(size_t capacity);
 
 /**
  * Creates a new instance of kit_Array from a fixed sequence of elements.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * WARNING:
  *  This function iterates elements until Ellipsis is hit, so last value in @param pack must be Ellipsis.
@@ -55,16 +55,16 @@ kit_Array_new(size_t capacity);
  *
  * @param e0 The first element.
  * @param ... Other elements.
- * @return A new instance of kit_Array or Option_None.
+ * @return A new instance of kit_Array or MutableOption_None.
  */
-extern Optional(struct kit_Array *)
+extern MutableOptional(struct kit_Array *)
 __kit_Array_from(void *e0, ...);
 
 #define kit_Array_from(...) __kit_Array_from(__VA_ARGS__, Ellipsis)
 
 /**
  * Creates a new instance of kit_Array from arguments pack.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * WARNING:
  *  This function iterates the argument pack until Ellipsis is hit, so last value in @param pack must be Ellipsis.
@@ -74,9 +74,9 @@ __kit_Array_from(void *e0, ...);
  *      - @param pack must not be NULL.
  *
  * @param pack The arguments pack.
- * @return A new instance of kit_Array or Option_None.
+ * @return A new instance of kit_Array or MutableOption_None.
  */
-extern Optional(struct kit_Array *)
+extern MutableOptional(struct kit_Array *)
 kit_Array_fromPack(va_list pack);
 
 /**

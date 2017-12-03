@@ -1,0 +1,22 @@
+{
+  "name": "kit",
+  "version": "0.1.0",
+  "repo": "daddinuz/kit",
+  "description": "C Development Kit",
+  "keywords": [
+    "framework",
+    "containers",
+    "collections",
+    "datastructures",
+    "development-kit"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "daddinuz/option": "0.2.0",
+    "daddinuz/alligator": "0.3.0"
+  },
+  "development": {
+    "daddinuz/traits": "2.1.0",
+    "daddinuz/traits-unit": "1.1.1"
+  }
+}

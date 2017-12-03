@@ -15,7 +15,7 @@ FeatureDefine(ListIteratorFromEmptyListBoundaries) {
     void *e;
     struct kit_List *list = traits_context;
     assert_not_null(list);
-    struct kit_List_Iterator *sut = Option_unwrap(kit_List_Iterator_fromBegin(list));
+    struct kit_List_Iterator *sut = MutableOption_unwrap(kit_List_Iterator_fromBegin(list));
 
     e = NULL;
     assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_List_Iterator_next(sut, &e));
@@ -26,7 +26,7 @@ FeatureDefine(ListIteratorFromEmptyListBoundaries) {
     assert_equal(KIT_RESULT_ILLEGAL_STATE_ERROR, kit_List_Iterator_setLast(sut, "x"));
     kit_List_Iterator_delete(sut);
 
-    sut = Option_unwrap(kit_List_Iterator_fromEnd(list));
+    sut = MutableOption_unwrap(kit_List_Iterator_fromEnd(list));
     e = NULL;
     assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_List_Iterator_next(sut, &e));
     assert_null(e);
@@ -41,7 +41,7 @@ FeatureDefine(ListIteratorFromSeededListBoundaries) {
     void *e;
     struct kit_List *list = traits_context;
     assert_not_null(list);
-    struct kit_List_Iterator *sut = Option_unwrap(kit_List_Iterator_fromBegin(list));
+    struct kit_List_Iterator *sut = MutableOption_unwrap(kit_List_Iterator_fromBegin(list));
 
     assert_equal(KIT_RESULT_ILLEGAL_STATE_ERROR, kit_List_Iterator_setLast(sut, "x"));
     e = NULL;
@@ -52,7 +52,7 @@ FeatureDefine(ListIteratorFromSeededListBoundaries) {
     assert_string_equal(SEEDS[0], e);
     kit_List_Iterator_delete(sut);
 
-    sut = Option_unwrap(kit_List_Iterator_fromEnd(list));
+    sut = MutableOption_unwrap(kit_List_Iterator_fromEnd(list));
     assert_equal(KIT_RESULT_ILLEGAL_STATE_ERROR, kit_List_Iterator_setLast(sut, "x"));
     e = NULL;
     assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_List_Iterator_next(sut, &e));

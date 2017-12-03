@@ -46,9 +46,9 @@ typedef const char *kit_Atom;
  *
  * @param s The sequence of bytes.
  * @param length The length of the sequence.
- * @return An Option containing a kit_Atom instance or Option_None in case of out of memory.
+ * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern Optional(kit_Atom)
+extern MutableOptional(kit_Atom)
 kit_Atom_put(const char *s, size_t length)
 __attribute__((__nonnull__));
 
@@ -59,9 +59,9 @@ __attribute__((__nonnull__));
  *      - @param s must not be NULL.
  *
  * @param s The string literal to be converted.
- * @return An Option containing a kit_Atom instance or Option_None in case of out of memory.
+ * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern Optional(kit_Atom)
+extern MutableOptional(kit_Atom)
 kit_Atom_fromLiteral(const char *s)
 __attribute__((__nonnull__));
 
@@ -72,9 +72,9 @@ __attribute__((__nonnull__));
  *      - @param s must not be NULL.
  *
  * @param n The integer number to be converted.
- * @return An Option containing a kit_Atom instance or Option_None in case of out of memory.
+ * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern Optional(kit_Atom)
+extern MutableOptional(kit_Atom)
 kit_Atom_fromInteger(long long n);
 
 /**
@@ -84,9 +84,9 @@ kit_Atom_fromInteger(long long n);
  *      - @param s must not be NULL.
  *
  * @param n The floating number to be converted.
- * @return An Option containing a kit_Atom instance or Option_None in case of out of memory.
+ * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
  */
-extern Optional(kit_Atom)
+extern MutableOptional(kit_Atom)
 kit_Atom_fromFloating(long double n);
 
 /**

@@ -32,38 +32,38 @@ struct kit_Sequence;
 
 /**
  * Creates a new instance of kit_Sequence using DoublyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Sequence or Option_None.
+ * @return A new instance of kit_Sequence or MutableOption_None.
  */
-extern Optional(struct kit_Sequence *)
+extern MutableOptional(struct kit_Sequence *)
 kit_Sequence_fromDoublyList(void);
 
 /**
  * Creates a new instance of kit_Sequence using SinglyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Sequence or Option_None.
+ * @return A new instance of kit_Sequence or MutableOption_None.
  */
-extern Optional(struct kit_Sequence *)
+extern MutableOptional(struct kit_Sequence *)
 kit_Sequence_fromSinglyList(void);
 
 /**
  * Creates a new instance of kit_Sequence using XorList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Sequence or Option_None.
+ * @return A new instance of kit_Sequence or MutableOption_None.
  */
-extern Optional(struct kit_Sequence *)
+extern MutableOptional(struct kit_Sequence *)
 kit_Sequence_fromXorList(void);
 
 /**
  * Creates a new instance of kit_Sequence using Vector as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Sequence or Option_None.
+ * @return A new instance of kit_Sequence or MutableOption_None.
  */
-extern Optional(struct kit_Sequence *)
+extern MutableOptional(struct kit_Sequence *)
 kit_Sequence_fromVector(size_t capacityHint);
 
 /**
@@ -337,15 +337,15 @@ struct kit_Sequence_Iterator;
 
 /**
  * Creates a new instance of kit_Sequence_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_Sequence_Iterator or Option_None.
+ * @return A new instance of kit_Sequence_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Sequence_Iterator *)
+extern MutableOptional(struct kit_Sequence_Iterator *)
 kit_Sequence_Iterator_new(struct kit_Sequence *container)
 __attribute__((__nonnull__));
 

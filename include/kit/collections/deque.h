@@ -35,47 +35,47 @@ struct kit_Deque;
 
 /**
  * Creates a new instance of kit_Deque using DoublyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Deque or Option_None.
+ * @return A new instance of kit_Deque or MutableOption_None.
  */
-extern Optional(struct kit_Deque *)
+extern MutableOptional(struct kit_Deque *)
 kit_Deque_fromDoublyList(void);
 
 /**
  * Creates a new instance of kit_Deque using SinglyList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Deque or Option_None.
+ * @return A new instance of kit_Deque or MutableOption_None.
  */
-extern Optional(struct kit_Deque *)
+extern MutableOptional(struct kit_Deque *)
 kit_Deque_fromSinglyList(void);
 
 /**
  * Creates a new instance of kit_Deque using XorList as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Deque or Option_None.
+ * @return A new instance of kit_Deque or MutableOption_None.
  */
-extern Optional(struct kit_Deque *)
+extern MutableOptional(struct kit_Deque *)
 kit_Deque_fromXorList(void);
 
 /**
  * Creates a new instance of kit_Deque using Hat as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Deque or Option_None.
+ * @return A new instance of kit_Deque or MutableOption_None.
  */
-extern Optional(struct kit_Deque *)
+extern MutableOptional(struct kit_Deque *)
 kit_Deque_fromHat(size_t capacityHint);
 
 /**
  * Creates a new instance of kit_Deque using Vector as underlying container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @return A new instance of kit_Deque or Option_None.
+ * @return A new instance of kit_Deque or MutableOption_None.
  */
-extern Optional(struct kit_Deque *)
+extern MutableOptional(struct kit_Deque *)
 kit_Deque_fromVector(size_t capacityHint);
 
 /**
@@ -278,7 +278,7 @@ struct kit_Deque_Iterator;
 
 /**
  * Creates a new instance of kit_Deque_Iterator.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
@@ -286,37 +286,37 @@ struct kit_Deque_Iterator;
  *
  * @param container The instance of the container to iterate.
  * @param bound The start bound.
- * @return A new instance of kit_Deque_Iterator or Option_None.
+ * @return A new instance of kit_Deque_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Deque_Iterator *)
+extern MutableOptional(struct kit_Deque_Iterator *)
 kit_Deque_Iterator_new(struct kit_Deque *container, enum kit_Bound bound)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Deque_Iterator from begin of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_Deque_Iterator or Option_None.
+ * @return A new instance of kit_Deque_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Deque_Iterator *)
+extern MutableOptional(struct kit_Deque_Iterator *)
 kit_Deque_Iterator_fromBegin(struct kit_Deque *container)
 __attribute__((__nonnull__));
 
 /**
  * Creates a new instance of kit_Deque_Iterator from end of container.
- * In case of out of memory this function returns Option_None.
+ * In case of out of memory this function returns MutableOption_None.
  *
  * Checked runtime errors:
  *      - @param container must not be NULL.
  *
  * @param container The instance of the container to iterate.
- * @return A new instance of kit_Deque_Iterator or Option_None.
+ * @return A new instance of kit_Deque_Iterator or MutableOption_None.
  */
-extern Optional(struct kit_Deque_Iterator *)
+extern MutableOptional(struct kit_Deque_Iterator *)
 kit_Deque_Iterator_fromEnd(struct kit_Deque *container)
 __attribute__((__nonnull__));
 

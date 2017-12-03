@@ -15,12 +15,12 @@ struct kit_Pair {
     void *second;
 };
 
-Option kit_Pair_new(void *first, void *second) {
+MutableOption kit_Pair_new(void *first, void *second) {
     struct kit_Pair *self;
-    Option selfOption = kit_Allocator_malloc(sizeof(*self));
+    MutableOption selfOption = kit_Allocator_malloc(sizeof(*self));
 
-    if (Option_isSome(selfOption)) {
-        self = Option_unwrap(selfOption);
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
         self->first = first;
         self->second = second;
     }

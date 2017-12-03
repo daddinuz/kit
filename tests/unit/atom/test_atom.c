@@ -37,19 +37,19 @@ FeatureDefine(AtomEssentials) {
         const char *EXPECTED_TEXT = "Hello World!";
         const size_t EXPECTED_LENGTH = strlen(EXPECTED_TEXT);
 
-        kit_Atom atom1 = Option_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH));
-        kit_Atom atom2 = Option_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT));
+        kit_Atom atom1 = MutableOption_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH));
+        kit_Atom atom2 = MutableOption_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT));
 
         assert_equal(EXPECTED_LENGTH, kit_Atom_length(atom1));
-        assert_equal(atom1, Option_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH)));
+        assert_equal(atom1, MutableOption_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH)));
         assert_string_equal(atom1, EXPECTED_TEXT);
 
         assert_equal(EXPECTED_LENGTH, kit_Atom_length(atom2));
-        assert_equal(atom2, Option_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT)));
+        assert_equal(atom2, MutableOption_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT)));
         assert_string_equal(atom2, EXPECTED_TEXT);
 
-        assert_equal(Option_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH)), Option_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT)));
-        assert_string_equal(Option_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH)), Option_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT)));
+        assert_equal(MutableOption_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH)), MutableOption_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT)));
+        assert_string_equal(MutableOption_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH)), MutableOption_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT)));
     }
 
     {
@@ -57,10 +57,10 @@ FeatureDefine(AtomEssentials) {
         const char *EXPECTED_TEXT = "85813541";
         const size_t EXPECTED_LENGTH = strlen(EXPECTED_TEXT);
 
-        kit_Atom atom = Option_unwrap(kit_Atom_fromInteger(SEED));
+        kit_Atom atom = MutableOption_unwrap(kit_Atom_fromInteger(SEED));
 
         assert_equal(EXPECTED_LENGTH, kit_Atom_length(atom));
-        assert_equal(atom, Option_unwrap(kit_Atom_fromInteger(SEED)));
+        assert_equal(atom, MutableOption_unwrap(kit_Atom_fromInteger(SEED)));
         assert_string_equal(atom, EXPECTED_TEXT);
     }
 
@@ -70,10 +70,10 @@ FeatureDefine(AtomEssentials) {
         const size_t EXPECTED_LENGTH = (size_t) snprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), "%Lf", SEED);
         const char *EXPECTED_TEXT = buffer;
 
-        kit_Atom atom = Option_unwrap(kit_Atom_fromFloating(SEED));
+        kit_Atom atom = MutableOption_unwrap(kit_Atom_fromFloating(SEED));
 
         assert_equal(EXPECTED_LENGTH, kit_Atom_length(atom), "%s", atom);
-        assert_equal(atom, Option_unwrap(kit_Atom_fromFloating(SEED)));
+        assert_equal(atom, MutableOption_unwrap(kit_Atom_fromFloating(SEED)));
         assert_string_equal(atom, EXPECTED_TEXT);
     }
 
@@ -81,10 +81,10 @@ FeatureDefine(AtomEssentials) {
         kit_Atom atomsList[SEEDS_SIZE];
 
         for (size_t i = 0; i < SEEDS_SIZE; i++) {
-            atomsList[i] = Option_unwrap(kit_Atom_fromLiteral(SEEDS[i]));
+            atomsList[i] = MutableOption_unwrap(kit_Atom_fromLiteral(SEEDS[i]));
             for (size_t x = 0; x <= i; x++) {
                 assert_equal(strlen(SEEDS[x]), kit_Atom_length(atomsList[x]));
-                assert_equal(atomsList[x], Option_unwrap(kit_Atom_fromLiteral(SEEDS[x])));
+                assert_equal(atomsList[x], MutableOption_unwrap(kit_Atom_fromLiteral(SEEDS[x])));
                 assert_string_equal(atomsList[x], SEEDS[x]);
             }
         }
