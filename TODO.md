@@ -38,7 +38,7 @@
 
 ### Networking
 
-- implement interface of http_method.h
+- ~~implement interface of http_method.h~~
 - implement interface of http_request.h
 - implement interface of http_response.h
-- implement interface of http_status.h
+- ~~implement interface of http_status.h~~

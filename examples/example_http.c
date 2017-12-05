@@ -21,18 +21,25 @@ void printResponse(const struct kit_HttpResponse *response) __attribute__((__non
  *
  */
 int main() {
+    struct kit_Map *requestHeaders;
     const struct kit_HttpRequest *request;
     const struct kit_HttpResponse *response;
-    struct kit_HttpRequestBuilder *builder = M(kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, I(kit_Atom_fromLiteral("https://github.com"))));
+    struct kit_HttpRequestBuilder *requestBuilder;
 
-    kit_HttpRequestBuilder_setTimeout(builder, 60);
-    kit_HttpRequestBuilder_putHeader(builder, I(kit_Atom_fromLiteral("Accept")), I(kit_Atom_fromLiteral("application/json")));    kit_HttpRequestBuilder_putHeader(builder, I(kit_Atom_fromLiteral("Accept")), I(kit_Atom_fromLiteral("application/json")));
+    requestHeaders = M(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
+    kit_Map_put(requestHeaders, I(kit_Atom_fromLiteral("Accept")), (void *) I(kit_Atom_fromLiteral("application/json")));
 
-    request = I(kit_HttpRequestBuilder_build(&builder)); // moves ownership deleting and invalidating builder.
-    assert(NULL == builder);
+    requestBuilder = M(kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, I(kit_Atom_fromLiteral("https://github.com"))));
+    kit_HttpRequestBuilder_setTimeout(requestBuilder, 60);
+    kit_HttpRequestBuilder_setHeaders(requestBuilder, &requestHeaders); // takes ownership invalidating headers
+    assert(NULL == requestHeaders);
+
+    request = kit_HttpRequestBuilder_build(&requestBuilder); // takes ownership deleting and invalidating requestBuilder.
+    assert(NULL == requestBuilder);
     printRequest(request);
 
-    response = I(kit_HttpRequest_fire(&request)); // moves ownership invalidating request.
+    // TODO perform real call
+    response = I(kit_HttpRequest_fire(&request)); // takes ownership invalidating request.
     assert(NULL == request);
     printResponse(response);
 
@@ -47,13 +54,8 @@ void printRequest(const struct kit_HttpRequest *request) {
     printf("url: %s\n", kit_HttpRequest_getUrl(request));
 
     // --- TODO -----------------------------------------------------------
-    void *value;
-    kit_Atom *accept = I(kit_Atom_fromLiteral("Accept"));
-    const struct kit_Map *headers = kit_HttpRequest_getHeaders(request);
-    kit_Map_get((void *) headers, accept, &value);
     printf("headers:\n");
-    printf("\t%s: %s\n", accept, (const char *) value);
-    printf("body: %s\n", ""); // kit_HttpRequest_getBody(request));
+    printf("body:\n");
     // --------------------------------------------------------------------
 
     printf("timeout: %ld\n", kit_HttpRequest_getTimeout(request));
@@ -65,5 +67,14 @@ void printRequest(const struct kit_HttpRequest *request) {
 
 void printResponse(const struct kit_HttpResponse *response) {
     assert(response);
-    // TODO
+    puts("");
+    printf("effective_url: %s\n", kit_HttpResponse_getUrl(response));
+
+    // --- TODO -----------------------------------------------------------
+    printf("headers:\n");
+    printf("body:\n");
+    // --------------------------------------------------------------------
+
+    printf("status: %d (%s)\n", kit_HttpResponse_getStatus(response), kit_HttpStatus_explanin(kit_HttpResponse_getStatus(response)));
+    puts("");
 }

@@ -35,7 +35,7 @@ extern kit_Atom *
 kit_HttpRequest_getUrl(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern const struct kit_Map *
+extern ImmutableOptional(const struct kit_Map *)
 kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
@@ -59,11 +59,14 @@ extern bool
 kit_HttpRequest_getHostVerification(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-// TODO
-// moves ownership invalidating ref.
+// *************************************
+
+// takes ownership
 extern ImmutableOptional(const struct kit_HttpResponse *)
 kit_HttpRequest_fire(const struct kit_HttpRequest **ref)
 __attribute__((__nonnull__));
+
+// *************************************
 
 extern void
 kit_HttpRequest_delete(const struct kit_HttpRequest *self);
@@ -77,13 +80,19 @@ extern MutableOptional(struct kit_HttpRequestBuilder *)
 kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom *url)
 __attribute__((__nonnull__));
 
+// *************************************
+
+// takes ownership
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_putHeader(struct kit_HttpRequestBuilder *self, kit_Atom *key, kit_Atom *value)
+kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, struct kit_Map **ref)
 __attribute__((__nonnull__));
 
+// takes ownership
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, const struct kit_Text *body)
+kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, struct kit_Text **ref)
 __attribute__((__nonnull__));
+
+// *************************************
 
 extern struct kit_HttpRequestBuilder *
 kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, long timeout)
@@ -101,10 +110,14 @@ extern struct kit_HttpRequestBuilder *
 kit_HttpRequestBuilder_setHostVerification(struct kit_HttpRequestBuilder *self, bool hostVerification)
 __attribute__((__nonnull__));
 
-// moves ownership invalidating ref.
-extern ImmutableOptional(const struct kit_HttpRequest *)
+// *************************************
+
+// takes ownership
+extern const struct kit_HttpRequest *
 kit_HttpRequestBuilder_build(struct kit_HttpRequestBuilder **ref)
 __attribute__((__nonnull__));
+
+// *************************************
 
 extern void
 kit_HttpRequestBuilder_delete(struct kit_HttpRequestBuilder *self);
