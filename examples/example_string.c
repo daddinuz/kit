@@ -10,29 +10,23 @@
 #include <kit/collections/string.h>
 
 #define I(x)    ImmutableOption_unwrap((x))
-#define M(x)    MutableOption_unwrap((x))
 
 /*
  *
  */
 int main() {
-    kit_String string = I(kit_String_fromLiteral("Hello World!"));
+    kit_String string = I(kit_String_fromFormat("%s %s! ", "Hello", "World"));
     printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
 
-    string = I(kit_String_appendLiteral(&string, " How Are You?"));
+    string = I(kit_String_appendFormat(&string, "%s %s!", "I'm evil!", "MuahUahUah"));
     printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
 
-    kit_String formatted = I(kit_String_format("%s %s %zu %d", "lorem", "ipsum", 3453534LU, -356));
-    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(formatted), kit_String_capacity(formatted), formatted);
+    string = I(kit_String_setBytes(&string, "abc\"\0\t\n\r\b\a123", 13));
+    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
 
-    formatted = I(kit_String_append(&formatted, string));
-    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(formatted), kit_String_capacity(formatted), formatted);
+    string = I(kit_String_quote(&string));
+    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
 
-    kit_String_clear(formatted);
-    formatted = I(kit_String_shrink(&formatted));
-    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(formatted), kit_String_capacity(formatted), formatted);
-
-    kit_String_delete(formatted);
     kit_String_delete(string);
     return 0;
 }

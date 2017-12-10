@@ -7,13 +7,13 @@
  */
 
 #include <stdio.h>
+#include <ctype.h>
 #include <assert.h>
-#include <string.h>
+#include <memory.h>
 #include <kit/allocator/allocator.h>
 #include <kit/collections/string.h>
 
 #define KIT_STRING_IDENTITY_CODE    ((void *) 0xDEADBEAF)
-#define KIT_STRING_DEFAULT_CAPACITY 126
 
 struct kit_String_Object {
     size_t size;
@@ -60,34 +60,136 @@ ImmutableOption kit_String_new(const size_t capacityHint) {
     return ImmutableOption_None;
 }
 
-ImmutableOption kit_String_format(const char *format, ...) {
+ImmutableOption kit_String_quoted(const void *bytes, const size_t size) {
+    assert(bytes);
+
+    const char *data = bytes;
+    kit_String string = NULL;
+    bool teardownRequired = false;
+    ImmutableOption stringOption = kit_String_new(size + size / 3);
+
+    if (ImmutableOption_isNone(stringOption)) {
+        return ImmutableOption_None;
+    }
+
+    string = ImmutableOption_unwrap(stringOption);
+    /* if we are here we have enough space to perform this operation so no checks are performed */
+    string = ImmutableOption_unwrap(kit_String_setBytes(&string, "\"", 1));
+
+    for (size_t i = 0; i < size && false == teardownRequired; i++) {
+        string = ImmutableOption_unwrap(stringOption);
+        switch (*data) {
+            case '\a': {
+                stringOption = kit_String_appendBytes(&string, "\\a", 2);
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+            case '\b': {
+                stringOption = kit_String_appendBytes(&string, "\\b", 2);
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+            case '\n': {
+                stringOption = kit_String_appendBytes(&string, "\\n", 2);
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+            case '\r': {
+                stringOption = kit_String_appendBytes(&string, "\\r", 2);
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+            case '\t': {
+                stringOption = kit_String_appendBytes(&string, "\\t", 2);
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+            case '\\': {
+                stringOption = kit_String_appendBytes(&string, "\\\\", 2);
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+            case '"': {
+                stringOption = kit_String_appendBytes(&string, "\\\"", 2);
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+            default: {
+                if (isprint(*data)) {
+                    stringOption = kit_String_appendFormat(&string, "%c", *data);
+                } else {
+                    stringOption = kit_String_appendFormat(&string, "\\x%02x", (unsigned char) *data);
+                }
+                if (ImmutableOption_isNone(stringOption)) {
+                    teardownRequired = true;
+                }
+                break;
+            }
+        }
+        data++;
+    }
+
+    if (false == teardownRequired) {
+        assert(NULL == string);
+        assert(ImmutableOption_isSome(stringOption));
+        string = ImmutableOption_unwrap(stringOption);
+        stringOption = kit_String_appendBytes(&string, "\"", 1);
+        if (ImmutableOption_isNone(stringOption)) {
+            teardownRequired = true;
+        }
+    }
+
+    if (teardownRequired) {
+        assert(NULL != string);
+        assert(ImmutableOption_isNone(stringOption));
+        kit_String_delete(string);
+        string = NULL;
+    } else {
+        assert(NULL == string);
+        assert(ImmutableOption_isSome(stringOption));
+        string = ImmutableOption_unwrap(stringOption);
+    }
+
+    return ImmutableOption_new((void *) string);
+}
+
+ImmutableOption kit_String_fromPack(const char *format, va_list pack) {
     assert(format);
+    assert(pack);
 
-    va_list args;
-    va_start(args, format);
-    const int needed = vsnprintf(NULL, 0, format, args);
-    va_end(args);
+    va_list packCopy;
 
-    if (needed >= 0) {
-        const size_t size = (size_t) needed;
-        MutableOption stringObjectOption = kit_String_Object_new(size);
+    va_copy(packCopy, pack);
+    const int FORMATTED_SIZE = vsnprintf(NULL, 0, format, packCopy);
+    va_end(packCopy);
+
+    if (FORMATTED_SIZE >= 0) {
+        const size_t SIZE = (size_t) FORMATTED_SIZE;
+        MutableOption stringObjectOption = kit_String_Object_new(SIZE);
 
         if (MutableOption_isSome(stringObjectOption)) {
             struct kit_String_Object *stringObject = MutableOption_unwrap(stringObjectOption);
-            va_start(args, format);
-            vsnprintf(stringObject->raw, size + 1, format, args);
-            va_end(args);
-            stringObject->size = size;
+            vsnprintf(stringObject->raw, SIZE + 1, format, pack);
+            stringObject->size = SIZE;
             return ImmutableOption_new(stringObject->raw);
         }
     }
 
     return ImmutableOption_None;
-}
-
-ImmutableOption kit_String_fromLiteral(const char *literal) {
-    assert(literal);
-    return kit_String_fromBytes(literal, strlen(literal));
 }
 
 ImmutableOption kit_String_fromBytes(const void *bytes, size_t size) {
@@ -97,7 +199,7 @@ ImmutableOption kit_String_fromBytes(const void *bytes, size_t size) {
     if (MutableOption_isSome(stringObjectOption)) {
         struct kit_String_Object *stringObject = MutableOption_unwrap(stringObjectOption);
         char *raw = stringObject->raw;
-        strncpy(raw, bytes, size);
+        memcpy(raw, bytes, size);
         raw[size] = '\0';
         stringObject->size = size;
         return ImmutableOption_new(raw);
@@ -106,11 +208,42 @@ ImmutableOption kit_String_fromBytes(const void *bytes, size_t size) {
     return ImmutableOption_None;
 }
 
+ImmutableOption kit_String_fromFormat(const char *format, ...) {
+    assert(format);
+
+    va_list pack;
+
+    va_start(pack, format);
+    ImmutableOption result = kit_String_fromPack(format, pack);
+    va_end(pack);
+
+    return result;
+}
+
+ImmutableOption kit_String_fromLiteral(const char *literal) {
+    assert(literal);
+
+    return kit_String_fromBytes(literal, strlen(literal));
+}
+
 ImmutableOption kit_String_duplicate(kit_String s) {
     assert(s);
     kit_String_assertValidInstance(s);
 
     return kit_String_fromBytes(s, kit_String_size(s));
+}
+
+ImmutableOption kit_String_clear(kit_String *ref) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+    stringObject->raw[0] = '\0';
+    stringObject->size = 0;
+
+    *ref = NULL;
+    return ImmutableOption_new(stringObject->raw);
 }
 
 ImmutableOption kit_String_append(kit_String *ref, kit_String other) {
@@ -125,14 +258,34 @@ ImmutableOption kit_String_append(kit_String *ref, kit_String other) {
     return kit_String_appendBytes(ref, other, otherObject->size);
 }
 
-ImmutableOption kit_String_appendLiteral(kit_String *ref, const char *literal) {
+ImmutableOption kit_String_appendPack(kit_String *ref, const char *format, va_list pack) {
     assert(ref);
     assert(*ref);
-    assert(literal);
-    assert((void *) *ref != literal);
-    kit_String_assertValidInstance(*ref);
+    assert(format);
+    assert(pack);
 
-    return kit_String_appendBytes(ref, literal, strlen(literal));
+    va_list packCopy;
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+
+    va_copy(packCopy, pack);
+    const int FORMATTED_SIZE = vsnprintf(NULL, 0, format, packCopy);
+    va_end(packCopy);
+
+    if (FORMATTED_SIZE >= 0) {
+        const size_t CURRENT_SIZE = stringObject->size;
+        const size_t ADDITIONAL_SIZE = (size_t) FORMATTED_SIZE;
+        MutableOption stringObjectOption = kit_String_Object_reserve(&stringObject, CURRENT_SIZE + ADDITIONAL_SIZE);
+
+        if (MutableOption_isSome(stringObjectOption)) {
+            stringObject = MutableOption_unwrap(stringObjectOption);
+            vsnprintf(stringObject->raw + CURRENT_SIZE, ADDITIONAL_SIZE + 1, format, pack);
+            stringObject->size += ADDITIONAL_SIZE;
+            *ref = NULL;
+            return ImmutableOption_new(stringObject->raw);
+        }
+    }
+
+    return ImmutableOption_None;
 }
 
 ImmutableOption kit_String_appendBytes(kit_String *ref, const void *bytes, const size_t size) {
@@ -150,7 +303,7 @@ ImmutableOption kit_String_appendBytes(kit_String *ref, const void *bytes, const
         assert(NULL == stringObject);
         stringObject = MutableOption_unwrap(stringObjectOption);
         char *stringObjectRaw = stringObject->raw;
-        strncpy(stringObjectRaw + stringObjectSize, bytes, size);
+        memcpy(stringObjectRaw + stringObjectSize, bytes, size);
         stringObjectRaw[stringObject->size = stringObjectSize + size] = '\0';
         *ref = NULL;
         return ImmutableOption_new(stringObjectRaw);
@@ -158,6 +311,136 @@ ImmutableOption kit_String_appendBytes(kit_String *ref, const void *bytes, const
 
     assert(NULL != stringObject);
     return ImmutableOption_None;
+}
+
+ImmutableOption kit_String_appendFormat(kit_String *ref, const char *format, ...) {
+    assert(ref);
+    assert(*ref);
+    assert(format);
+
+    va_list pack;
+
+    va_start(pack, format);
+    ImmutableOption result = kit_String_appendPack(ref, format, pack);
+    va_end(pack);
+
+    assert(ImmutableOption_isSome(result) ? NULL == *ref : NULL != *ref);
+    return result;
+}
+
+ImmutableOption kit_String_appendLiteral(kit_String *ref, const char *literal) {
+    assert(ref);
+    assert(*ref);
+    assert(literal);
+    assert((void *) *ref != literal);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_appendBytes(ref, literal, strlen(literal));
+}
+
+ImmutableOption kit_String_set(kit_String *ref, kit_String other) {
+    assert(ref);
+    assert(*ref);
+    assert(other);
+    assert(*ref != other);
+    kit_String_assertValidInstance(*ref);
+    kit_String_assertValidInstance(other);
+
+    const struct kit_String_Object *otherObject = ((struct kit_String_Object *) other) - 1;
+    return kit_String_setBytes(ref, other, otherObject->size);
+}
+
+ImmutableOption kit_String_setPack(kit_String *ref, const char *format, va_list pack) {
+    assert(ref);
+    assert(*ref);
+    assert(format);
+
+    va_list packCopy;
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+
+    va_copy(packCopy, pack);
+    const int FORMATTED_SIZE = vsnprintf(NULL, 0, format, packCopy);
+    va_end(packCopy);
+
+    if (FORMATTED_SIZE >= 0) {
+        const size_t NEW_SIZE = (size_t) FORMATTED_SIZE;
+        MutableOption stringObjectOption = kit_String_Object_reserve(&stringObject, NEW_SIZE);
+
+        if (MutableOption_isSome(stringObjectOption)) {
+            stringObject = MutableOption_unwrap(stringObjectOption);
+            vsnprintf(stringObject->raw, NEW_SIZE + 1, format, pack);
+            stringObject->size = NEW_SIZE;
+            *ref = NULL;
+            return ImmutableOption_new(stringObject->raw);
+        }
+    }
+
+    return ImmutableOption_None;
+}
+
+ImmutableOption kit_String_setBytes(kit_String *ref, const void *bytes, size_t size) {
+    assert(ref);
+    assert(*ref);
+    assert(bytes);
+    assert((void *) *ref != bytes);
+    kit_String_assertValidInstance(*ref);
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+    MutableOption stringObjectOption = kit_String_Object_reserve(&stringObject, size);
+
+    if (MutableOption_isSome(stringObjectOption)) {
+        assert(NULL == stringObject);
+        stringObject = MutableOption_unwrap(stringObjectOption);
+        char *stringObjectRaw = stringObject->raw;
+        memcpy(stringObjectRaw, bytes, size);
+        stringObjectRaw[stringObject->size = size] = '\0';
+        *ref = NULL;
+        return ImmutableOption_new(stringObjectRaw);
+    }
+
+    assert(NULL != stringObject);
+    return ImmutableOption_None;
+}
+
+ImmutableOption kit_String_setFormat(kit_String *ref, const char *format, ...) {
+    assert(ref);
+    assert(*ref);
+    assert(format);
+
+    va_list pack;
+
+    va_start(pack, format);
+    ImmutableOption result = kit_String_setPack(ref, format, pack);
+    va_end(pack);
+
+    assert(ImmutableOption_isSome(result) ? NULL == *ref : NULL != *ref);
+    return result;
+}
+
+ImmutableOption kit_String_setLiteral(kit_String *ref, const char *literal) {
+    assert(ref);
+    assert(*ref);
+    assert(literal);
+    assert((void *) *ref != literal);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_setBytes(ref, literal, strlen(literal));
+}
+
+ImmutableOption kit_String_quote(kit_String *ref) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+    ImmutableOption option = kit_String_quoted(stringObject->raw, stringObject->size);
+
+    if (ImmutableOption_isSome(option)) {
+        kit_String_delete(*ref);
+        *ref = NULL;
+    }
+
+    return option;
 }
 
 ImmutableOption kit_String_reserve(kit_String *ref, size_t capacity) {
@@ -222,7 +505,7 @@ bool kit_String_isEqual(kit_String self, kit_String other) {
 
     struct kit_String_Object *selfObject = ((struct kit_String_Object *) self) - 1;
     struct kit_String_Object *otherObject = ((struct kit_String_Object *) self) - 1;
-    return (selfObject->size == otherObject->size) && (0 == strcmp(self, other));
+    return (selfObject->size == otherObject->size) && (0 == memcmp(self, other, selfObject->size));
 }
 
 bool kit_String_isEmpty(kit_String self) {
@@ -231,15 +514,6 @@ bool kit_String_isEmpty(kit_String self) {
 
     struct kit_String_Object *selfObject = ((struct kit_String_Object *) self) - 1;
     return 0 == selfObject->size;
-}
-
-void kit_String_clear(kit_String self) {
-    assert(self);
-    kit_String_assertValidInstance(self);
-
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
-    stringObject->raw[0] = '\0';
-    stringObject->size = 0;
 }
 
 void kit_String_delete(kit_String self) {

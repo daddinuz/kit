@@ -18,6 +18,7 @@ extern "C" {
 #include <stdbool.h>
 #include <option/option.h>
 #include <kit/compiler_steroids.h>
+#include <kit/collections/string_config.h>
 
 typedef const char *kit_String;
 
@@ -25,23 +26,32 @@ extern ImmutableOptional(kit_String)
 kit_String_new(size_t capacityHint);
 
 extern ImmutableOptional(kit_String)
-kit_String_format(const char *format, ...)
-__attribute__((__nonnull__, __format__(printf, 1, 2)));
+kit_String_quoted(const void *bytes, size_t size)
+__attribute__((__nonnull__));
 
 extern ImmutableOptional(kit_String)
 kit_String_fromPack(const char *format, va_list pack)
-__attribute__((__nonnull__));
-
-extern ImmutableOptional(kit_String)
-kit_String_fromLiteral(const char *literal)
-__attribute__((__nonnull__));
+__attribute__((__nonnull__, __format__(__printf__, 1, 0)));
 
 extern ImmutableOptional(kit_String)
 kit_String_fromBytes(const void *bytes, size_t size)
 __attribute__((__nonnull__));
 
 extern ImmutableOptional(kit_String)
+kit_String_fromFormat(const char *format, ...)
+__attribute__((__nonnull__, __format__(printf, 1, 2)));
+
+extern ImmutableOptional(kit_String)
+kit_String_fromLiteral(const char *literal)
+__attribute__((__nonnull__));
+
+extern ImmutableOptional(kit_String)
 kit_String_duplicate(kit_String s)
+__attribute__((__nonnull__));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_clear(kit_String *ref)
 __attribute__((__nonnull__));
 
 // takes ownership
@@ -51,12 +61,52 @@ __attribute__((__nonnull__));
 
 // takes ownership
 extern ImmutableOptional(kit_String)
+kit_String_appendPack(kit_String *ref, const char *format, va_list pack)
+__attribute__((__nonnull__, __format__(printf, 2, 0)));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_appendBytes(kit_String *ref, const void *bytes, size_t size)
+__attribute__((__nonnull__));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_appendFormat(kit_String *ref, const char *format, ...)
+__attribute__((__nonnull__, __format__(printf, 2, 3)));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
 kit_String_appendLiteral(kit_String *ref, const char *literal)
 __attribute__((__nonnull__));
 
 // takes ownership
 extern ImmutableOptional(kit_String)
-kit_String_appendBytes(kit_String *ref, const void *bytes, size_t size)
+kit_String_set(kit_String *ref, kit_String other)
+__attribute__((__nonnull__));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_setPack(kit_String *ref, const char *format, va_list pack)
+__attribute__((__nonnull__, __format__(printf, 2, 0)));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_setBytes(kit_String *ref, const void *bytes, size_t size)
+__attribute__((__nonnull__));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_setFormat(kit_String *ref, const char *format, ...)
+__attribute__((__nonnull__, __format__(printf, 2, 3)));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_setLiteral(kit_String *ref, const char *literal)
+__attribute__((__nonnull__));
+
+// takes ownership
+extern ImmutableOptional(kit_String)
+kit_String_quote(kit_String *ref)
 __attribute__((__nonnull__));
 
 // takes ownership
@@ -83,10 +133,6 @@ __attribute__((__nonnull__));
 
 extern bool
 kit_String_isEmpty(kit_String self)
-__attribute__((__nonnull__));
-
-extern void
-kit_String_clear(kit_String self)
 __attribute__((__nonnull__));
 
 extern void
