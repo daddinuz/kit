@@ -15,10 +15,10 @@
  *
  */
 int main() {
-    kit_String string = I(kit_String_fromFormat("%s %s! ", "Hello", "World"));
+    kit_String string = I(kit_String_fromFormat("%s %s!", "Hello", "World"));
     printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
 
-    string = I(kit_String_appendFormat(&string, "%s %s!", "I'm evil!", "MuahUahUah"));
+    string = I(kit_String_appendFormat(&string, " %s %s!", "I'm evil!", "MuahUahUah"));
     printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
 
     string = I(kit_String_setBytes(&string, "abc\"\0\t\n\r\b\a123", 13));
