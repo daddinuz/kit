@@ -209,7 +209,7 @@ ImmutableOption kit_String_fromBytes(const void *bytes, size_t size) {
     if (MutableOption_isSome(stringObjectOption)) {
         struct kit_String_Object *stringObject = MutableOption_unwrap(stringObjectOption);
         char *raw = stringObject->raw;
-        memcpy(raw, bytes, size);
+        MutableOption_unwrap(kit_Allocator_copy(raw, bytes, size));
         raw[size] = '\0';
         stringObject->size = size;
         return ImmutableOption_new(raw);
@@ -313,7 +313,7 @@ ImmutableOption kit_String_appendBytes(kit_String *ref, const void *bytes, const
         assert(NULL == stringObject);
         stringObject = MutableOption_unwrap(stringObjectOption);
         char *stringObjectRaw = stringObject->raw;
-        memcpy(stringObjectRaw + stringObjectSize, bytes, size);
+        MutableOption_unwrap(kit_Allocator_copy(stringObjectRaw + stringObjectSize, bytes, size));
         stringObjectRaw[stringObject->size = stringObjectSize + size] = '\0';
         *ref = NULL;
         return ImmutableOption_new(stringObjectRaw);
@@ -404,7 +404,7 @@ ImmutableOption kit_String_setBytes(kit_String *ref, const void *bytes, size_t s
         assert(NULL == stringObject);
         stringObject = MutableOption_unwrap(stringObjectOption);
         char *stringObjectRaw = stringObject->raw;
-        memcpy(stringObjectRaw, bytes, size);
+        MutableOption_unwrap(kit_Allocator_copy(stringObjectRaw, bytes, size));
         stringObjectRaw[stringObject->size = size] = '\0';
         *ref = NULL;
         return ImmutableOption_new(stringObjectRaw);
