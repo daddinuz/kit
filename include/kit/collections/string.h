@@ -22,9 +22,37 @@ extern "C" {
 
 typedef const char *kit_String;
 
+/**
+ * Creates a new instance of kit_String with 0 size.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * @param capacityHint A hint to determine the initial capacity of the string.
+ * @return A new instance of kit_String or ImmutableOption_None.
+ */
 extern ImmutableOptional(kit_String)
 kit_String_new(size_t capacityHint);
 
+/**
+ * Creates a new quoted instance of kit_String starting from bytes.
+ * In case of OOM this function returns ImmutableOption_None.
+ * The following quoting rules are applied:
+ *      - '\"'                    -> "\\\""
+ *      - '\\'                    -> "\\\\"
+ *      - '\a'                    -> "\\a"
+ *      - '\b'                    -> "\\b"
+ *      - '\n'                    -> "\\n"
+ *      - '\r'                    -> "\\r"
+ *      - '\t'                    -> "\\t"
+ *      - any printable character -> unchanged
+ *      - others                  -> "\\x<ascii-code>" eg: '\0' -> "\\x00"
+ *
+ * Checked runtime errors:
+ *      - @param bytes must not be NULL.
+ *
+ * @param bytes Bytes string is composed by.
+ * @param size Size of bytes.
+ * @return A new instance of kit_String or ImmutableOption_None.
+ */
 extern ImmutableOptional(kit_String)
 kit_String_quoted(const void *bytes, size_t size)
 __attribute__((__nonnull__));

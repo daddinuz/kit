@@ -250,7 +250,7 @@ ImmutableOption kit_String_append(kit_String *ref, kit_String other) {
     assert(ref);
     assert(*ref);
     assert(other);
-    assert(*ref != other);
+    assert(*ref != other);  // TODO handle overlapping strings
     kit_String_assertValidInstance(*ref);
     kit_String_assertValidInstance(other);
 
@@ -292,7 +292,7 @@ ImmutableOption kit_String_appendBytes(kit_String *ref, const void *bytes, const
     assert(ref);
     assert(*ref);
     assert(bytes);
-    assert((void *) *ref != bytes);
+    assert((void *) *ref != bytes);  // TODO handle overlapping strings
     kit_String_assertValidInstance(*ref);
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
@@ -332,7 +332,7 @@ ImmutableOption kit_String_appendLiteral(kit_String *ref, const char *literal) {
     assert(ref);
     assert(*ref);
     assert(literal);
-    assert((void *) *ref != literal);
+    assert((void *) *ref != literal);  // TODO handle overlapping strings
     kit_String_assertValidInstance(*ref);
 
     return kit_String_appendBytes(ref, literal, strlen(literal));
@@ -342,7 +342,7 @@ ImmutableOption kit_String_set(kit_String *ref, kit_String other) {
     assert(ref);
     assert(*ref);
     assert(other);
-    assert(*ref != other);
+    assert(*ref != other);  // TODO handle overlapping strings
     kit_String_assertValidInstance(*ref);
     kit_String_assertValidInstance(other);
 
@@ -382,7 +382,7 @@ ImmutableOption kit_String_setBytes(kit_String *ref, const void *bytes, size_t s
     assert(ref);
     assert(*ref);
     assert(bytes);
-    assert((void *) *ref != bytes);
+    assert((void *) *ref != bytes);  // TODO handle overlapping strings
     kit_String_assertValidInstance(*ref);
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
@@ -421,7 +421,7 @@ ImmutableOption kit_String_setLiteral(kit_String *ref, const char *literal) {
     assert(ref);
     assert(*ref);
     assert(literal);
-    assert((void *) *ref != literal);
+    assert((void *) *ref != literal);  // TODO handle overlapping strings
     kit_String_assertValidInstance(*ref);
 
     return kit_String_setBytes(ref, literal, strlen(literal));
