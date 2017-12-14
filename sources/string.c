@@ -84,7 +84,7 @@ ImmutableOption kit_String_quoted(const void *bytes, const size_t size) {
 
     string = ImmutableOption_unwrap(stringOption);
     /* if we are here we have enough space to perform this operation so no checks are performed */
-    string = ImmutableOption_unwrap(kit_String_setBytes(&string, "\"", 1));
+    ImmutableOption_unwrap(kit_String_setBytes(&string, "\"", 1));
 
     for (size_t i = 0; i < size && false == teardownRequired; i++) {
         string = ImmutableOption_unwrap(stringOption);

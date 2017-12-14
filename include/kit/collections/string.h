@@ -57,22 +57,75 @@ extern ImmutableOptional(kit_String)
 kit_String_quoted(const void *bytes, size_t size)
 __attribute__((__nonnull__));
 
+/**
+ * Creates a new instance of kit_String using printf-like format as seed, behave like kit_String_fromFormat but takes a va_list.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Checked runtime errors:
+ *      - @param format must not be NULL
+ *
+ * @param format The printf-like format string.
+ * @param pack The args for @param format
+ * @return A new instance of kit_String or ImmutableOption_None.
+ */
 extern ImmutableOptional(kit_String)
 kit_String_fromPack(const char *format, va_list pack)
-__attribute__((__nonnull__, __format__(__printf__, 1, 0)));
+__attribute__((__nonnull__(1), __format__(__printf__, 1, 0)));
 
+/**
+ * Creates a new instance of kit_String using @param bytes as seed.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Checked runtime errors:
+ *      - @param bytes must not be NULL
+ *
+ * @param bytes The bytes used as seed to construct the string.
+ * @param size The length of @param bytes.
+ * @return A new instance of kit_String or ImmutableOption_None.
+ */
 extern ImmutableOptional(kit_String)
 kit_String_fromBytes(const void *bytes, size_t size)
 __attribute__((__nonnull__));
 
+/**
+ * Creates a new instance of kit_String using printf-like format as seed.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Checked runtime errors:
+ *      - @param format must not be NULL
+ *
+ * @param format The printf-like format string.
+ * @param ... The args for @param format
+ * @return A new instance of kit_String or ImmutableOption_None.
+ */
 extern ImmutableOptional(kit_String)
 kit_String_fromFormat(const char *format, ...)
-__attribute__((__nonnull__, __format__(printf, 1, 2)));
+__attribute__((__nonnull__(1), __format__(printf, 1, 2)));
 
+/**
+ * Creates a new instance of kit_String using @param literal as seed.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Checked runtime errors:
+ *      - @param literal must not be NULL
+ *
+ * @param literal The string literal used as seed to construct the string.
+ * @return A new instance of kit_String or ImmutableOption_None.
+ */
 extern ImmutableOptional(kit_String)
 kit_String_fromLiteral(const char *literal)
 __attribute__((__nonnull__));
 
+/**
+ * Duplicates a string instance.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Checked runtime errors:
+ *      - @param s must not be NULL and must be a valid string instance.
+ *
+ * @param s The string instance to be duplicated.
+ * @return A new instance of kit_String or ImmutableOption_None.
+ */
 extern ImmutableOptional(kit_String)
 kit_String_duplicate(kit_String s)
 __attribute__((__nonnull__));

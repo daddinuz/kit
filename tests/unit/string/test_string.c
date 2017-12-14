@@ -16,6 +16,10 @@ Describe("String",
          Trait(
                  "Essentials",
                  Run(StringNew),
-                 Run(StringQuoted)
+                 Run(StringQuoted),
+                 Run(StringFromBytes),
+                 Run(StringFromFormat),
+                 Run(StringFromLiteral),
+                 Run(StringDuplicate),
          )
 )

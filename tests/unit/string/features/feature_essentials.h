@@ -17,6 +17,10 @@ extern "C" {
 
 FeatureDeclare(StringNew);
 FeatureDeclare(StringQuoted);
+FeatureDeclare(StringFromBytes);
+FeatureDeclare(StringFromFormat);
+FeatureDeclare(StringFromLiteral);
+FeatureDeclare(StringDuplicate);
 
 #ifdef __cplusplus
 }
