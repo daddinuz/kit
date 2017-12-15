@@ -6,6 +6,13 @@
  * Date:   December 06, 2017 
  */
 
+/*
+ * kit_String are highly inspired by antirez's sds string library.
+ * kit_String must be changed only using functions within this interface.  
+ * kit_String are binary safe and grows automatically.
+ * kit_String are compatible with standard C string functions that accesses strings in a read only way.
+ */
+
 #ifndef KIT_STRING_INCLUDED
 #define KIT_STRING_INCLUDED
 
@@ -190,20 +197,61 @@ extern ImmutableOptional(kit_String)
 kit_String_quote(kit_String *ref)
 __attribute__((__nonnull__));
 
-// takes ownership
+/**
+ * Explicitly request an expansion to hold at least as many elements as @param capacity.
+ * If requested capacity is less than current capacity nothing will be done.
+ *
+ * Note: Takes ownership invalidating @param *ref is case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *
+ * @param ref The reference of the string instance to modify.
+ * @param capacity The minimum capacity to hold.
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
 extern ImmutableOptional(kit_String)
 kit_String_reserve(kit_String *ref, size_t capacity)
 __attribute__((__nonnull__));
 
-// takes ownership
+/**
+ * Requests the container to shrink in order to fit at least the stored elements freeing resources not used.
+ * The request may be ignored by the container if the current size is less than the default capacity.
+ *
+ * Note: Takes ownership invalidating @param *ref is case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *
+ * @param ref The reference of the string instance to modify.
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
 extern ImmutableOptional(kit_String)
 kit_String_shrink(kit_String *ref)
 __attribute__((__nonnull__));
 
+/**
+ * Gets the size of the string.
+ *
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *
+ * @param self The container instance.
+ * @return The size of the string.
+ */
 extern size_t
 kit_String_size(kit_String self)
 __attribute__((__nonnull__));
 
+/**
+ * Gets the capacity of the string before expansion.
+ *
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *
+ * @param self The container instance.
+ * @return The capacity of the string.
+ */
 extern size_t
 kit_String_capacity(kit_String self)
 __attribute__((__nonnull__));
@@ -216,6 +264,12 @@ extern bool
 kit_String_isEmpty(kit_String self)
 __attribute__((__nonnull__));
 
+/**
+ * Deletes an instance of kit_String.
+ * If @param self is NULL no action will be performed.
+ *
+ * @param self The instance to be deleted.
+ */
 extern void
 kit_String_delete(kit_String self);
 

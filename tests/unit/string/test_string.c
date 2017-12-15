@@ -8,6 +8,7 @@
 
 #include <traits-unit/traits-unit.h>
 #include "features/feature_essentials.h"
+#include "features/feature_expandable.h"
 
 /*
  * Describe our test case
@@ -20,6 +21,11 @@ Describe("String",
                  Run(StringFromBytes),
                  Run(StringFromFormat),
                  Run(StringFromLiteral),
-                 Run(StringDuplicate),
+                 Run(StringDuplicate)
+         ),
+         Trait(
+                 "Expandable",
+                 Run(StringReserve),
+                 Run(StringShrink)
          )
 )

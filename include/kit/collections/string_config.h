@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #define KIT_STRING_DEFAULT_CAPACITY     128
+#define KIT_STRING_MINIMUM_RESERVATION  32
 
 #ifdef __cplusplus
 }

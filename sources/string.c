@@ -566,11 +566,13 @@ MutableOption kit_String_Object_reserve(struct kit_String_Object **ref, const si
     struct kit_String_Object *stringObject = *ref;
 
     if (stringObject->capacity < capacity) {
-        MutableOption stringObjectOption = kit_Allocator_ralloc(stringObject, sizeof(*stringObject) + capacity + 1);
+        const size_t newCapacity = (capacity - stringObject->capacity > KIT_STRING_MINIMUM_RESERVATION) ?
+                                   capacity : stringObject->capacity + KIT_STRING_MINIMUM_RESERVATION;
+        MutableOption stringObjectOption = kit_Allocator_ralloc(stringObject, sizeof(*stringObject) + newCapacity + 1);
         if (MutableOption_isSome(stringObjectOption)) {
             stringObject = MutableOption_unwrap(stringObjectOption);
-            stringObject->capacity = capacity;
-            stringObject->raw[capacity] = '\0';
+            stringObject->capacity = newCapacity;
+            stringObject->raw[newCapacity] = '\0';
         } else {
             return MutableOption_None;
         }

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(kit)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -pedantic")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wno-overlength-strings -pedantic")
 if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wcast-align -Wbad-function-cast")
