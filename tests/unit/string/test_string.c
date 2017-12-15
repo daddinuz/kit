@@ -9,6 +9,7 @@
 #include <traits-unit/traits-unit.h>
 #include "features/feature_essentials.h"
 #include "features/feature_expandable.h"
+#include "features/feature_comparable.h"
 
 /*
  * Describe our test case
@@ -27,5 +28,9 @@ Describe("String",
                  "Expandable",
                  Run(StringReserve),
                  Run(StringShrink)
+         ),
+         Trait(
+                 "Comparable",
+                 Run(StringIsEqual)
          )
 )

@@ -8,7 +8,7 @@
 
 /*
  * kit_String are highly inspired by antirez's sds string library.
- * kit_String must be changed only using functions within this interface.  
+ * kit_String must be changed only using functions within this interface.
  * kit_String are binary safe and grows automatically.
  * kit_String are compatible with standard C string functions that accesses strings in a read only way.
  */
@@ -256,10 +256,30 @@ extern size_t
 kit_String_capacity(kit_String self)
 __attribute__((__nonnull__));
 
+/**
+ * Checks if the string is equal to the another.
+ *
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *      - @param other must not be NULL.
+ *
+ * @param self The string instance.
+ * @param other The other string instance.
+ * @return true if the strings are equal false otherwise.
+ */
 extern bool
 kit_String_isEqual(kit_String self, kit_String other)
 __attribute__((__nonnull__));
 
+/**
+ * Checks if the string is empty.
+ *
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *
+ * @param self The string instance.
+ * @return true if the string is empty false otherwise.
+ */
 extern bool
 kit_String_isEmpty(kit_String self)
 __attribute__((__nonnull__));

@@ -21,7 +21,8 @@ FeatureDefine(StringNew) {
         sut = I(kit_String_new(0));
         assert_not_null(sut);
         assert_string_equal("", sut);
-        assert_equal(0, kit_String_size(sut));
+        assert_equal(kit_String_size(sut), 0);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(KIT_STRING_DEFAULT_CAPACITY, kit_String_capacity(sut));
     }
 
@@ -31,7 +32,8 @@ FeatureDefine(StringNew) {
         sut = I(kit_String_new(KIT_STRING_DEFAULT_CAPACITY - 1));
         assert_not_null(sut);
         assert_string_equal("", sut);
-        assert_equal(0, kit_String_size(sut));
+        assert_equal(kit_String_size(sut), 0);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(KIT_STRING_DEFAULT_CAPACITY, kit_String_capacity(sut));
     }
 
@@ -41,7 +43,8 @@ FeatureDefine(StringNew) {
         sut = I(kit_String_new(KIT_STRING_DEFAULT_CAPACITY));
         assert_not_null(sut);
         assert_string_equal("", sut);
-        assert_equal(0, kit_String_size(sut));
+        assert_equal(kit_String_size(sut), 0);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(KIT_STRING_DEFAULT_CAPACITY, kit_String_capacity(sut));
     }
 
@@ -51,7 +54,8 @@ FeatureDefine(StringNew) {
         sut = I(kit_String_new(KIT_STRING_DEFAULT_CAPACITY + 1));
         assert_not_null(sut);
         assert_string_equal("", sut);
-        assert_equal(0, kit_String_size(sut));
+        assert_equal(kit_String_size(sut), 0);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(KIT_STRING_DEFAULT_CAPACITY + 1, kit_String_capacity(sut));
     }
 
@@ -74,6 +78,7 @@ FeatureDefine(StringQuoted) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -91,6 +96,7 @@ FeatureDefine(StringQuoted) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -108,6 +114,7 @@ FeatureDefine(StringQuoted) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -125,6 +132,7 @@ FeatureDefine(StringQuoted) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -138,12 +146,13 @@ FeatureDefine(StringFromBytes) {
 
     {
         const char BYTES[] = "";
-        const size_t BYTES_SIZE = 0;
+        const size_t BYTES_SIZE = sizeof(BYTES) - 1;
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
         sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_equal(kit_String_size(sut), BYTES_SIZE);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(0, memcmp(BYTES, sut, BYTES_SIZE));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
@@ -159,6 +168,7 @@ FeatureDefine(StringFromBytes) {
         sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_equal(kit_String_size(sut), BYTES_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(0, memcmp(BYTES, sut, BYTES_SIZE));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
@@ -174,6 +184,7 @@ FeatureDefine(StringFromBytes) {
         sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_equal(kit_String_size(sut), BYTES_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(0, memcmp(BYTES, sut, BYTES_SIZE));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
@@ -199,6 +210,7 @@ FeatureDefine(StringFromFormat) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
 
 #undef FORMAT
@@ -219,6 +231,7 @@ FeatureDefine(StringFromFormat) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_true(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
 
 #undef FORMAT
@@ -239,6 +252,7 @@ FeatureDefine(StringFromFormat) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
 
 #undef FORMAT
@@ -259,6 +273,7 @@ FeatureDefine(StringFromFormat) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
 
 #undef FORMAT
@@ -279,6 +294,7 @@ FeatureDefine(StringFromFormat) {
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(EXPECTED_CAPACITY, kit_String_capacity(sut));
 
 #undef FORMAT
@@ -294,13 +310,14 @@ FeatureDefine(StringFromLiteral) {
 
     {
         const char LITERAL[] = "";
-        const size_t LITERAL_SIZE = 0;
+        const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
+        assert_true(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -317,6 +334,7 @@ FeatureDefine(StringFromLiteral) {
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -333,6 +351,7 @@ FeatureDefine(StringFromLiteral) {
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
+        assert_true(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -349,6 +368,7 @@ FeatureDefine(StringFromLiteral) {
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -382,6 +402,7 @@ FeatureDefine(StringFromLiteral) {
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 
@@ -411,6 +432,7 @@ FeatureDefine(StringFromLiteral) {
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
+        assert_false(kit_String_isEmpty(sut));
         assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
     }
 

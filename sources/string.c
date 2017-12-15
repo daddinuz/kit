@@ -518,7 +518,7 @@ bool kit_String_isEqual(kit_String self, kit_String other) {
     kit_String_assertValidInstance(other);
 
     struct kit_String_Object *selfObject = ((struct kit_String_Object *) self) - 1;
-    struct kit_String_Object *otherObject = ((struct kit_String_Object *) self) - 1;
+    struct kit_String_Object *otherObject = ((struct kit_String_Object *) other) - 1;
     return (selfObject->size == otherObject->size) && (0 == memcmp(self, other, selfObject->size));
 }
 

@@ -24,6 +24,7 @@ FeatureDefine(StringReserve) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -35,6 +36,7 @@ FeatureDefine(StringReserve) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
     }
@@ -48,6 +50,7 @@ FeatureDefine(StringReserve) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -59,6 +62,7 @@ FeatureDefine(StringReserve) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION);
     }
@@ -72,6 +76,7 @@ FeatureDefine(StringReserve) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -83,6 +88,7 @@ FeatureDefine(StringReserve) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1);
     }
@@ -96,6 +102,7 @@ FeatureDefine(StringReserve) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -107,6 +114,7 @@ FeatureDefine(StringReserve) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION);
     }
@@ -120,6 +128,7 @@ FeatureDefine(StringReserve) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -131,6 +140,7 @@ FeatureDefine(StringReserve) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1);
     }
@@ -150,6 +160,7 @@ FeatureDefine(StringShrink) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -159,6 +170,7 @@ FeatureDefine(StringShrink) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
     }
@@ -172,6 +184,7 @@ FeatureDefine(StringShrink) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -181,6 +194,7 @@ FeatureDefine(StringShrink) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
     }
@@ -194,6 +208,7 @@ FeatureDefine(StringShrink) {
         sut = I(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
@@ -205,6 +220,7 @@ FeatureDefine(StringShrink) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1);
 
@@ -214,6 +230,7 @@ FeatureDefine(StringShrink) {
 
         sut = ImmutableOption_unwrap(option);
         assert_string_equal(sut, LITERAL);
+        assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
     }
