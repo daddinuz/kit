@@ -65,7 +65,7 @@ kit_String_quoted(const void *bytes, size_t size)
 __attribute__((__nonnull__));
 
 /**
- * Creates a new instance of kit_String using printf-like format as seed, behave like kit_String_fromFormat but takes a va_list.
+ * Creates a new instance of kit_String using printf-like format as seed, behaves like kit_String_fromFormat but takes a va_list.
  * In case of OOM this function returns ImmutableOption_None.
  *
  * Checked runtime errors:
@@ -137,32 +137,95 @@ extern ImmutableOptional(kit_String)
 kit_String_duplicate(kit_String s)
 __attribute__((__nonnull__));
 
-// takes ownership
-extern ImmutableOptional(kit_String)
-kit_String_clear(kit_String *ref)
-__attribute__((__nonnull__));
-
-// takes ownership
+/**
+ * Appends content to string.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Note: Takes ownership invalidating @param *ref in case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *      - @param other must not be NULL and must be a valid string instance.
+ *
+ * @param ref The reference to the string instance to be modified.
+ * @param other The string to be appended.
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
 extern ImmutableOptional(kit_String)
 kit_String_append(kit_String *ref, kit_String other)
 __attribute__((__nonnull__));
 
-// takes ownership
+/**
+ * Appends content to string using printf-like format, behaves like kit_String_appendFormat but takes a va_list.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Note: Takes ownership invalidating @param *ref in case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *      - @param format must not be NULL.
+ *
+ * @param ref The reference to the string instance to be modified.
+ * @param format The printf-like format string.
+ * @param pack The args for @param format
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
 extern ImmutableOptional(kit_String)
 kit_String_appendPack(kit_String *ref, const char *format, va_list pack)
 __attribute__((__nonnull__, __format__(printf, 2, 0)));
 
-// takes ownership
+/**
+ * Appends bytes to string.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Note: Takes ownership invalidating @param *ref in case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *      - @param bytes must not be NULL.
+ *
+ * @param ref The reference to the string instance to be modified.
+ * @param bytes The bytes used as seed to construct the string.
+ * @param size The length of @param bytes.
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
 extern ImmutableOptional(kit_String)
 kit_String_appendBytes(kit_String *ref, const void *bytes, size_t size)
 __attribute__((__nonnull__));
 
-// takes ownership
+/**
+ * Appends content to string using printf-like format.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Note: Takes ownership invalidating @param *ref in case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *      - @param format must not be NULL.
+ *
+ * @param ref The reference to the string instance to be modified.
+ * @param format The printf-like format string.
+ * @param ... The args for @param format
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
 extern ImmutableOptional(kit_String)
 kit_String_appendFormat(kit_String *ref, const char *format, ...)
 __attribute__((__nonnull__, __format__(printf, 2, 3)));
 
-// takes ownership
+/**
+ * Appends literal to string.
+ * In case of OOM this function returns ImmutableOption_None.
+ *
+ * Note: Takes ownership invalidating @param *ref in case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *      - @param literal must not be NULL.
+ *
+ * @param ref The reference to the string instance to be modified.
+ * @param literal The string literal to be appended.
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
 extern ImmutableOptional(kit_String)
 kit_String_appendLiteral(kit_String *ref, const char *literal)
 __attribute__((__nonnull__));
@@ -198,15 +261,31 @@ kit_String_quote(kit_String *ref)
 __attribute__((__nonnull__));
 
 /**
- * Explicitly request an expansion to hold at least as many elements as @param capacity.
- * If requested capacity is less than current capacity nothing will be done.
+ * Clears the string resetting its size to 0.
+ * This function will not modify the capacity of the string.
  *
- * Note: Takes ownership invalidating @param *ref is case of success.
+ * Note: Takes ownership invalidating @param *ref in case of success.
  *
  * Checked runtime errors:
  *      - @param ref must not be NULL and *ref must be a valid string instance.
  *
- * @param ref The reference of the string instance to modify.
+ * @param ref The reference to the string instance to be modified.
+ * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
+ */
+extern ImmutableOptional(kit_String)
+kit_String_clear(kit_String *ref)
+__attribute__((__nonnull__));
+
+/**
+ * Explicitly request an expansion to hold at least as many elements as @param capacity.
+ * If requested capacity is less than current capacity nothing will be done.
+ *
+ * Note: Takes ownership invalidating @param *ref in case of success.
+ *
+ * Checked runtime errors:
+ *      - @param ref must not be NULL and *ref must be a valid string instance.
+ *
+ * @param ref The reference to the string instance to be modified.
  * @param capacity The minimum capacity to hold.
  * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
  */
@@ -218,12 +297,12 @@ __attribute__((__nonnull__));
  * Requests the container to shrink in order to fit at least the stored elements freeing resources not used.
  * The request may be ignored by the container if the current size is less than the default capacity.
  *
- * Note: Takes ownership invalidating @param *ref is case of success.
+ * Note: Takes ownership invalidating @param *ref in case of success.
  *
  * Checked runtime errors:
  *      - @param ref must not be NULL and *ref must be a valid string instance.
  *
- * @param ref The reference of the string instance to modify.
+ * @param ref The reference to the string instance to be modified.
  * @return The modified string instance (invalidating *ref) in case of success or ImmutableOption_None (leaving *ref untouched).
  */
 extern ImmutableOptional(kit_String)

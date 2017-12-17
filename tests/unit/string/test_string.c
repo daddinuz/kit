@@ -10,6 +10,7 @@
 #include "features/feature_essentials.h"
 #include "features/feature_expandable.h"
 #include "features/feature_comparable.h"
+#include "features/feature_mutable.h"
 
 /*
  * Describe our test case
@@ -32,5 +33,13 @@ Describe("String",
          Trait(
                  "Comparable",
                  Run(StringIsEqual)
+         ),
+         Trait(
+                 "Mutable",
+                 Run(StringAppend),
+                 Run(StringAppendBytes),
+                 Run(StringAppendFormat),
+                 Run(StringAppendLiteral),
+                 Run(StringClear),
          )
 )
