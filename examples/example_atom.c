@@ -16,9 +16,9 @@
 int main() {
 #define I(x)    ImmutableOption_unwrap((x))
 
-    kit_Atom *literal = I(kit_Atom_fromLiteral("Hello World!"));
-    kit_Atom *integer = I(kit_Atom_fromInteger(-865765909809282));
-    kit_Atom *floating = I(kit_Atom_fromFloating(86576583.986764));
+    kit_Atom literal = I(kit_Atom_fromLiteral("Hello World!"));
+    kit_Atom integer = I(kit_Atom_fromInteger(-865765909809282));
+    kit_Atom floating = I(kit_Atom_fromFloating(86576583.986764));
 
     printf(
             "Atom[%zu]: `%s` (%s)\n",

@@ -22,7 +22,7 @@ struct kit_Atom_Node {
     size_t hash;
     size_t length;
     struct kit_Atom_Node *next;
-    kit_Atom *atom;
+    kit_Atom atom;
 };
 
 static ImmutableOption
@@ -37,7 +37,7 @@ static void
 kit_Atom_table_clear(void);
 
 static void
-kit_Atom_assertValidInstance(kit_Atom *atom);
+kit_Atom_assertValidInstance(kit_Atom atom);
 
 static size_t
 kit_Atom_hash(const char *s, size_t length)
@@ -82,7 +82,7 @@ ImmutableOption kit_Atom_fromFloating(long double n) {
     return kit_Atom_put(buffer, (size_t) length);
 }
 
-size_t kit_Atom_length(kit_Atom *atom) {
+size_t kit_Atom_length(kit_Atom atom) {
     assert(atom);
     kit_Atom_assertValidInstance(atom);
     struct kit_Atom_Node *node = ((struct kit_Atom_Node *) atom) - 1;
@@ -156,7 +156,7 @@ void kit_Atom_table_clear(void) {
     }
 }
 
-void kit_Atom_assertValidInstance(kit_Atom *atom) {
+void kit_Atom_assertValidInstance(kit_Atom atom) {
     assert(atom);
     (void) atom;
 #ifndef NDEBUG

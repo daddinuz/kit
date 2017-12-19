@@ -22,9 +22,9 @@ int main() {
 #define M(x)    MutableOption_unwrap((x))
 
     void *e = NULL;
-    kit_Atom *accept = I(kit_Atom_fromLiteral("Accept"));
-    kit_Atom *contentType = I(kit_Atom_fromLiteral("ContentType"));
-    kit_Atom *authorization = I(kit_Atom_fromLiteral("Authorization"));
+    kit_Atom accept = I(kit_Atom_fromLiteral("Accept"));
+    kit_Atom contentType = I(kit_Atom_fromLiteral("ContentType"));
+    kit_Atom authorization = I(kit_Atom_fromLiteral("Authorization"));
     struct kit_Map *map = M(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
     struct kit_Array *keys = M(kit_Array_from((void *) accept, (void *) contentType, (void *) authorization));
 
@@ -58,8 +58,8 @@ void report(struct kit_Map *map, struct kit_Array *keys) {
 #define s(x)    ((const char *) (x))
 
     void *e;
-    kit_Atom *atom1;
-    kit_Atom *atom2;
+    kit_Atom atom1;
+    kit_Atom atom2;
     const char sep[] = "----------------------------------------------------------------------------------------------";
 
     printf("\n%.*s\n", (int) sizeof(sep), sep);

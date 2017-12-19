@@ -37,8 +37,8 @@ FeatureDefine(AtomEssentials) {
         const char *EXPECTED_TEXT = "Hello World!";
         const size_t EXPECTED_LENGTH = strlen(EXPECTED_TEXT);
 
-        const kit_Atom *atom1 = ImmutableOption_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH));
-        const kit_Atom *atom2 = ImmutableOption_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT));
+        const kit_Atom atom1 = ImmutableOption_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH));
+        const kit_Atom atom2 = ImmutableOption_unwrap(kit_Atom_fromLiteral(EXPECTED_TEXT));
 
         assert_equal(EXPECTED_LENGTH, kit_Atom_length(atom1));
         assert_equal(atom1, ImmutableOption_unwrap(kit_Atom_put(EXPECTED_TEXT, EXPECTED_LENGTH)));
@@ -57,7 +57,7 @@ FeatureDefine(AtomEssentials) {
         const char *EXPECTED_TEXT = "85813541";
         const size_t EXPECTED_LENGTH = strlen(EXPECTED_TEXT);
 
-        const kit_Atom *atom = ImmutableOption_unwrap(kit_Atom_fromInteger(SEED));
+        const kit_Atom atom = ImmutableOption_unwrap(kit_Atom_fromInteger(SEED));
 
         assert_equal(EXPECTED_LENGTH, kit_Atom_length(atom));
         assert_equal(atom, ImmutableOption_unwrap(kit_Atom_fromInteger(SEED)));
@@ -70,7 +70,7 @@ FeatureDefine(AtomEssentials) {
         const size_t EXPECTED_LENGTH = (size_t) snprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), "%Lf", SEED);
         const char *EXPECTED_TEXT = buffer;
 
-        const kit_Atom *atom = ImmutableOption_unwrap(kit_Atom_fromFloating(SEED));
+        const kit_Atom atom = ImmutableOption_unwrap(kit_Atom_fromFloating(SEED));
 
         assert_equal(EXPECTED_LENGTH, kit_Atom_length(atom), "%s", atom);
         assert_equal(atom, ImmutableOption_unwrap(kit_Atom_fromFloating(SEED)));
@@ -78,7 +78,7 @@ FeatureDefine(AtomEssentials) {
     }
 
     {
-        const kit_Atom *atomsList[SEEDS_SIZE];
+        kit_Atom atomsList[SEEDS_SIZE];
 
         for (size_t i = 0; i < SEEDS_SIZE; i++) {
             atomsList[i] = ImmutableOption_unwrap(kit_Atom_fromLiteral(SEEDS[i]));
