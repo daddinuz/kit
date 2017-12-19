@@ -25,16 +25,22 @@
 - add hat implementation to sequence.h
 - add hat implementation to stack.h
 - add hat implementation to queue.h
+
 - implement interface of deque.h
+
 - add variadic constructors
 
 - ~~implement interface of map.h~~
 - extend interface of map.h with iterators 
+
 - ~~implement interface of hash_map.h~~
 - extend interface of hash_map.h with iterators
 
-- approve interface of text.h
-- implement interface of text.h
+- ~~approve interface of string.h~~
+- ~~implement interface of string.h~~
+- ~~test interface of string.h~~
+
+- remove interface of text.h
 
 ### Networking
 
