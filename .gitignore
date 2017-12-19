@@ -47,6 +47,7 @@ lib/*
 build/
 coverage/
 cmake-build-debug/
+cmake-build-release/
 
 # IDEs and editors
 *.idea
