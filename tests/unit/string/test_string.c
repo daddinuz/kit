@@ -40,6 +40,11 @@ Describe("String",
                  Run(StringAppendBytes),
                  Run(StringAppendFormat),
                  Run(StringAppendLiteral),
-                 Run(StringClear),
+                 Run(StringSet),
+                 Run(StringSetBytes),
+                 Run(StringSetFormat),
+                 Run(StringSetLiteral),
+                 Run(StringQuote),
+                 Run(StringClear)
          )
 )

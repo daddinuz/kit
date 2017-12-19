@@ -19,6 +19,11 @@ FeatureDeclare(StringAppend);
 FeatureDeclare(StringAppendBytes);
 FeatureDeclare(StringAppendFormat);
 FeatureDeclare(StringAppendLiteral);
+FeatureDeclare(StringSet);
+FeatureDeclare(StringSetBytes);
+FeatureDeclare(StringSetFormat);
+FeatureDeclare(StringSetLiteral);
+FeatureDeclare(StringQuote);
 FeatureDeclare(StringClear);
 
 #ifdef __cplusplus
