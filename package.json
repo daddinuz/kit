@@ -12,8 +12,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "daddinuz/option": "0.2.0",
-    "daddinuz/alligator": "0.3.0"
+    "daddinuz/option": "0.3.0",
+    "daddinuz/alligator": "0.3.2"
   },
   "development": {
     "daddinuz/traits": "2.1.0",

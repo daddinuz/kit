@@ -55,7 +55,7 @@ ImmutableOption kit_Atom_put(const char *const s, const size_t length) {
 
     if (ImmutableOption_isSome(nodeOption)) {
         const struct kit_Atom_Node *node = ImmutableOption_unwrap(nodeOption);
-        return ImmutableOption_new((void *) node->atom);
+        return ImmutableOption_new(node->atom);
     } else {
         return ImmutableOption_None;
     }

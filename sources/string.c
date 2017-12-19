@@ -174,7 +174,7 @@ ImmutableOption kit_String_quoted(const void *bytes, const size_t size) {
         string = ImmutableOption_unwrap(stringOption);
     }
 
-    return ImmutableOption_new((void *) string);
+    return ImmutableOption_new(string);
 }
 
 ImmutableOption kit_String_fromPack(const char *format, va_list pack) {
@@ -619,9 +619,7 @@ void __kit_String_assertValidInstance(const char *file, const size_t line, kit_S
     const struct kit_String_Object *stringObject = ((struct kit_String_Object *) string) - 1;
 
     if (stringObject->identityCode != KIT_STRING_IDENTITY_CODE) {
-        char buffer[1024] = "";
-        snprintf(buffer, sizeof(buffer) - 1, "Expected a valid string instance.\n%s:%zu", file, line);
-        MutableOption_expect(MutableOption_None, buffer);
+        MutableOption_expect(MutableOption_None, "Expected a valid string instance.\n%s:%zu", file, line);
     }
 }
 
@@ -641,9 +639,7 @@ void __kit_String_assertNotOverlapping(
      */
 
     if (!((a2 + s2) < a1 || (a1 + s1) < a2)) {
-        char buffer[1024] = "";
-        snprintf(buffer, sizeof(buffer) - 1, "Expected non-overlapping strings.\n%s:%zu", file, line);
-        MutableOption_expect(MutableOption_None, buffer);
+        MutableOption_expect(MutableOption_None, "Expected non-overlapping strings.\n%s:%zu", file, line);
     }
 }
 
