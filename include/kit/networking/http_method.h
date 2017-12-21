@@ -43,7 +43,7 @@ enum kit_HttpMethod {
 };
 
 extern const char *
-kit_HttpMethod_explanin(enum kit_HttpMethod method);
+kit_HttpMethod_explain(enum kit_HttpMethod method);
 
 #ifdef __cplusplus
 }

@@ -13,9 +13,9 @@
 
 struct kit_HttpResponse {
     const struct kit_HttpRequest *request;
-    kit_Atom *url;
+    kit_Atom url;
     const struct kit_Map *headers;
-    const struct kit_Text *body;
+    kit_String body;
     enum kit_HttpStatus status;
 };
 
@@ -24,7 +24,7 @@ const struct kit_HttpRequest *kit_HttpResponse_getRequest(const struct kit_HttpR
     return self->request;
 }
 
-kit_Atom *kit_HttpResponse_getUrl(const struct kit_HttpResponse *self) {
+kit_Atom kit_HttpResponse_getUrl(const struct kit_HttpResponse *self) {
     assert(self);
     return self->url;
 }
@@ -103,7 +103,7 @@ kit_HttpResponseBuilder_setStatus(struct kit_HttpResponseBuilder *self, enum kit
 }
 
 struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom *url) {
+kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom url) {
     assert(self);
     assert(url);
     self->response->url = url;
@@ -121,7 +121,7 @@ kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, struct 
 }
 
 struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, struct kit_Text **ref) {
+kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, kit_String *ref) {
     assert(self);
     assert(ref);
     assert(*ref);

@@ -17,7 +17,7 @@ extern "C" {
 #include <option/option.h>
 #include <kit/collections/map.h>
 #include <kit/collections/atom.h>
-#include <kit/collections/text.h>
+#include <kit/collections/string.h>
 #include <kit/networking/http_status.h>
 #include <kit/networking/http_request.h>
 
@@ -30,15 +30,15 @@ extern const struct kit_HttpRequest *
 kit_HttpResponse_getRequest(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
-extern kit_Atom *
+extern kit_Atom
 kit_HttpResponse_getUrl(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(const struct kit_Map *)
+extern ImmutableOptional(struct kit_Map *)
 kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(const struct kit_Text *)
+extern ImmutableOptional(kit_String)
 kit_HttpResponse_getBody(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
@@ -63,7 +63,7 @@ kit_HttpResponseBuilder_setStatus(struct kit_HttpResponseBuilder *self, enum kit
 __attribute__((__nonnull__));
 
 extern struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom *url)
+kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom url)
 __attribute__((__nonnull__));
 
 // *************************************
@@ -75,7 +75,7 @@ __attribute__((__nonnull__));
 
 // takes ownership
 extern struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, struct kit_Text **ref)
+kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, kit_String *ref)
 __attribute__((__nonnull__));
 
 // takes ownership

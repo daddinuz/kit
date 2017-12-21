@@ -12,19 +12,19 @@
 #include <kit/collections/atom.h>
 #include <kit/collections/array.h>
 
+#define I(x)    ImmutableOption_unwrap((x))
+#define M(x)    MutableOption_unwrap((x))
+
 void report(struct kit_Map *map, struct kit_Array *keys);
 
 /*
  *
  */
 int main() {
-#define I(x)    ImmutableOption_unwrap((x))
-#define M(x)    MutableOption_unwrap((x))
-
     void *e = NULL;
-    kit_Atom *accept = I(kit_Atom_fromLiteral("Accept"));
-    kit_Atom *contentType = I(kit_Atom_fromLiteral("ContentType"));
-    kit_Atom *authorization = I(kit_Atom_fromLiteral("Authorization"));
+    kit_Atom accept = I(kit_Atom_fromLiteral("Accept"));
+    kit_Atom contentType = I(kit_Atom_fromLiteral("ContentType"));
+    kit_Atom authorization = I(kit_Atom_fromLiteral("Authorization"));
     struct kit_Map *map = M(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
     struct kit_Array *keys = M(kit_Array_from((void *) accept, (void *) contentType, (void *) authorization));
 
@@ -49,17 +49,12 @@ int main() {
     kit_invalidate((void **) &keys, kit_Array_delete);
     kit_invalidate((void **) &map, kit_Map_delete);
     return 0;
-
-#undef M
-#undef I
 }
 
 void report(struct kit_Map *map, struct kit_Array *keys) {
-#define s(x)    ((const char *) (x))
-
     void *e;
-    kit_Atom *atom1;
-    kit_Atom *atom2;
+    kit_Atom atom1;
+    kit_Atom atom2;
     const char sep[] = "----------------------------------------------------------------------------------------------";
 
     printf("\n%.*s\n", (int) sizeof(sep), sep);
@@ -72,9 +67,7 @@ void report(struct kit_Map *map, struct kit_Array *keys) {
         e = NULL;
         kit_Map_get(map, atom1, &e);
         atom2 = e;
-        printf("\n%s:\n\tpresent: %s\n\tvalue: %s", s(atom1), kit_truth(kit_Map_has(map, atom1)), s(atom2));
+        printf("\n%s:\n\tpresent: %s\n\tvalue: %s", atom1, kit_truth(kit_Map_has(map, atom1)), atom2);
     }
     printf("\n%.*s\n", (int) sizeof(sep), sep);
-
-#undef s
 }

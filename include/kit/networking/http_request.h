@@ -18,7 +18,7 @@ extern "C" {
 #include <kit/compiler_steroids.h>
 #include <kit/collections/map.h>
 #include <kit/collections/atom.h>
-#include <kit/collections/text.h>
+#include <kit/collections/string.h>
 #include <kit/networking/http_method.h>
 #include <kit/networking/http_response.h>
 
@@ -31,15 +31,15 @@ extern enum kit_HttpMethod
 kit_HttpRequest_getMethod(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern kit_Atom *
+extern kit_Atom
 kit_HttpRequest_getUrl(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(const struct kit_Map *)
+extern ImmutableOptional(struct kit_Map *)
 kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(const struct kit_Text *)
+extern ImmutableOptional(kit_String)
 kit_HttpRequest_getBody(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
@@ -62,7 +62,7 @@ __attribute__((__nonnull__));
 // *************************************
 
 // takes ownership
-extern ImmutableOptional(const struct kit_HttpResponse *)
+extern ImmutableOptional(struct kit_HttpResponse *)
 kit_HttpRequest_fire(const struct kit_HttpRequest **ref)
 __attribute__((__nonnull__));
 
@@ -77,7 +77,7 @@ kit_HttpRequest_delete(const struct kit_HttpRequest *self);
 struct kit_HttpRequestBuilder;
 
 extern MutableOptional(struct kit_HttpRequestBuilder *)
-kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom *url)
+kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url)
 __attribute__((__nonnull__));
 
 // *************************************
@@ -89,7 +89,7 @@ __attribute__((__nonnull__));
 
 // takes ownership
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, struct kit_Text **ref)
+kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, kit_String *ref)
 __attribute__((__nonnull__));
 
 // *************************************

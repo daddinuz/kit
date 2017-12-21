@@ -50,7 +50,7 @@ int main() {
 void printRequest(const struct kit_HttpRequest *request) {
     assert(request);
     puts("");
-    printf("method: %s\n", kit_HttpMethod_explanin(kit_HttpRequest_getMethod(request)));
+    printf("method: %s\n", kit_HttpMethod_explain(kit_HttpRequest_getMethod(request)));
     printf("url: %s\n", kit_HttpRequest_getUrl(request));
 
     // --- TODO -----------------------------------------------------------
