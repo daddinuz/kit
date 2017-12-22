@@ -111,6 +111,35 @@ extern bool
 kit_HashMap_isEmpty(struct kit_HashMap *self)
 __attribute__((__nonnull__));
 
+/*
+ * 
+ */
+
+struct kit_HashMap_Iterator;
+
+extern MutableOptional(struct kit_HashMap_Iterator *)
+kit_HashMap_Iterator_new(struct kit_HashMap *container)
+__attribute__((__nonnull__));
+
+extern void
+kit_HashMap_Iterator_delete(struct kit_HashMap_Iterator *self);
+
+extern void
+kit_HashMap_Iterator_rewind(struct kit_HashMap_Iterator *self)
+__attribute__((__nonnull__));
+
+extern enum kit_Result
+kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, const void **keyOut, void **valueOut)
+__attribute__((__nonnull__));
+
+extern enum kit_Result
+kit_HashMap_Iterator_setLast(struct kit_HashMap_Iterator *self, void *value)
+__attribute__((__nonnull__(1)));
+
+extern bool
+kit_HashMap_Iterator_isModified(struct kit_HashMap_Iterator *self)
+__attribute__((__nonnull__));
+
 #ifdef __cplusplus
 }
 #endif

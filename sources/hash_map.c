@@ -31,7 +31,8 @@ struct kit_HashMap {
     struct kit_HashMap_Bucket **buckets;
 };
 
-MutableOption kit_HashMap_new(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
+MutableOption
+kit_HashMap_new(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
     assert(compareFn);
     assert(hashFn);
     size_t i;
@@ -168,4 +169,117 @@ size_t kit_HashMap_size(struct kit_HashMap *self) {
 bool kit_HashMap_isEmpty(struct kit_HashMap *self) {
     assert(self);
     return 0 == self->size;
+}
+
+struct kit_HashMap_Iterator {
+    int operationId;
+    size_t currentIndex;
+    struct kit_HashMap *container;
+    struct kit_HashMap_Bucket *last;
+    struct kit_HashMap_Bucket *next;
+};
+
+MutableOption kit_HashMap_Iterator_new(struct kit_HashMap *container) {
+    assert(container);
+    struct kit_HashMap_Iterator *self;
+    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
+
+    if (MutableOption_isSome(selfOption)) {
+        self = MutableOption_unwrap(selfOption);
+        self->container = container;
+        kit_HashMap_Iterator_rewind(self);
+    }
+
+    return selfOption;
+}
+
+void kit_HashMap_Iterator_delete(struct kit_HashMap_Iterator *self) {
+    kit_Allocator_free(self);
+}
+
+void kit_HashMap_Iterator_rewind(struct kit_HashMap_Iterator *self) {
+    assert(self);
+    assert(self->container);
+    const struct kit_HashMap *container = self->container;
+    struct kit_HashMap_Bucket **buckets = container->buckets;
+    const size_t CAPACITY = container->capacity;
+    size_t currentIndex = 0;
+
+    if (container->size > 0) {
+        while (currentIndex < CAPACITY && NULL == buckets[currentIndex]) {
+            currentIndex += 1;
+        }
+    }
+
+    self->operationId = container->operationId;
+    self->currentIndex = currentIndex;
+    self->last = NULL;
+    self->next = buckets[currentIndex];
+}
+
+enum kit_Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, const void **keyOut, void **valueOut) {
+    assert(self);
+    assert(keyOut);
+    assert(valueOut);
+
+    if (kit_HashMap_Iterator_isModified(self)) {
+        return KIT_RESULT_CONCURRENT_MODIFICATION_ERROR;
+    }
+
+    struct kit_HashMap_Bucket *currentBucket = self->next;
+    if (currentBucket) {
+        *keyOut = currentBucket->key;
+        *valueOut = currentBucket->value;
+        self->last = currentBucket;
+
+        if (currentBucket->next) {
+            self->next = currentBucket->next;
+            return KIT_RESULT_OK;
+        }
+
+        size_t currentIndex = self->currentIndex + 1;
+        const size_t CAPACITY = self->container->capacity;
+
+        if (self->currentIndex < CAPACITY) {
+            struct kit_HashMap_Bucket **buckets = self->container->buckets;
+
+            while (currentIndex < CAPACITY) {
+                if (buckets[currentIndex]) {
+                    self->next = buckets[currentIndex];
+                    self->currentIndex = currentIndex;
+                    return KIT_RESULT_OK;
+                }
+                currentIndex += 1;
+            }
+
+            self->next = NULL;
+            self->currentIndex = 0;
+            return KIT_RESULT_OK;
+        }
+    }
+
+    self->next = NULL;
+    self->currentIndex = 0;
+    return KIT_RESULT_OUT_OF_RANGE_ERROR;
+}
+
+enum kit_Result kit_HashMap_Iterator_setLast(struct kit_HashMap_Iterator *self, void *value) {
+    assert(self);
+    enum kit_Result result = KIT_RESULT_OK;
+
+    if (kit_HashMap_Iterator_isModified(self)) {
+        result = KIT_RESULT_CONCURRENT_MODIFICATION_ERROR;
+    } else if (self->last) {
+        self->last->value = value;
+    } else {
+        result = KIT_RESULT_ILLEGAL_STATE_ERROR;
+    }
+
+    return result;
+}
+
+bool kit_HashMap_Iterator_isModified(struct kit_HashMap_Iterator *self) {
+    assert(self);
+    struct kit_HashMap *container = self->container;
+    return NULL == container || self->operationId != container->operationId;
 }
