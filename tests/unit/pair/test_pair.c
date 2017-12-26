@@ -33,13 +33,23 @@ FeatureDefine(PairEssentials) {
     (void) traits_context;
 
     for (size_t i = 0; i < SEEDS_SIZE - 1; i += 2) {
-        const char *EXPECTED_FIRST = SEEDS[i];
-        const char *EXPECTED_SECOND = SEEDS[i + 1];
-        struct kit_Pair *sut = MutableOption_unwrap(kit_Pair_new((void *) EXPECTED_FIRST, (void *) EXPECTED_SECOND));
-        assert_equal(kit_Pair_first(sut), EXPECTED_FIRST);
-        assert_string_equal(kit_Pair_first(sut), EXPECTED_FIRST);
-        assert_equal(kit_Pair_second(sut), EXPECTED_SECOND);
-        assert_string_equal(kit_Pair_second(sut), EXPECTED_SECOND);
+        const char *EXPECTED_KEY = SEEDS[i];
+        const char *EXPECTED_VALUE = SEEDS[i + 1];
+        struct kit_Pair sut = kit_Pair_make(EXPECTED_KEY, (void *) EXPECTED_VALUE);
+        assert_equal(sut.key, EXPECTED_KEY);
+        assert_string_equal(sut.key, EXPECTED_KEY);
+        assert_equal(sut.value, EXPECTED_VALUE);
+        assert_string_equal(sut.value, EXPECTED_VALUE);
+    }
+
+    for (size_t i = 0; i < SEEDS_SIZE - 1; i += 2) {
+        const char *EXPECTED_KEY = SEEDS[i];
+        const char *EXPECTED_VALUE = SEEDS[i + 1];
+        struct kit_Pair *sut = MutableOption_unwrap(kit_Pair_new(EXPECTED_KEY, (void *) EXPECTED_VALUE));
+        assert_equal(sut->key, EXPECTED_KEY);
+        assert_string_equal(sut->key, EXPECTED_KEY);
+        assert_equal(sut->value, EXPECTED_VALUE);
+        assert_string_equal(sut->value, EXPECTED_VALUE);
         kit_Pair_delete(sut);
     }
 }

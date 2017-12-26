@@ -21,6 +21,7 @@ extern "C" {
 #include <stdbool.h>
 #include <option/option.h>
 #include <kit/compiler_steroids.h>
+#include <kit/collections/pair.h>
 #include <kit/collections/result.h>
 
 /**
@@ -60,12 +61,22 @@ __attribute__((__nonnull__(1, 2)));
 /**
  *
  * @param self
+ * @param pair
+ * @return
+ */
+extern enum kit_Result
+kit_Map_add(struct kit_Map *self, struct kit_Pair pair)
+__attribute__((__nonnull__));
+
+/**
+ *
+ * @param self
  * @param key
  * @param out
  * @return
  */
 extern enum kit_Result
-kit_Map_get(struct kit_Map *self, const void *key, void **out)
+kit_Map_get(struct kit_Map *self, const void *key, struct kit_Pair *out)
 __attribute__((__nonnull__));
 
 /**
@@ -86,7 +97,7 @@ __attribute__((__nonnull__));
  * @return
  */
 extern enum kit_Result
-kit_Map_pop(struct kit_Map *self, const void *key, void **out)
+kit_Map_pop(struct kit_Map *self, const void *key, struct kit_Pair *out)
 __attribute__((__nonnull__));
 
 /**
@@ -113,6 +124,64 @@ __attribute__((__nonnull__));
  */
 extern bool
 kit_Map_isEmpty(struct kit_Map *self)
+__attribute__((__nonnull__));
+
+/**
+ * kit_Map_Iterator interface.
+ */
+struct kit_Map_Iterator;
+
+/**
+ *
+ * @param container
+ * @return
+ */
+extern MutableOptional(struct kit_Map_Iterator *)
+kit_Map_Iterator_new(struct kit_Map *container)
+__attribute__((__nonnull__));
+
+/**
+ *
+ * @param self
+ */
+extern void
+kit_Map_Iterator_delete(struct kit_Map_Iterator *self);
+
+/**
+ *
+ * @param self
+ */
+extern void
+kit_Map_Iterator_rewind(struct kit_Map_Iterator *self)
+__attribute__((__nonnull__));
+
+/**
+ *
+ * @param self
+ * @param out
+ * @return
+ */
+extern enum kit_Result
+kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair *out)
+__attribute__((__nonnull__));
+
+/**
+ *
+ * @param self
+ * @param value
+ * @return
+ */
+extern enum kit_Result
+kit_Map_Iterator_setLast(struct kit_Map_Iterator *self, void *value)
+__attribute__((__nonnull__(1)));
+
+/**
+ *
+ * @param self
+ * @return
+ */
+extern bool
+kit_Map_Iterator_isModified(struct kit_Map_Iterator *self)
 __attribute__((__nonnull__));
 
 #ifdef __cplusplus
