@@ -42,11 +42,11 @@ void report(struct kit_Map *map) {
     static const char S[] = "-----------------------------------------------------------------------------------------";
     struct kit_Map_Iterator *iterator = M(kit_Map_Iterator_new(map));
 
-    printf("\n%.*s\n{\n", (int) sizeof(S), S);
+    printf("\n%s\n{\n", S);
     while (KIT_RESULT_OK == kit_Map_Iterator_next(iterator, &pair)) {
         printf("\t'%s': '%s',\n", (const char *) pair.key, (const char *) pair.value);
     }
-    printf("}\n%.*s\n", (int) sizeof(S), S);
+    printf("}\n%s\n", S);
 
     kit_Map_Iterator_delete(iterator);
 }
