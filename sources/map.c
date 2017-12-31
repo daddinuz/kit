@@ -47,6 +47,8 @@ struct kit_Map {
 
 MutableOption
 kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
+    assert(compareFn);
+    assert(hashFn);
     struct kit_Map *self;
     MutableOption selfOption = kit_Allocator_malloc(sizeof(*self)), superOption;
 
@@ -81,16 +83,16 @@ void kit_Map_delete(struct kit_Map *self) {
     }
 }
 
-enum kit_Result kit_Map_put(struct kit_Map *self, const void *key, void *value) {
-    assert(self);
-    assert(key);
-    return self->fnPut(self->super, key, value);
-}
-
 enum kit_Result kit_Map_add(struct kit_Map *self, struct kit_Pair pair) {
     assert(self);
     assert(pair.key);
     return self->fnAdd(self->super, pair);
+}
+
+enum kit_Result kit_Map_put(struct kit_Map *self, const void *key, void *value) {
+    assert(self);
+    assert(key);
+    return self->fnPut(self->super, key, value);
 }
 
 enum kit_Result kit_Map_get(struct kit_Map *self, const void *key, struct kit_Pair *out) {
