@@ -9,6 +9,7 @@
 #include <traits-unit/traits-unit.h>
 #include "fixtures/fixture_map.h"
 #include "features/feature_insert.h"
+#include "features/feature_remove.h"
 
 /*
  * Describe the test case
@@ -17,6 +18,8 @@ Describe("Map",
          Trait(
                  "HashMap",
                  Run(MapAdd, EmptyMapHashMapFixture),
-                 Run(MapPut, EmptyMapHashMapFixture)
+                 Run(MapPut, EmptyMapHashMapFixture),
+                 Run(MapPop, SeededMapHashMapFixture),
+                 Run(MapClear, SeededMapHashMapFixture)
          ),
 )

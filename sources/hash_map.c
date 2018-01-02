@@ -163,6 +163,7 @@ void kit_HashMap_clear(struct kit_HashMap *self) {
                 next = current->next;
                 kit_Allocator_free(current);
             }
+            self->buckets[i] = NULL;
         }
         self->size = 0;
         self->operationId += 1;

@@ -110,29 +110,46 @@ kit_Map_get(struct kit_Map *self, const void *key, struct kit_Pair *out)
 __attribute__((__nonnull__));
 
 /**
+ * Checks if a key is present in the container.
  *
- * @param self
- * @param key
- * @return
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *      - @param key must not be NULL.
+ *
+ * @param self The container instance.
+ * @param key The key to look for.
+ * @return true if the key is present else false
  */
 extern bool
 kit_Map_has(struct kit_Map *self, const void *key)
 __attribute__((__nonnull__));
 
 /**
- *
- * @param self
- * @param key
- * @param out
+ * Removes an element from the container.
+ * 
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *      - @param key must not be NULL.
+ *      - @param out must not be NULL.
+ * 
+ * @param self The container instance.
+ * @param key The key to be removed.
+ * @param out The removed element.
  * @return
+ *      - KIT_RESULT_OK            :   The operation was performed successfully.
+ *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
  */
 extern enum kit_Result
 kit_Map_pop(struct kit_Map *self, const void *key, struct kit_Pair *out)
 __attribute__((__nonnull__));
 
 /**
+ * Removes all elements from the container, leaving it with a size of 0.
  *
- * @param self
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *
+ * @param self The container instance.
  */
 extern void
 kit_Map_clear(struct kit_Map *self)
