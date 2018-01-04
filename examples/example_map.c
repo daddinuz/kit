@@ -8,66 +8,45 @@
 
 #include <stdio.h>
 #include <kit/utils.h>
-#include <kit/collections/map.h>
 #include <kit/collections/atom.h>
-#include <kit/collections/array.h>
+#include <kit/collections/map.h>
 
 #define I(x)    ImmutableOption_unwrap((x))
 #define M(x)    MutableOption_unwrap((x))
 
-void report(struct kit_Map *map, struct kit_Array *keys);
+void report(struct kit_Map *map);
 
 /*
  *
  */
 int main() {
-    void *e = NULL;
     kit_Atom accept = I(kit_Atom_fromLiteral("Accept"));
     kit_Atom contentType = I(kit_Atom_fromLiteral("ContentType"));
     kit_Atom authorization = I(kit_Atom_fromLiteral("Authorization"));
     struct kit_Map *map = M(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
-    struct kit_Array *keys = M(kit_Array_from((void *) accept, (void *) contentType, (void *) authorization));
 
-    report(map, keys);
+    report(map);
 
     kit_Map_put(map, accept, (void *) I(kit_Atom_fromLiteral("text/plain")));
     kit_Map_put(map, contentType, (void *) I(kit_Atom_fromLiteral("application/json")));
     kit_Map_put(map, authorization, (void *) I(kit_Atom_fromLiteral("Basic QWxhZGRpbc2FtZQ==")));
 
-    report(map, keys);
+    report(map);
 
-    printf("\nUpdating: `%s` ...\n", accept);
-    kit_Map_put(map, accept, (void *) I(kit_Atom_fromLiteral("application/json")));
-
-    report(map, keys);
-
-    printf("\nRemoving: `%s` ...\n", authorization);
-    kit_Map_pop(map, authorization, &e);
-
-    report(map, keys);
-
-    kit_invalidate((void **) &keys, kit_Array_delete);
     kit_invalidate((void **) &map, kit_Map_delete);
     return 0;
 }
 
-void report(struct kit_Map *map, struct kit_Array *keys) {
-    void *e;
-    kit_Atom atom1;
-    kit_Atom atom2;
-    const char sep[] = "----------------------------------------------------------------------------------------------";
+void report(struct kit_Map *map) {
+    struct kit_Pair pair;
+    static const char S[] = "-----------------------------------------------------------------------------------------";
+    struct kit_Map_Iterator *iterator = M(kit_Map_Iterator_new(map));
 
-    printf("\n%.*s\n", (int) sizeof(sep), sep);
-    printf("size: %zu\n", kit_Map_size(map));
-    printf("isEmpty: %s", kit_truth(kit_Map_isEmpty(map)));
-    for (size_t i = 0; i < kit_Array_capacity(keys); i++) {
-        e = NULL;
-        kit_Array_get(keys, &e, i);
-        atom1 = e;
-        e = NULL;
-        kit_Map_get(map, atom1, &e);
-        atom2 = e;
-        printf("\n%s:\n\tpresent: %s\n\tvalue: %s", atom1, kit_truth(kit_Map_has(map, atom1)), atom2);
+    printf("\n%s\n{\n", S);
+    while (KIT_RESULT_OK == kit_Map_Iterator_next(iterator, &pair)) {
+        printf("\t'%s': '%s',\n", (const char *) pair.key, (const char *) pair.value);
     }
-    printf("\n%.*s\n", (int) sizeof(sep), sep);
+    printf("}\n%s\n", S);
+
+    kit_Map_Iterator_delete(iterator);
 }
