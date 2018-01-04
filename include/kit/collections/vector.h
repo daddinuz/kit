@@ -291,18 +291,19 @@ __attribute__((__nonnull__));
 
 /**
  * Explicitly request an expansion to hold at least size elements.
- * If requested size is less than vector capacity nothing will be done.
+ * If requested capacity is less than vector capacity nothing will be done.
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
  *
  * @param self The container instance.
+ * @param capacity The requested capacity
  * @return
  *      - KIT_RESULT_OK            :   The operation was performed successfully.
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_reserve(struct kit_Vector *self, size_t size)
+kit_Vector_reserve(struct kit_Vector *self, size_t capacity)
 __attribute__((__nonnull__));
 
 /**
