@@ -51,7 +51,9 @@ kit_Vector_new(void);
  * Creates a new instance of kit_Vector giving hits about initial capacity.
  * In case of out of memory this function returns MutableOption_None.
  *
- * @param capacityHint The hint about the initial capacity.
+ * If capacityHint is 0 then a default capacity will be used.
+ *
+ * @param capacityHint An hint about the average capacity.
  * @return A new instance of kit_Vector or MutableOption_None.
  */
 extern MutableOptional(struct kit_Vector *)
@@ -290,19 +292,20 @@ kit_Vector_capacity(struct kit_Vector *self)
 __attribute__((__nonnull__));
 
 /**
- * Explicitly request an expansion to hold at least size elements.
- * If requested size is less than vector capacity nothing will be done.
+ * Explicitly request an expansion to hold at least @param capacity elements.
+ * If requested capacity is less than vector capacity nothing will be done.
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
  *
  * @param self The container instance.
+ * @param capacity The requested capacity
  * @return
  *      - KIT_RESULT_OK            :   The operation was performed successfully.
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Vector_reserve(struct kit_Vector *self, size_t size)
+kit_Vector_reserve(struct kit_Vector *self, size_t capacity)
 __attribute__((__nonnull__));
 
 /**

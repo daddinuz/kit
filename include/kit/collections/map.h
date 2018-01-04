@@ -35,11 +35,13 @@ struct kit_Map;
  * Creates a new instance of kit_Map using HashMap as underlying container.
  * In case of out of memory this function returns MutableOption_None.
  *
+ * If capacityHint is 0 then a default capacity will be used.
+ *
  * Checked runtime errors:
  *      - @param compareFn must not be NULL.
  *      - @param hashFn must not be NULL.
  *
- * @param capacityHint The maximum expected capacity for this map.
+ * @param capacityHint An hint about the average capacity.
  * @param compareFn The function used to compare keys.
  * @param hashFn The function used to hash keys.
  * @return A new instance of kit_Map or MutableOption_None.

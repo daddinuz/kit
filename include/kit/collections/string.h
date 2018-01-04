@@ -33,7 +33,9 @@ typedef const char *kit_String;
  * Creates a new instance of kit_String with 0 size.
  * In case of OOM this function returns ImmutableOption_None.
  *
- * @param capacityHint A hint to determine the initial capacity of the string.
+ * If capacityHint is 0 then a default capacity will be used.
+ *
+ * @param capacityHint An hint about the average capacity.
  * @return A new instance of kit_String or ImmutableOption_None.
  */
 extern ImmutableOptional(kit_String)
