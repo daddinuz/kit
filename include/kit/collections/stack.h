@@ -60,10 +60,13 @@ kit_Stack_fromXorList(void);
  * Creates a new instance of kit_Stack using Vector as underlying container.
  * In case of out of memory this function returns MutableOption_None.
  *
+ * If capacityHint is 0 then a default capacity will be used.
+ *
+ * @param capacityHint An hint about the average capacity.
  * @return A new instance of kit_Stack or MutableOption_None.
  */
 extern MutableOptional(struct kit_Stack *)
-kit_Stack_fromVector(void);
+kit_Stack_fromVector(size_t capacityHint);
 
 /**
  * Deletes an instance of kit_Stack.

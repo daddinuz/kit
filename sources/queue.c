@@ -111,13 +111,13 @@ MutableOption kit_Queue_fromXorList(void) {
     return selfOption;
 }
 
-MutableOption kit_Queue_fromVector(void) {
+MutableOption kit_Queue_fromVector(size_t capacityHint) {
     struct kit_Queue *self;
     MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
     if (MutableOption_isSome(selfOption)) {
         self = MutableOption_unwrap(selfOption);
-        superOption = kit_Vector_new();
+        superOption = kit_Vector_from(capacityHint);
         if (MutableOption_isSome(superOption)) {
             self->super = MutableOption_unwrap(superOption);
             self->fnDelete = (kit_Queue_Super_deleteFn) kit_Vector_delete;

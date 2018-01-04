@@ -269,9 +269,9 @@ size_t kit_List_capacity(struct kit_List *self) {
     return self->fnCapacity(self->super);
 }
 
-enum kit_Result kit_List_reserve(struct kit_List *self, size_t size) {
+enum kit_Result kit_List_reserve(struct kit_List *self, size_t capacity) {
     assert(self);
-    return self->fnReserve(self->super, size);
+    return self->fnReserve(self->super, capacity);
 }
 
 enum kit_Result kit_List_shrink(struct kit_List *self) {
