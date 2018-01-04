@@ -14,8 +14,17 @@
 #define M(x)   MutableOption_unwrap((x))
 #define I(x)   ImmutableOption_unwrap((x))
 
-void printRequest(const struct kit_HttpRequest *request) __attribute__((__nonnull__));
-void printResponse(const struct kit_HttpResponse *response) __attribute__((__nonnull__));
+static void
+printMap(const struct kit_Map *map)
+__attribute__((__nonnull__));
+
+static void
+printRequest(const struct kit_HttpRequest *request)
+__attribute__((__nonnull__));
+
+static void
+printResponse(const struct kit_HttpResponse *response)
+__attribute__((__nonnull__));
 
 /*
  *
@@ -28,6 +37,7 @@ int main() {
 
     requestHeaders = M(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
     kit_Map_put(requestHeaders, I(kit_Atom_fromLiteral("Accept")), (void *) I(kit_Atom_fromLiteral("application/json")));
+    kit_Map_put(requestHeaders, I(kit_Atom_fromLiteral("Authorization")), (void *) I(kit_Atom_fromLiteral("Basic QWxhZGRpbc2FtZQ==")));
 
     requestBuilder = M(kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, I(kit_Atom_fromLiteral("https://github.com"))));
     kit_HttpRequestBuilder_setTimeout(requestBuilder, 60);
@@ -38,7 +48,6 @@ int main() {
     assert(NULL == requestBuilder);
     printRequest(request);
 
-    // TODO perform real call
     response = I(kit_HttpRequest_fire(&request)); // takes ownership invalidating request.
     assert(NULL == request);
     printResponse(response);
@@ -47,17 +56,33 @@ int main() {
     return 0;
 }
 
+/*
+ * 
+ */
+void printMap(const struct kit_Map *map) {
+    struct kit_Pair pair;
+    struct kit_Map_Iterator *iterator = M(kit_Map_Iterator_new((struct kit_Map *) map));
+
+    while (KIT_RESULT_OK == kit_Map_Iterator_next(iterator, &pair)) {
+        printf("  %s: %s\n", (const char *) pair.key, (const char *) pair.value);
+    }
+
+    kit_Map_Iterator_delete(iterator);
+}
+
 void printRequest(const struct kit_HttpRequest *request) {
     assert(request);
     puts("");
     printf("method: %s\n", kit_HttpMethod_explain(kit_HttpRequest_getMethod(request)));
     printf("url: %s\n", kit_HttpRequest_getUrl(request));
-
-    // --- TODO -----------------------------------------------------------
     printf("headers:\n");
+    if (ImmutableOption_isSome(kit_HttpRequest_getHeaders(request))) {
+        printMap(ImmutableOption_unwrap(kit_HttpRequest_getHeaders(request)));
+    }
     printf("body:\n");
-    // --------------------------------------------------------------------
-
+    if (ImmutableOption_isSome(kit_HttpRequest_getBody(request))) {
+        printMap(ImmutableOption_unwrap(kit_HttpRequest_getBody(request)));
+    }
     printf("timeout: %ld\n", kit_HttpRequest_getTimeout(request));
     printf("followLocation: %s\n", kit_truth(kit_HttpRequest_getFollowLocation(request)));
     printf("peerVerification: %s\n", kit_truth(kit_HttpRequest_getPeerVerification(request)));
@@ -69,12 +94,14 @@ void printResponse(const struct kit_HttpResponse *response) {
     assert(response);
     puts("");
     printf("effective_url: %s\n", kit_HttpResponse_getUrl(response));
-
-    // --- TODO -----------------------------------------------------------
     printf("headers:\n");
+    if (ImmutableOption_isSome(kit_HttpResponse_getHeaders(response))) {
+        printMap(ImmutableOption_unwrap(kit_HttpResponse_getHeaders(response)));
+    }
     printf("body:\n");
-    // --------------------------------------------------------------------
-
+    if (ImmutableOption_isSome(kit_HttpResponse_getBody(response))) {
+        printMap(ImmutableOption_unwrap(kit_HttpResponse_getBody(response)));
+    }
     printf("status: %d (%s)\n", kit_HttpResponse_getStatus(response), kit_HttpStatus_explanin(kit_HttpResponse_getStatus(response)));
     puts("");
 }
