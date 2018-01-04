@@ -294,19 +294,20 @@ kit_List_capacity(struct kit_List *self)
 __attribute__((__nonnull__));
 
 /**
- * Requests an expansion to hold at least @param size elements.
+ * Requests an expansion to hold at least @param capacity elements.
  * (This method may ignore the request if the container does not support reserve)
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
  *
  * @param self The container instance.
+ * @param capacity The requested capacity
  * @return
  *      - KIT_RESULT_OK            :   The operation was performed successfully.
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_List_reserve(struct kit_List *self, size_t size)
+kit_List_reserve(struct kit_List *self, size_t capacity)
 __attribute__((__nonnull__));
 
 /**

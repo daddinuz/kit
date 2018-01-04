@@ -292,7 +292,7 @@ kit_Vector_capacity(struct kit_Vector *self)
 __attribute__((__nonnull__));
 
 /**
- * Explicitly request an expansion to hold at least size elements.
+ * Explicitly request an expansion to hold at least @param capacity elements.
  * If requested capacity is less than vector capacity nothing will be done.
  *
  * Checked runtime errors:
