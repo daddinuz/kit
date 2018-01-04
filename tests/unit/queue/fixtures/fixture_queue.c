@@ -102,7 +102,7 @@ struct kit_Queue *setup_helper(enum kit_QueueType type, const char *const seeds[
             sut = MutableOption_unwrap(kit_Queue_fromXorList());
             break;
         case KIT_QUEUE_TYPE_VECTOR:
-            sut = MutableOption_unwrap(kit_Queue_fromVector());
+            sut = MutableOption_unwrap(kit_Queue_fromVector(0));
             break;
         default:
             traits_assert(false);

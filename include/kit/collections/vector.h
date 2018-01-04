@@ -51,7 +51,9 @@ kit_Vector_new(void);
  * Creates a new instance of kit_Vector giving hits about initial capacity.
  * In case of out of memory this function returns MutableOption_None.
  *
- * @param capacityHint The hint about the initial capacity.
+ * If capacityHint is 0 then a default capacity will be used.
+ *
+ * @param capacityHint An hint about the average capacity.
  * @return A new instance of kit_Vector or MutableOption_None.
  */
 extern MutableOptional(struct kit_Vector *)
