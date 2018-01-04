@@ -9,8 +9,8 @@
 #include <seeds.h>
 #include <traits/traits.h>
 #include <fixtures/fixture_map.h>
+#include <fixtures/fixture_map_context.h>
 #include <kit/utils.h>
-#include <kit/collections/map.h>
 #include <kit/collections/atom.h>
 
 /*
@@ -26,6 +26,9 @@ enum kit_MapType {
 static struct kit_Map *
 setup_map_helper(enum kit_MapType type, const char *const *seeds, size_t seeds_size);
 
+static struct kit_Traits_MapIteratorContext *
+setup_map_iterator_helper(enum kit_MapType type, const char *const *seeds, size_t seeds_size);
+
 /*
  * Setups implementations
  */
@@ -37,6 +40,14 @@ SetupDefine(SeededMapHashMapSetup) {
     return setup_map_helper(KIT_MAP_TYPE_HASH_MAP, SEEDS, SEEDS_SIZE);
 }
 
+SetupDefine(MapIteratorFromEmptyMapHashMapSetup) {
+    return setup_map_iterator_helper(KIT_MAP_TYPE_HASH_MAP, NULL, 0);
+}
+
+SetupDefine(MapIteratorFromSeededMapHashMapSetup) {
+    return setup_map_iterator_helper(KIT_MAP_TYPE_HASH_MAP, SEEDS, SEEDS_SIZE);
+}
+
 /*
  * Teardowns implementations
  */
@@ -46,11 +57,24 @@ TeardownDefine(MapTeardown) {
     kit_Map_delete(sut);
 }
 
+TeardownDefine(MapIteratorTeardown) {
+    struct kit_Traits_MapIteratorContext *context = traits_context;
+    assert_not_null(context);
+    assert_not_null(context->map);
+    assert_not_null(context->sut);
+    kit_Map_delete(context->map);
+    kit_Map_Iterator_delete(context->sut);
+    free(context);
+}
+
 /*
  * Fixtures implementations
  */
 FixtureDefine(EmptyMapHashMapFixture, EmptyMapHashMapSetup, MapTeardown);
 FixtureDefine(SeededMapHashMapFixture, SeededMapHashMapSetup, MapTeardown);
+
+FixtureDefine(MapIteratorFromEmptyMapHashMapFixture, MapIteratorFromEmptyMapHashMapSetup, MapIteratorTeardown);
+FixtureDefine(MapIteratorFromSeededMapHashMapFixture, MapIteratorFromSeededMapHashMapSetup, MapIteratorTeardown);
 
 /*
  * Helpers implementations
@@ -82,4 +106,20 @@ setup_map_helper(enum kit_MapType type, const char *const seeds[], const size_t 
     }
 
     return sut;
+}
+
+struct kit_Traits_MapIteratorContext *
+setup_map_iterator_helper(enum kit_MapType type, const char *const *seeds, size_t seeds_size) {
+    assert_true((seeds && seeds_size) > 0 || (NULL == seeds && seeds_size == 0));
+
+    struct kit_Traits_MapIteratorContext *context = calloc(1, sizeof(*context));
+    assert_not_null(context);
+
+    context->map = setup_map_helper(type, seeds, seeds_size);
+    assert_not_null(context->map);
+
+    context->sut = MutableOption_unwrap(kit_Map_Iterator_new(context->map));
+    assert_not_null(context->sut);
+
+    return context;
 }

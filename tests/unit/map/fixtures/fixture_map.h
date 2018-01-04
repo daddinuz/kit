@@ -21,6 +21,12 @@ extern "C" {
 FixtureDeclare(EmptyMapHashMapFixture);
 FixtureDeclare(SeededMapHashMapFixture);
 
+/*
+ * MapIterator
+ */
+FixtureDeclare(MapIteratorFromEmptyMapHashMapFixture);
+FixtureDeclare(MapIteratorFromSeededMapHashMapFixture);
+
 #ifdef __cplusplus
 }
 #endif

@@ -7,7 +7,9 @@
  */
 
 /*
- * 
+ * Maps are associative containers that store elements formed by a combination of a key value and a mapped value.
+ * In a map, the keys are generally used to sort and uniquely identify the elements, while the mapped values
+ * store the content associated to this key.
  */
 
 #ifndef KIT_MAP_INCLUDED
@@ -187,53 +189,83 @@ __attribute__((__nonnull__));
 struct kit_Map_Iterator;
 
 /**
+ * Creates a new instance of kit_Map_Iterator.
+ * In case of out of memory this function returns MutableOption_None.
  *
- * @param container
- * @return
+ * Checked runtime errors:
+ *      - @param container must not be NULL.
+ *
+ * @param container The instance of the container to iterate.
+ * @return A new instance of kit_Map_Iterator or MutableOption_None.
  */
 extern MutableOptional(struct kit_Map_Iterator *)
 kit_Map_Iterator_new(struct kit_Map *container)
 __attribute__((__nonnull__));
 
 /**
+ * Deletes an instance of kit_Map_Iterator.
+ * If @param self is NULL no action will be performed.
  *
- * @param self
+ * @param self The instance to be deleted.
  */
 extern void
 kit_Map_Iterator_delete(struct kit_Map_Iterator *self);
 
 /**
+ * Rewinds the iterator.
  *
- * @param self
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *
+ * @param self The instance of the iterator to be rewound.
  */
 extern void
 kit_Map_Iterator_rewind(struct kit_Map_Iterator *self)
 __attribute__((__nonnull__));
 
 /**
+ * Gets the next pair in the map.
  *
- * @param self
- * @param out
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *      - @param out must not be NULL.
+ *
+ * @param self The iterator instance.
+ * @param out The retrieved pair.
  * @return
+ *      - KIT_RESULT_OK                        :   The operation was performed successfully.
+ *      - KIT_RESULT_OUT_OF_RANGE              :   The iterator hit the end of the container, nothing has been done.
+ *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
 kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair *out)
 __attribute__((__nonnull__));
 
 /**
+ * Updates the value of the last retrieved pair.
  *
- * @param self
- * @param value
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *
+ * @param self The iterator instance.
+ * @param value The new value.
  * @return
+ *      - KIT_RESULT_OK                        :   The operation was performed successfully.
+ *      - KIT_RESULT_ILLEGAL_STATE             :   Neither next() or previous() has been called, nothing has been done.
+ *      - KIT_RESULT_CONCURRENT_MODIFICATION   :   The container has been modified, nothing has been done.
  */
 extern enum kit_Result
 kit_Map_Iterator_setLast(struct kit_Map_Iterator *self, void *value)
 __attribute__((__nonnull__(1)));
 
 /**
+ * Checks for associated container modifications.
  *
- * @param self
- * @return
+ * Checked runtime errors:
+ *      - @param self must not be NULL.
+ *
+ * @param self The iterator instance.
+ * @return true if the container has been modified else false
  */
 extern bool
 kit_Map_Iterator_isModified(struct kit_Map_Iterator *self)
