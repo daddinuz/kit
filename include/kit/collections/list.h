@@ -384,10 +384,10 @@ kit_List_Iterator_delete(struct kit_List_Iterator *self);
  * Rewinds the iterator.
  *
  * Checked runtime errors:
- *      - @param container must not be NULL.
+ *      - @param self must not be NULL.
  *      - @param bound must be KIT_BOUND_BEGIN or KIT_BOUND_END.
  *
- * @param container The instance of the container to iterate.
+ * @param self The instance of the iterator to be rewound.
  * @param bound The start bound.
  */
 extern void
