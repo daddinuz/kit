@@ -76,7 +76,7 @@ enum kit_HttpStatus {
 };
 
 extern const char *
-kit_HttpStatus_explanin(enum kit_HttpStatus status);
+kit_HttpStatus_explain(enum kit_HttpStatus status);
 
 #ifdef __cplusplus
 }

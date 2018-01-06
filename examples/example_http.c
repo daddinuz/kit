@@ -102,6 +102,6 @@ void printResponse(const struct kit_HttpResponse *response) {
     if (ImmutableOption_isSome(kit_HttpResponse_getBody(response))) {
         printMap(ImmutableOption_unwrap(kit_HttpResponse_getBody(response)));
     }
-    printf("status: %d (%s)\n", kit_HttpResponse_getStatus(response), kit_HttpStatus_explanin(kit_HttpResponse_getStatus(response)));
+    printf("status: %d (%s)\n", kit_HttpResponse_getStatus(response), kit_HttpStatus_explain(kit_HttpResponse_getStatus(response)));
     puts("");
 }
