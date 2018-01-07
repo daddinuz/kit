@@ -48,11 +48,11 @@ void kit_swap(void **a, void **b) {
     *b = tmp;
 }
 
-void kit_invalidate(void **ref, void (*destructor)()) {
+void *kit_move(void **ref) {
     assert(ref);
-    assert(destructor);
-    destructor(*ref);
+    void *data = *ref;
     *ref = NULL;
+    return data;
 }
 
 int kit_compareFn(const void *a, const void *b) {
