@@ -7,6 +7,7 @@
  */
 
 #include <stdio.h>
+#include <kit/utils.h>
 #include <kit/collections/string.h>
 
 #define I(x)    ImmutableOption_unwrap((x))
@@ -27,6 +28,6 @@ int main() {
     string = I(kit_String_quote(&string));
     printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
 
-    kit_String_delete(string);
+    kit_String_delete(kit_move((void **) &string));
     return 0;
 }

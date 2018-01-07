@@ -51,7 +51,7 @@ int main() {
     assert(NULL == request);
     printResponse(response);
 
-    kit_invalidate((void **) &response, kit_HttpResponse_delete); // deletes and invalidates response and associated request
+    kit_HttpResponse_delete(kit_move((void **) &response)); // deletes and invalidates response and associated request
     return 0;
 }
 

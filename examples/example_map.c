@@ -33,7 +33,7 @@ int main() {
 
     report(map);
 
-    kit_invalidate((void **) &map, kit_Map_delete);
+    kit_Map_delete(kit_move((void **) &map));
     return 0;
 }
 
@@ -48,5 +48,5 @@ void report(struct kit_Map *map) {
     }
     printf("}\n%s\n", S);
 
-    kit_Map_Iterator_delete(iterator);
+    kit_Map_Iterator_delete(kit_move((void **) &iterator));
 }

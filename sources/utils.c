@@ -48,13 +48,6 @@ void kit_swap(void **a, void **b) {
     *b = tmp;
 }
 
-void kit_invalidate(void **ref, void (*destructor)()) {
-    assert(ref);
-    assert(destructor);
-    destructor(*ref);
-    *ref = NULL;
-}
-
 void *kit_move(void **ref) {
     assert(ref);
     void *data = *ref;

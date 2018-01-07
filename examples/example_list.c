@@ -37,7 +37,7 @@ int main() {
         printf("[%zu]: %s\n", index - 1, (char *) e);
     }
 
-    kit_invalidate((void **) &iterator, kit_List_Iterator_delete);
-    kit_invalidate((void **) &list, kit_List_delete);
+    kit_List_Iterator_delete(kit_move((void **) &iterator));
+    kit_List_delete(kit_move((void **) &list));
     return 0;
 }

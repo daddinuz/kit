@@ -65,33 +65,12 @@ kit_swap(void **a, void **b)
 __attribute__((__nonnull__));
 
 /**
- * Destructs data at (*ref) and assigns NULL invalidating the pointer.
- * Usually used as a safer alternative to free.
- *
- * e.g.
- * ```
- *      data_t *someData = data_new(...);
- *      kit_invalidate(&someData, data_delete);
- * ```
- *
- * Checked runtime errors:
- *      - @param ref must not be NULL.
- *      - @param destructor must not be NULL.
- *
- * @param ref The reference to the pointer to be destructed.
- * @param destructor The destructor function to invoke.
- */
-extern void
-kit_invalidate(void **ref, void (*destructor)())
-__attribute__((__nonnull__));
-
-/**
  * Moves ownership invalidating ref.
  *
  * Checked runtime errors:
  *      - @param ref must not be NULL.
  *
- * @param ref The reference to the pointer to be destructed.
+ * @param ref The reference to the pointer to be moved.
  * @return data to be moved.
  */
 extern void *
@@ -111,7 +90,8 @@ __attribute__((__nonnull__));
  * @return -1 if a > b; 0 if a == 0; 1 if b > a;
  */
 extern int
-kit_compareFn(const void *a, const void *b);
+kit_compareFn(const void *a, const void *b)
+__attribute__((__nonnull__));
 
 /**
  * This function should be treated as an helper when initializing collections that needs a hash function.
@@ -124,7 +104,8 @@ kit_compareFn(const void *a, const void *b);
  * @return The hash of the key.
  */
 extern size_t
-kit_hashFn(const void *key);
+kit_hashFn(const void *key)
+__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }
