@@ -14,7 +14,7 @@
 struct kit_HttpResponse {
     const struct kit_HttpRequest *request;
     kit_Atom url;
-    const struct kit_Map *headers;
+    kit_String headers;
     kit_String body;
     enum kit_HttpStatus status;
 };
@@ -47,7 +47,8 @@ enum kit_HttpStatus kit_HttpResponse_getStatus(const struct kit_HttpResponse *se
 void kit_HttpResponse_delete(const struct kit_HttpResponse *self) {
     if (self) {
         kit_HttpRequest_delete(self->request);
-        kit_Map_delete((void *) self->headers);
+        kit_String_delete(self->body);
+        kit_String_delete(self->headers);
         kit_Allocator_free((void *) self);
     }
 }
@@ -111,11 +112,11 @@ kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom ur
 }
 
 struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, struct kit_Map **ref) {
+kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, kit_String *ref) {
     assert(self);
     assert(ref);
     assert(*ref);
-    self->response->headers = *ref;
+    self->response->headers = ImmutableOption_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }
@@ -125,7 +126,7 @@ kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, kit_String
     assert(self);
     assert(ref);
     assert(*ref);
-    self->response->body = *ref;
+    self->response->body = ImmutableOption_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }

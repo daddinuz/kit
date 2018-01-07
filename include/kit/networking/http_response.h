@@ -15,7 +15,6 @@ extern "C" {
 
 #include <stdbool.h>
 #include <option/option.h>
-#include <kit/collections/map.h>
 #include <kit/collections/atom.h>
 #include <kit/collections/string.h>
 #include <kit/networking/http_status.h>
@@ -34,7 +33,7 @@ extern kit_Atom
 kit_HttpResponse_getUrl(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(struct kit_Map *)
+extern ImmutableOptional(kit_String)
 kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
@@ -70,7 +69,7 @@ __attribute__((__nonnull__));
 
 // takes ownership
 extern struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, struct kit_Map **ref)
+kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, kit_String *ref)
 __attribute__((__nonnull__));
 
 // takes ownership

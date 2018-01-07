@@ -7,16 +7,15 @@
  */
 
 #include <assert.h>
-#include <kit/utils.h>
 #include <kit/allocator/allocator.h>
 #include <kit/networking/http_request.h>
 
 struct kit_HttpRequest {
     enum kit_HttpMethod method;
     kit_Atom url;
-    const struct kit_Map *headers;
+    kit_String headers;
     kit_String body;
-    long timeout;
+    size_t timeout;
     bool followLocation;
     bool peerVerification;
     bool hostVerification;
@@ -42,7 +41,7 @@ ImmutableOption kit_HttpRequest_getBody(const struct kit_HttpRequest *self) {
     return ImmutableOption_new(self->body);
 }
 
-long kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self) {
+size_t kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self) {
     assert(self);
     return self->timeout;
 }
@@ -62,54 +61,10 @@ bool kit_HttpRequest_getHostVerification(const struct kit_HttpRequest *self) {
     return self->hostVerification;
 }
 
-ImmutableOption kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
-    assert(ref);
-    assert(*ref);
-    bool teardownRequired = false;
-    struct kit_Map *responseHeaders = NULL;
-    const struct kit_HttpRequest *request = *ref;
-    struct kit_HttpResponseBuilder *responseBuilder = NULL;
-    MutableOption responseBuilderOption, responseHeadersOption;
-
-    do {
-        // TODO perform the real request and handle oom (1)
-
-        responseHeadersOption = kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn);
-        if (MutableOption_isNone(responseHeadersOption)) {
-            teardownRequired = true;
-            break;
-        }
-        responseHeaders = MutableOption_unwrap(responseHeadersOption);
-
-        // TODO add responseHeaders here and handle oom
-
-        responseBuilderOption = kit_HttpResponseBuilder_new(request);
-        if (MutableOption_isNone(responseBuilderOption)) {
-            teardownRequired = true;
-            break;
-        }
-        responseBuilder = MutableOption_unwrap(responseBuilderOption);
-
-        // TODO set response effective url
-        kit_HttpResponseBuilder_setHeaders(responseBuilder, &responseHeaders);
-        // TODO set response body
-        // TODO set response status
-    } while (false);
-
-    if (teardownRequired) {
-        // TODO free what was needed in (1)
-        kit_Map_delete(responseHeaders);
-        kit_HttpResponseBuilder_delete(responseBuilder);
-        return ImmutableOption_None;
-    } else {
-        *ref = NULL;
-        return ImmutableOption_new(kit_HttpResponseBuilder_build(&responseBuilder));
-    }
-}
-
 void kit_HttpRequest_delete(const struct kit_HttpRequest *self) {
     if (self) {
-        kit_Map_delete((void *) self->headers);
+        kit_String_delete(self->body);
+        kit_String_delete(self->headers);
         kit_Allocator_free((void *) self);
     }
 }
@@ -144,7 +99,7 @@ MutableOption kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom ur
         request->url = url;
         request->headers = NULL;
         request->body = NULL;
-        request->timeout = -1;
+        request->timeout = 0;
         request->followLocation = true;
         request->peerVerification = true;
         request->hostVerification = true;
@@ -161,11 +116,11 @@ MutableOption kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom ur
 }
 
 struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, struct kit_Map **ref) {
+kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, kit_String *ref) {
     assert(self);
     assert(ref);
     assert(*ref);
-    self->request->headers = *ref;
+    self->request->headers = ImmutableOption_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }
@@ -175,13 +130,13 @@ kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, kit_String *
     assert(self);
     assert(ref);
     assert(*ref);
-    self->request->body = *ref;
+    self->request->body = ImmutableOption_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }
 
 struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, long timeout) {
+kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, size_t timeout) {
     assert(self);
     self->request->timeout = timeout;
     return self;

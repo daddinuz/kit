@@ -16,7 +16,6 @@ extern "C" {
 #include <stdbool.h>
 #include <option/option.h>
 #include <kit/compiler_steroids.h>
-#include <kit/collections/map.h>
 #include <kit/collections/atom.h>
 #include <kit/collections/string.h>
 #include <kit/networking/http_method.h>
@@ -35,7 +34,7 @@ extern kit_Atom
 kit_HttpRequest_getUrl(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(struct kit_Map *)
+extern ImmutableOptional(kit_String)
 kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
@@ -43,7 +42,7 @@ extern ImmutableOptional(kit_String)
 kit_HttpRequest_getBody(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern long
+extern size_t
 kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
@@ -84,7 +83,7 @@ __attribute__((__nonnull__));
 
 // takes ownership
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, struct kit_Map **ref)
+kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, kit_String *ref)
 __attribute__((__nonnull__));
 
 // takes ownership
@@ -95,7 +94,7 @@ __attribute__((__nonnull__));
 // *************************************
 
 extern struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, long timeout)
+kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, size_t timeout)
 __attribute__((__nonnull__));
 
 extern struct kit_HttpRequestBuilder *
