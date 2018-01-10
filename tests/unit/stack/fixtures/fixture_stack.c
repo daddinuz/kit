@@ -102,7 +102,7 @@ struct kit_Stack *setup_helper(enum kit_StackType type, const char *const seeds[
             sut = MutableOption_unwrap(kit_Stack_fromXorList());
             break;
         case KIT_STACK_TYPE_VECTOR:
-            sut = MutableOption_unwrap(kit_Stack_fromVector());
+            sut = MutableOption_unwrap(kit_Stack_fromVector(0));
             break;
         default:
             traits_assert(false);

@@ -39,7 +39,7 @@ int main() {
         printf("[%zu]: %s\n", index, (char *) e);
     }
 
-    kit_invalidate((void **) &iterator, kit_Sequence_Iterator_delete);
-    kit_invalidate((void **) &sequence, kit_Sequence_delete);
+    kit_Sequence_Iterator_delete(kit_move((void **) &iterator));
+    kit_Sequence_delete(kit_move((void **) &sequence));
     return 0;
 }

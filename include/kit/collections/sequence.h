@@ -61,6 +61,9 @@ kit_Sequence_fromXorList(void);
  * Creates a new instance of kit_Sequence using Vector as underlying container.
  * In case of out of memory this function returns MutableOption_None.
  *
+ * If capacityHint is 0 then a default capacity will be used.
+ *
+ * @param capacityHint An hint about the average capacity.
  * @return A new instance of kit_Sequence or MutableOption_None.
  */
 extern MutableOptional(struct kit_Sequence *)
@@ -299,19 +302,20 @@ kit_Sequence_capacity(struct kit_Sequence *self)
 __attribute__((__nonnull__));
 
 /**
- * Requests an expansion to hold at least @param size elements.
+ * Requests an expansion to hold at least @param capacity elements.
  * (This method may ignore the request if the container does not support reserve)
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
  *
  * @param self The container instance.
+ * @param capacity The requested capacity
  * @return
  *      - KIT_RESULT_OK            :   The operation was performed successfully.
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_Sequence_reserve(struct kit_Sequence *self, size_t size)
+kit_Sequence_reserve(struct kit_Sequence *self, size_t capacity)
 __attribute__((__nonnull__));
 
 /**
