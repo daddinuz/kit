@@ -23,6 +23,6 @@ int main() {
         printf("[%zu]: %s\n", index, (char *) element);
     }
 
-    kit_invalidate((void **) &array, kit_Array_delete);
+    kit_Array_delete(kit_move((void **) &array));
     return 0;
 }

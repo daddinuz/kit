@@ -60,10 +60,13 @@ kit_Queue_fromXorList(void);
  * Creates a new instance of kit_Queue using Vector as underlying container.
  * In case of out of memory this function returns MutableOption_None.
  *
+ * If capacityHint is 0 then a default capacity will be used.
+ *
+ * @param capacityHint An hint about the average capacity.
  * @return A new instance of kit_Queue or MutableOption_None.
  */
 extern MutableOptional(struct kit_Queue *)
-kit_Queue_fromVector(void);
+kit_Queue_fromVector(size_t capacityHint);
 
 /**
  * Deletes an instance of kit_Queue.

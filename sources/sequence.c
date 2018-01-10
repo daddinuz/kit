@@ -308,9 +308,9 @@ size_t kit_Sequence_capacity(struct kit_Sequence *self) {
     return self->fnCapacity(self->super);
 }
 
-enum kit_Result kit_Sequence_reserve(struct kit_Sequence *self, size_t size) {
+enum kit_Result kit_Sequence_reserve(struct kit_Sequence *self, size_t capacity) {
     assert(self);
-    return self->fnReserve(self->super, size);
+    return self->fnReserve(self->super, capacity);
 }
 
 enum kit_Result kit_Sequence_shrink(struct kit_Sequence *self) {

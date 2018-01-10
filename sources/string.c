@@ -25,8 +25,7 @@ struct kit_String_Object {
 };
 
 static MutableOptional(struct kit_String_Object *)
-kit_String_Object_new(size_t capacityHint)
-__attribute__((__nonnull__));
+kit_String_Object_new(size_t capacityHint);
 
 static MutableOptional(struct kit_String_Object *)
 kit_String_Object_reserve(struct kit_String_Object **ref, size_t capacity)
@@ -37,8 +36,7 @@ kit_String_Object_shrink(struct kit_String_Object **ref)
 __attribute__((__nonnull__));
 
 static void
-kit_String_Object_delete(struct kit_String_Object *self)
-__attribute__((__nonnull__));
+kit_String_Object_delete(struct kit_String_Object *self);
 
 #ifdef NDEBUG
 #define kit_String_assertValidInstance(x)

@@ -53,6 +53,9 @@ kit_List_fromXorList(void);
  * Creates a new instance of kit_List using Vector as underlying container.
  * In case of out of memory this function returns MutableOption_None.
  *
+ * If capacityHint is 0 then a default capacity will be used.
+ *
+ * @param capacityHint An hint about the average capacity.
  * @return A new instance of kit_List or MutableOption_None.
  */
 extern MutableOptional(struct kit_List *)
@@ -291,19 +294,20 @@ kit_List_capacity(struct kit_List *self)
 __attribute__((__nonnull__));
 
 /**
- * Requests an expansion to hold at least @param size elements.
+ * Requests an expansion to hold at least @param capacity elements.
  * (This method may ignore the request if the container does not support reserve)
  *
  * Checked runtime errors:
  *      - @param self must not be NULL.
  *
  * @param self The container instance.
+ * @param capacity The requested capacity
  * @return
  *      - KIT_RESULT_OK            :   The operation was performed successfully.
  *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
  */
 extern enum kit_Result
-kit_List_reserve(struct kit_List *self, size_t size)
+kit_List_reserve(struct kit_List *self, size_t capacity)
 __attribute__((__nonnull__));
 
 /**
@@ -384,10 +388,10 @@ kit_List_Iterator_delete(struct kit_List_Iterator *self);
  * Rewinds the iterator.
  *
  * Checked runtime errors:
- *      - @param container must not be NULL.
+ *      - @param self must not be NULL.
  *      - @param bound must be KIT_BOUND_BEGIN or KIT_BOUND_END.
  *
- * @param container The instance of the container to iterate.
+ * @param self The instance of the iterator to be rewound.
  * @param bound The start bound.
  */
 extern void
