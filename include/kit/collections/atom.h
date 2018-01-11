@@ -72,7 +72,7 @@ kit_Atom_fromFloating(long double n);
  * Gets the length of the atom.
  *
  * @attention
- *  This function requires an atom instance (not just a common string!).
+ *  This function requires a kit_Atom instance (not just any string!).
  *
  * @param atom The kit_Atom instance [<b>must not be NULL</b>].
  * @return The length of the atom.
