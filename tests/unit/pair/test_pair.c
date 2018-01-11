@@ -9,7 +9,7 @@
 #include <seeds.h>
 #include <traits/traits.h>
 #include <traits-unit/traits-unit.h>
-#include <kit/collections/pair.h.old>
+#include <kit/collections/pair.h>
 
 /*
  * Features declarations
@@ -45,7 +45,7 @@ FeatureDefine(PairEssentials) {
     for (size_t i = 0; i < SEEDS_SIZE - 1; i += 2) {
         const char *EXPECTED_KEY = SEEDS[i];
         const char *EXPECTED_VALUE = SEEDS[i + 1];
-        struct kit_Pair *sut = MutableOption_unwrap(kit_Pair_new(EXPECTED_KEY, (void *) EXPECTED_VALUE));
+        struct kit_Pair *sut = Option_unwrap(kit_Pair_new(EXPECTED_KEY, (void *) EXPECTED_VALUE));
         assert_equal(sut->key, EXPECTED_KEY);
         assert_string_equal(sut->key, EXPECTED_KEY);
         assert_equal(sut->value, EXPECTED_VALUE);

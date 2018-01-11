@@ -18,13 +18,13 @@ struct kit_Pair kit_Pair_make(const void *key, void *value) {
     };
 }
 
-MutableOption kit_Pair_new(const void *key, void *value) {
+Option kit_Pair_new(const void *key, void *value) {
     assert(key);
     struct kit_Pair *self;
-    MutableOption selfOption = kit_Allocator_malloc(sizeof(*self));
+    Option selfOption = kit_Allocator_malloc(sizeof(*self));
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->key = key;
         self->value = value;
     }

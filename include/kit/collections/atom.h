@@ -27,9 +27,6 @@ extern "C" {
 #include <option/option.h>
 #include <kit/compiler_steroids.h>
 
-/**
- * kit_Atom interface.
- */
 typedef const char *kit_Atom;
 
 /**

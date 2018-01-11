@@ -30,9 +30,6 @@ extern "C" {
 #include <kit/errors.h>
 #include <kit/compiler_steroids.h>
 
-/**
- * kit_Array opaque struct.
- */
 struct kit_Array;
 
 /**
