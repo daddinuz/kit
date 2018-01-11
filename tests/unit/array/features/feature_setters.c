@@ -12,42 +12,47 @@
 #include <kit/collections/array.h>
 
 FeatureDefine(ArraySet) {
-    void *e;
     size_t i, j;
+    Result result;
     struct kit_Array *sut = traits_context;
 
     for (i = 0, j = SEEDS_SIZE - 1; i < SEEDS_SIZE; i++, j--) {
-        assert_equal(KIT_RESULT_OK, kit_Array_set(sut, (void *) SEEDS[j], i));
-        e = NULL;
-        assert_equal(KIT_RESULT_OK, kit_Array_get(sut, &e, i));
-        assert_string_equal(SEEDS[j], (char *) e);
+        result = kit_Array_set(sut, (void *) SEEDS[j], i);
+        assert_true(Result_isOk(result));
+        assert_string_equal(SEEDS[i], (char *) Result_unwrap(result));
+
+        result = kit_Array_get(sut, i);
+        assert_true(Result_isOk(result));
+        assert_string_equal(SEEDS[j], (char *) Result_unwrap(result));
     }
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Array_set(sut, "x", i));
+    result = kit_Array_set(sut, "x", i);
+    assert_true(Result_isError(result));
+    assert_equal(&OutOfRangeError, Result_inspect(result));
 
-    e = NULL;
-    assert_equal(KIT_RESULT_OK, kit_Array_back(sut, &e));
-    assert_string_equal(SEEDS[0], (char *) e);
+    result = kit_Array_back(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[0], (char *) Result_unwrap(result));
 
-    e = NULL;
-    assert_equal(KIT_RESULT_OK, kit_Array_front(sut, &e));
-    assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) e);
+    result = kit_Array_front(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) Result_unwrap(result));
 }
 
 FeatureDefine(ArrayClear) {
-    void *e;
+    Result result;
     struct kit_Array *sut = traits_context;
 
     kit_Array_clear(sut);
     for (size_t i = 0; i < SEEDS_SIZE; i++) {
-        e = "x";
-        assert_equal(KIT_RESULT_OK, kit_Array_get(sut, &e, i));
-        assert_null(e);
+        result = kit_Array_get(sut, i);
+        assert_true(Result_isOk(result));
+        assert_null(Result_unwrap(result));
     }
-    e = "x";
-    assert_equal(KIT_RESULT_OK, kit_Array_back(sut, &e));
-    assert_null(e);
+    result = kit_Array_back(sut);
+    assert_true(Result_isOk(result));
+    assert_null(Result_unwrap(result));
 
-    e = "x";
-    assert_equal(KIT_RESULT_OK, kit_Array_front(sut, &e));
-    assert_null(e);
+    result = kit_Array_front(sut);
+    assert_true(Result_isOk(result));
+    assert_null(Result_unwrap(result));
 }

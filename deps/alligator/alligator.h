@@ -3,34 +3,34 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   December 02, 2017 
+ * Date:   January 10, 2018
  */
 
-#ifndef ALLIGATOR_ALLIGATOR_INCLUDED
-#define ALLIGATOR_ALLIGATOR_INCLUDED
+#ifndef ALLIGATOR_INCLUDED
+#define ALLIGATOR_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define ALLIGATOR_VERSION           "0.3.2"
+#define ALLIGATOR_VERSION           "0.10.0"
 #define ALLIGATOR_VERSION_MAJOR     0
-#define ALLIGATOR_VERSION_MINOR     3
-#define ALLIGATOR_VERSION_PATCH     2
+#define ALLIGATOR_VERSION_MINOR     10
+#define ALLIGATOR_VERSION_PATCH     0
 
 #include <stddef.h>
 #include <option/option.h>
 
-#if !(OPTION_VERSION_MAJOR == 0 && OPTION_VERSION_MINOR == 3 && OPTION_VERSION_PATCH == 0)
-#error "Alligator requires option version 0.3.0"
+#if !(OPTION_VERSION_MAJOR == 0 && OPTION_VERSION_MINOR == 10 && OPTION_VERSION_PATCH == 0)
+#error "Alligator requires option version 0.10.0"
 #endif
 
-extern MutableOptional(void *) alligator_malloc(size_t size);
-extern MutableOptional(void *) alligator_calloc(size_t numberOfMembers, size_t memberSize);
-extern MutableOptional(void *) alligator_ralloc(void *ptr, size_t newSize);
-extern MutableOptional(void *) alligator_copy(void *dst, const void *src, size_t size);
-extern MutableOptional(void *) alligator_move(void *dst, const void *src, size_t size);
-extern MutableOptional(void *) alligator_set(void *ptr, int value, size_t size);
+extern OptionOf(void *) alligator_malloc(size_t size);
+extern OptionOf(void *) alligator_calloc(size_t numberOfMembers, size_t memberSize);
+extern OptionOf(void *) alligator_ralloc(void *ptr, size_t newSize);
+extern OptionOf(void *) alligator_copy(void *dst, const void *src, size_t size);
+extern OptionOf(void *) alligator_move(void *dst, const void *src, size_t size);
+extern OptionOf(void *) alligator_set(void *ptr, int value, size_t size);
 extern void alligator_free(void *ptr);
 
 #ifdef ALLIGATOR_WRAP_STDLIB
@@ -42,12 +42,12 @@ extern void alligator_free(void *ptr);
 #undef memset
 #undef free
 
-#define malloc(size)                        MutableOption_unwrap(alligator_malloc(size))
-#define calloc(numberOfMembers, memberSize) MutableOption_unwrap(alligator_calloc(numberOfMembers, memberSize))
-#define realloc(ptr, newSize)               MutableOption_unwrap(alligator_ralloc(ptr, newSize))
-#define memcpy(dst, src, size)              MutableOption_unwrap(alligator_copy((dst), (src), (size)))
-#define memmove(dst, src, size)             MutableOption_unwrap(alligator_move((dst), (src), (size)))
-#define memset(ptr, value, size)            MutableOption_unwrap(alligator_set((ptr), (value), (size)))
+#define malloc(size)                        Option_unwrap(alligator_malloc(size))
+#define calloc(numberOfMembers, memberSize) Option_unwrap(alligator_calloc(numberOfMembers, memberSize))
+#define realloc(ptr, newSize)               Option_unwrap(alligator_ralloc(ptr, newSize))
+#define memcpy(dst, src, size)              Option_unwrap(alligator_copy((dst), (src), (size)))
+#define memmove(dst, src, size)             Option_unwrap(alligator_move((dst), (src), (size)))
+#define memset(ptr, value, size)            Option_unwrap(alligator_set((ptr), (value), (size)))
 #define free(ptr)                           alligator_free(ptr)
 #endif
 
@@ -55,4 +55,4 @@ extern void alligator_free(void *ptr);
 }
 #endif
 
-#endif /* ALLIGATOR_ALLIGATOR_INCLUDED */
+#endif /* ALLIGATOR_INCLUDED */
