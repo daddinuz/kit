@@ -11,7 +11,7 @@
 #include <fixtures/fixture_map.h>
 #include <fixtures/fixture_map_context.h>
 #include <kit/utils.h>
-#include <kit/collections/atom.h.old>
+#include <kit/collections/atom.h>
 
 /*
  * kit_MapType
@@ -86,7 +86,7 @@ setup_map_helper(enum kit_MapType type, const char *const seeds[], const size_t 
 
     switch (type) {
         case KIT_MAP_TYPE_HASH_MAP:
-            sut = MutableOption_unwrap(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
+            sut = Option_unwrap(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
             break;
         default:
             traits_assert(false);
@@ -98,9 +98,10 @@ setup_map_helper(enum kit_MapType type, const char *const seeds[], const size_t 
         const size_t SIZE = seeds_size / 2;
         const size_t COUPLES = SIZE * 2;
         for (size_t i = 0; i < COUPLES;) {
-            kit_Atom key = ImmutableOption_unwrap(kit_Atom_fromLiteral(seeds[i++]));
-            char *value = (void *) seeds[i++];
-            assert_equal(KIT_RESULT_OK, kit_Map_put(sut, key, value));
+            kit_Atom key = Option_unwrap(kit_Atom_fromLiteral(seeds[i++]));
+            Result result = kit_Map_put(sut, key, (void *) seeds[i++]);
+            assert_true(Result_isOk(result));
+            assert_null(Result_unwrap(result));
         }
         assert_equal(SIZE, kit_Map_size(sut));
     }
@@ -118,7 +119,7 @@ setup_map_iterator_helper(enum kit_MapType type, const char *const *seeds, size_
     context->map = setup_map_helper(type, seeds, seeds_size);
     assert_not_null(context->map);
 
-    context->sut = MutableOption_unwrap(kit_Map_Iterator_new(context->map));
+    context->sut = Option_unwrap(kit_Map_Iterator_new(context->map));
     assert_not_null(context->sut);
 
     return context;

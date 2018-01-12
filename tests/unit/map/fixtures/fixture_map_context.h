@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-#include <kit/collections/map.h.old>
+#include <kit/collections/map.h>
 
 struct kit_Traits_MapIteratorContext {
     struct kit_Map *map;

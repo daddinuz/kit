@@ -22,11 +22,11 @@ enum kit_Map_Trait {
 typedef void *kit_Map_Super;
 
 typedef void (*kit_Map_Super_deleteFn)(kit_Map_Super);
-typedef enum kit_Result (*kit_Map_Super_putFn)(kit_Map_Super, const void *, void *);
-typedef enum kit_Result (*kit_Map_Super_addFn)(kit_Map_Super, struct kit_Pair pair);
-typedef enum kit_Result (*kit_Map_Super_getFn)(kit_Map_Super, const void *, struct kit_Pair *out);
+typedef Result (*kit_Map_Super_putFn)(kit_Map_Super, const void *, void *);
+typedef Result (*kit_Map_Super_addFn)(kit_Map_Super, struct kit_Pair pair);
+typedef Result (*kit_Map_Super_getFn)(kit_Map_Super, const void *);
 typedef bool (*kit_Map_Super_hasFn)(kit_Map_Super, const void *);
-typedef enum kit_Result (*kit_Map_Super_popFn)(kit_Map_Super, const void *, struct kit_Pair *out);
+typedef Result (*kit_Map_Super_popFn)(kit_Map_Super, const void *);
 typedef void (*kit_Map_Super_clearFn)(kit_Map_Super);
 typedef size_t (*kit_Map_Super_sizeFn)(kit_Map_Super);
 typedef bool (*kit_Map_Super_isEmptyFn)(kit_Map_Super);
@@ -45,19 +45,19 @@ struct kit_Map {
     kit_Map_Super_isEmptyFn fnIsEmpty;
 };
 
-MutableOption
+Option
 kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
     assert(compareFn);
     assert(hashFn);
     struct kit_Map *self;
-    MutableOption selfOption = kit_Allocator_malloc(sizeof(*self)), superOption;
+    Option selfOption = kit_Allocator_malloc(sizeof(*self)), superOption;
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         superOption = kit_HashMap_new(capacityHint, compareFn, hashFn);
-        if (MutableOption_isSome(superOption)) {
+        if (Option_isSome(superOption)) {
             self->trait = KIT_MAP_TRAIT_HASH_MAP;
-            self->super = MutableOption_unwrap(superOption);
+            self->super = Option_unwrap(superOption);
             self->fnDelete = (kit_Map_Super_deleteFn) kit_HashMap_delete;
             self->fnPut = (kit_Map_Super_putFn) kit_HashMap_put;
             self->fnAdd = (kit_Map_Super_addFn) kit_HashMap_add;
@@ -69,7 +69,7 @@ kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *, const void 
             self->fnIsEmpty = (kit_Map_Super_isEmptyFn) kit_HashMap_isEmpty;
         } else {
             kit_Allocator_free(self);
-            selfOption = MutableOption_None;
+            selfOption = None;
         }
     }
 
@@ -83,23 +83,22 @@ void kit_Map_delete(struct kit_Map *self) {
     }
 }
 
-enum kit_Result kit_Map_add(struct kit_Map *self, struct kit_Pair pair) {
+Result kit_Map_add(struct kit_Map *self, struct kit_Pair pair) {
     assert(self);
     assert(pair.key);
     return self->fnAdd(self->super, pair);
 }
 
-enum kit_Result kit_Map_put(struct kit_Map *self, const void *key, void *value) {
+Result kit_Map_put(struct kit_Map *self, const void *key, void *value) {
     assert(self);
     assert(key);
     return self->fnPut(self->super, key, value);
 }
 
-enum kit_Result kit_Map_get(struct kit_Map *self, const void *key, struct kit_Pair *out) {
+Result kit_Map_get(struct kit_Map *self, const void *key) {
     assert(self);
     assert(key);
-    assert(out);
-    return self->fnGet(self->super, key, out);
+    return self->fnGet(self->super, key);
 }
 
 bool kit_Map_has(struct kit_Map *self, const void *key) {
@@ -108,11 +107,10 @@ bool kit_Map_has(struct kit_Map *self, const void *key) {
     return self->fnHas(self->super, key);
 }
 
-enum kit_Result kit_Map_pop(struct kit_Map *self, const void *key, struct kit_Pair *out) {
+Result kit_Map_pop(struct kit_Map *self, const void *key) {
     assert(self);
     assert(key);
-    assert(out);
-    return self->fnPop(self->super, key, out);
+    return self->fnPop(self->super, key);
 }
 
 void kit_Map_clear(struct kit_Map *self) {
@@ -137,8 +135,8 @@ typedef void *kit_Map_Iterator_Super;
 
 typedef void (*kit_Map_Iterator_Super_deleteFn)(kit_Map_Iterator_Super);
 typedef void (*kit_Map_Iterator_Super_rewindFn)(kit_Map_Iterator_Super);
-typedef enum kit_Result (*kit_Map_Iterator_Super_nextFn)(kit_Map_Iterator_Super, struct kit_Pair *out);
-typedef enum kit_Result (*kit_Map_Iterator_Super_setLastFn)(kit_Map_Iterator_Super, void *value);
+typedef Result (*kit_Map_Iterator_Super_nextFn)(kit_Map_Iterator_Super, struct kit_Pair *out);
+typedef Result (*kit_Map_Iterator_Super_setLastFn)(kit_Map_Iterator_Super, void *value);
 typedef bool (*kit_Map_Iterator_Super_isModifiedFn)(kit_Map_Iterator_Super);
 
 struct kit_Map_Iterator {
@@ -150,16 +148,16 @@ struct kit_Map_Iterator {
     kit_Map_Iterator_Super_isModifiedFn fnIsModified;
 };
 
-static MutableOption kit_Map_Iterator_fromHashMap(struct kit_HashMap *container) {
+static Option kit_Map_Iterator_fromHashMap(struct kit_HashMap *container) {
     assert(container);
     struct kit_Map_Iterator *self;
-    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         superOption = kit_HashMap_Iterator_new(container);
-        if (MutableOption_isSome(superOption)) {
-            self->super = MutableOption_unwrap(superOption);
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->fnDelete = (kit_Map_Iterator_Super_deleteFn) kit_HashMap_Iterator_delete;
             self->fnRewind = (kit_Map_Iterator_Super_rewindFn) kit_HashMap_Iterator_rewind;
             self->fnNext = (kit_Map_Iterator_Super_nextFn) kit_HashMap_Iterator_next;
@@ -167,7 +165,7 @@ static MutableOption kit_Map_Iterator_fromHashMap(struct kit_HashMap *container)
             self->fnIsModified = (kit_Map_Iterator_Super_isModifiedFn) kit_HashMap_Iterator_isModified;
         } else {
             kit_Allocator_free(self);
-            selfOption = MutableOption_None;
+            selfOption = None;
         }
     }
 
@@ -175,7 +173,7 @@ static MutableOption kit_Map_Iterator_fromHashMap(struct kit_HashMap *container)
 
 }
 
-MutableOption kit_Map_Iterator_new(struct kit_Map *container) {
+Option kit_Map_Iterator_new(struct kit_Map *container) {
     assert(container);
     switch (container->trait) {
         case KIT_MAP_TRAIT_HASH_MAP: {
@@ -200,13 +198,13 @@ void kit_Map_Iterator_rewind(struct kit_Map_Iterator *self) {
     self->fnRewind(self->super);
 }
 
-enum kit_Result kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair *out) {
+Result kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair *out) {
     assert(self);
     assert(out);
     return self->fnNext(self->super, out);
 }
 
-enum kit_Result kit_Map_Iterator_setLast(struct kit_Map_Iterator *self, void *value) {
+Result kit_Map_Iterator_setLast(struct kit_Map_Iterator *self, void *value) {
     assert(self);
     return self->fnSetLast(self->super, value);
 }
