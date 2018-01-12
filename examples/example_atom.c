@@ -10,7 +10,8 @@
 #include <kit/utils.h>
 #include <kit/collections/atom.h>
 
-#define u(xOption)  Option_unwrap(xOption)
+#define u(xOption) \
+    Option_unwrap(xOption)
 
 /*
  *

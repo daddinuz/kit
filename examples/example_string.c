@@ -10,7 +10,8 @@
 #include <kit/utils.h>
 #include <kit/collections/string.h>
 
-#define u(x)    Option_unwrap((x))
+#define u(x) \
+    Option_unwrap((x))
 
 /*
  *
