@@ -105,8 +105,8 @@ __attribute__((__nonnull__));
  * @param element The new element.
  * @param index The index of the element to be replaced.
  * @return
- *   - Ok               : The operation was performed successfully, wraps the old element.
- *   - OutOfRangeError  : The given index is out of range, nothing has been done.
+ * - Ok => wraps the previous element at the given index.
+ * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_set(struct kit_Array *self, void *element, size_t index)
@@ -118,8 +118,8 @@ __attribute__((__nonnull__(1)));
  * @param self The container instance [<b>must not be NULL</b>].
  * @param index The index of the element requested.
  * @return
- *   - Ok               : The operation was performed successfully, wraps the element.
- *   - OutOfRangeError  : The given index is out of range, nothing has been done.
+ * - Ok => wraps the element at the given index.
+ * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_get(struct kit_Array *self, size_t index)
@@ -130,8 +130,8 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return
- *   - Ok               : The operation was performed successfully, wraps the element.
- *   - OutOfRangeError  : No such element, nothing has been done.
+ * - Ok => wraps the element at back of the container.
+ * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_back(struct kit_Array *self)
@@ -142,8 +142,8 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return
- *   - Ok               : The operation was performed successfully, wraps the element.
- *   - OutOfRangeError  : No such element, nothing has been done.
+ * - Ok => wraps the element at front of the container.
+ * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_front(struct kit_Array *self)
