@@ -17,7 +17,7 @@ struct kit_DoublyList_Node {
     struct kit_DoublyList_Node *next;
 };
 
-static Option
+static OptionOf(struct kit_DoublyList_Node *)
 kit_DoublyList_Node_new(void *e);
 
 static void *
@@ -91,7 +91,7 @@ Result kit_DoublyList_insert(struct kit_DoublyList *const self, void *const e, c
         self->back->next = newNode;
         self->back = newNode;
     } else {                                    /* insert middle */
-        /* OutOfRangeError check at the begging */
+        /* OutOfRangeError check at the beginning */
         struct kit_DoublyList_Node *nextNode = Result_unwrap(kit_DoublyList_Node_fetch(self, index));
         newNode->next = nextNode;
         newNode->prev = nextNode->prev;
