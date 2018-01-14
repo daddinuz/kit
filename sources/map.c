@@ -13,7 +13,7 @@
 #include <kit/collections/hash_map.h>
 
 /*
- * 
+ *
  */
 enum kit_Map_Trait {
     KIT_MAP_TRAIT_HASH_MAP
@@ -23,7 +23,7 @@ typedef void *kit_Map_Super;
 
 typedef void (*kit_Map_Super_deleteFn)(kit_Map_Super);
 typedef Result (*kit_Map_Super_putFn)(kit_Map_Super, const void *, void *);
-typedef Result (*kit_Map_Super_addFn)(kit_Map_Super, struct kit_Pair pair);
+typedef Result (*kit_Map_Super_addFn)(kit_Map_Super, struct kit_Pair *);
 typedef Result (*kit_Map_Super_getFn)(kit_Map_Super, const void *);
 typedef bool (*kit_Map_Super_hasFn)(kit_Map_Super, const void *);
 typedef Result (*kit_Map_Super_popFn)(kit_Map_Super, const void *);
@@ -83,9 +83,9 @@ void kit_Map_delete(struct kit_Map *self) {
     }
 }
 
-Result kit_Map_add(struct kit_Map *self, struct kit_Pair pair) {
+Result kit_Map_add(struct kit_Map *self, struct kit_Pair *pair) {
     assert(self);
-    assert(pair.key);
+    assert(pair);
     return self->fnAdd(self->super, pair);
 }
 
@@ -135,8 +135,8 @@ typedef void *kit_Map_Iterator_Super;
 
 typedef void (*kit_Map_Iterator_Super_deleteFn)(kit_Map_Iterator_Super);
 typedef void (*kit_Map_Iterator_Super_rewindFn)(kit_Map_Iterator_Super);
-typedef Result (*kit_Map_Iterator_Super_nextFn)(kit_Map_Iterator_Super, struct kit_Pair *out);
-typedef Result (*kit_Map_Iterator_Super_setLastFn)(kit_Map_Iterator_Super, void *value);
+typedef Result (*kit_Map_Iterator_Super_nextFn)(kit_Map_Iterator_Super, struct kit_Pair **);
+typedef Result (*kit_Map_Iterator_Super_setLastFn)(kit_Map_Iterator_Super, void *);
 typedef bool (*kit_Map_Iterator_Super_isModifiedFn)(kit_Map_Iterator_Super);
 
 struct kit_Map_Iterator {
@@ -198,10 +198,9 @@ void kit_Map_Iterator_rewind(struct kit_Map_Iterator *self) {
     self->fnRewind(self->super);
 }
 
-Result kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair *out) {
+Result kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair **ref) {
     assert(self);
-    assert(out);
-    return self->fnNext(self->super, out);
+    return self->fnNext(self->super, ref);
 }
 
 Result kit_Map_Iterator_setLast(struct kit_Map_Iterator *self, void *value) {

@@ -19,6 +19,7 @@ FeatureDefine(MapAdd) {
     Result result;
     struct kit_Map *sut = traits_context;
     assert_not_null(sut);
+    struct kit_Pair *pair = Option_unwrap(kit_Pair_new("", NULL));
 
     assert_true(kit_Map_isEmpty(sut));
     assert_equal(0, kit_Map_size(sut));
@@ -33,7 +34,10 @@ FeatureDefine(MapAdd) {
         assert_true(Result_isError(result));
         assert_equal(&OutOfRangeError, Result_inspect(result));
 
-        result = kit_Map_add(sut, kit_Pair_make(key, value));
+        kit_Pair_setKey(pair, key);
+        kit_Pair_setValue(pair, value);
+
+        result = kit_Map_add(sut, pair);
         assert_true(Result_isOk(result));
         assert_null(Result_unwrap(result));
 
@@ -62,7 +66,10 @@ FeatureDefine(MapAdd) {
         assert_true(Result_isOk(result));
         assert_string_equal(value, Result_unwrap(result));
 
-        result = kit_Map_add(sut, kit_Pair_make(key, newValue));
+        kit_Pair_setKey(pair, key);
+        kit_Pair_setValue(pair, newValue);
+
+        result = kit_Map_add(sut, pair);
         assert_true(Result_isOk(result));
         assert_string_equal(value, Result_unwrap(result));
 
@@ -74,6 +81,8 @@ FeatureDefine(MapAdd) {
         assert_true(Result_isOk(result));
         assert_string_equal(newValue, Result_unwrap(result));
     }
+
+    kit_Pair_delete(pair);
 }
 
 FeatureDefine(MapPut) {

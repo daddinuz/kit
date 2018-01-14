@@ -57,13 +57,13 @@ kit_Map_delete(struct kit_Map *self);
  * The operation performed is actually an insert or update.
  *
  * @param self The container instance [<b>must not be NULL</b>].
- * @param pair The pair to be added [<b>pair.key must not be NULL</b>].
+ * @param pair The pair to be added [<b>pair must not be NULL</b>].
  * @return
  * - Ok => wraps the previous value at the given key if present else NULL.
  * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
 extern ResultOf(void *, OutOfMemoryError)
-kit_Map_add(struct kit_Map *self, struct kit_Pair pair)
+kit_Map_add(struct kit_Map *self, struct kit_Pair *pair)
 __attribute__((__nonnull__));
 
 /**
@@ -181,15 +181,17 @@ __attribute__((__nonnull__));
 /**
  * Gets the next pair in the map.
  *
+ * Note: Takes ownership invalidating *ref in case of success.
+ *
  * @param self The iterator instance [<b>must not be NULL</b>].
- * @param out The retrieved pair [<b>must not be NULL</b>].
+ * @param ref The reference to the pair in which the result will be store [<b>must not be NULL</b>].
  * @return
  * - Ok => wraps the pair at the given key (same of out parameter).
  * - OutOfRangeError => The iterator hit the end of the container, nothing has been done.
  * - ConcurrentModificationError => The container has been modified, nothing has been done.
  */
 extern ResultOf(struct kit_Pair *, OutOfRangeError, ConcurrentModificationError)
-kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair *out)
+kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair **ref)
 __attribute__((__nonnull__));
 
 /**

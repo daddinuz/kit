@@ -21,21 +21,7 @@ extern "C" {
 #include <option/option.h>
 #include <kit/compiler_steroids.h>
 
-struct kit_Pair {
-    const void *key;
-    void *value;
-};
-
-/**
- * Makes and initializes a kit_Pair struct.
- *
- * @param key The key element [<b>must not be NULL</b>].
- * @param value The value element.
- * @return An initialized kit_Pair struct.
- */
-extern struct kit_Pair
-kit_Pair_make(const void *key, void *value)
-__attribute__((__nonnull__(1)));
+struct kit_Pair;
 
 /**
  * Creates a new instance of kit_Pair.
@@ -47,6 +33,46 @@ __attribute__((__nonnull__(1)));
  */
 extern OptionOf(struct kit_Pair *)
 kit_Pair_new(const void *key, void *value)
+__attribute__((__nonnull__(1)));
+
+/**
+ * Gets the key element of the pair.
+ *
+ * @param self The kit_Pair instance [<b>mut not be NULL</b>].
+ * @return The key element.
+ */
+extern const void *
+kit_Pair_getKey(struct kit_Pair *self)
+__attribute__((__nonnull__));
+
+/**
+ * Gets the value element of the pair.
+ *
+ * @param self The kit_Pair instance [<b>mut not be NULL</b>].
+ * @return The value element.
+ */
+extern void *
+kit_Pair_getValue(struct kit_Pair *self)
+__attribute__((__nonnull__));
+
+/**
+ * Sets the key element of the pair.
+ *
+ * @param self The kit_Pair instance [<b>mut not be NULL</b>].
+ * @param key The key element [<b>must not be NULL</b>].
+ */
+extern void
+kit_Pair_setKey(struct kit_Pair *self, const void *key)
+__attribute__((__nonnull__));
+
+/**
+ * Sets the value element of the pair.
+ *
+ * @param self The kit_Pair instance [<b>mut not be NULL</b>].
+ * @param value The value element.
+ */
+extern void
+kit_Pair_setValue(struct kit_Pair *self, void *value)
 __attribute__((__nonnull__(1)));
 
 /**

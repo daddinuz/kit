@@ -61,10 +61,10 @@ void kit_HashMap_delete(struct kit_HashMap *self) {
     }
 }
 
-Result kit_HashMap_add(struct kit_HashMap *self, struct kit_Pair pair) {
+Result kit_HashMap_add(struct kit_HashMap *self, struct kit_Pair *pair) {
     assert(self);
-    assert(pair.key);
-    return kit_HashMap_put(self, pair.key, pair.value);
+    assert(pair);
+    return kit_HashMap_put(self, kit_Pair_getKey(pair), kit_Pair_getValue(pair));
 }
 
 Result kit_HashMap_put(struct kit_HashMap *self, const void *key, void *value) {
@@ -221,9 +221,9 @@ void kit_HashMap_Iterator_rewind(struct kit_HashMap_Iterator *self) {
     self->next = buckets[currentIndex];
 }
 
-Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_Pair *out) {
+Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_Pair **ref) {
     assert(self);
-    assert(out);
+    assert(ref);
 
     if (kit_HashMap_Iterator_isModified(self)) {
         return Result_error(&ConcurrentModificationError);
@@ -231,12 +231,16 @@ Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_P
 
     struct kit_HashMap_Bucket *currentBucket = self->next;
     if (currentBucket) {
-        (*out).key = currentBucket->key;
-        (*out).value = currentBucket->value;
+        struct kit_Pair *out = *ref;
+        kit_Pair_setKey(out, currentBucket->key);
+        kit_Pair_setValue(out, currentBucket->value);
+
         self->last = currentBucket;
 
         if (currentBucket->next) {
             self->next = currentBucket->next;
+
+            *ref = NULL;
             return Result_ok(out);
         }
 
@@ -250,6 +254,8 @@ Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_P
                 if (buckets[currentIndex]) {
                     self->next = buckets[currentIndex];
                     self->currentIndex = currentIndex;
+
+                    *ref = NULL;
                     return Result_ok(out);
                 }
                 currentIndex += 1;
@@ -257,12 +263,15 @@ Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_P
 
             self->next = NULL;
             self->currentIndex = 0;
+
+            *ref = NULL;
             return Result_ok(out);
         }
     }
 
     self->next = NULL;
     self->currentIndex = 0;
+    // FIXME at this point *ref should not be modified
     return Result_error(&OutOfRangeError);
 }
 

@@ -46,13 +46,20 @@ int main() {
 
 void report(struct kit_Map *map) {
     assert(map);
+    Result result;
+    struct kit_Pair *pair = u(kit_Pair_new("", NULL));
     struct kit_Map_Iterator *iterator = u(kit_Map_Iterator_new(map));
 
     printf("{\n");
-    for (struct kit_Pair pair; Result_isOk(kit_Map_Iterator_next(iterator, &pair)); /* nothing */) {
-        printf("  '%s': '%s',\n", (const char *) pair.key, (const char *) pair.value);
+    for (const char *key, *value; Result_isOk(result = kit_Map_Iterator_next(iterator, &pair)); /* _._ */) {
+        assert(NULL == pair);
+        pair = Result_unwrap(result);
+        key = kit_Pair_getKey(pair);
+        value = kit_Pair_getValue(pair);
+        printf("  '%s': '%s',\n", key, value);
     }
     printf("}\n");
 
+    kit_Pair_delete(kit_move((void **) &pair));
     kit_Map_Iterator_delete(kit_move((void **) &iterator));
 }
