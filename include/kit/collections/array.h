@@ -3,16 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 21, 2017 
- */
-
-/*
- * Arrays are fixed-size sequence containers: they hold a specific number of elements ordered in a strict linear sequence.
- * It is as efficient in terms of storage size as an ordinary array declared with the language's bracket syntax ([]).
- * This container merely adds a layer of member and global functions to it, so that arrays can be used as other containers.
- *
- * Unlike the other containers, arrays have a fixed size therefore, they cannot be expanded or contracted dynamically
- * Zero-sized arrays are valid, but they should not be dereferenced.
+ * Date:   January 16, 2018
  */
 
 #ifndef KIT_ARRAY_INCLUDED
@@ -30,33 +21,41 @@ extern "C" {
 #include <kit/errors.h>
 #include <kit/compiler_steroids.h>
 
+/**
+ * Arrays are fixed-size sequence containers: they hold a specific number of elements ordered in a strict linear sequence.
+ * It is as efficient in terms of storage size as an ordinary array declared with the language's bracket syntax ([]).
+ * This container merely adds a layer of member and global functions to it, so that arrays can be used as other containers.
+ * Unlike the other containers, arrays have a fixed size therefore, they cannot be expanded or contracted dynamically
+ * Zero-sized arrays are valid, but they should not be accessed.
+ */
 struct kit_Array;
 
 /**
- * Creates a new instance of kit_Array.
- * In case of out of memory this function returns None.
+ * Creates a new instance of kit_Array with a specified capacity.
  *
- * @param capacity The capacity of the array.
- * @return A new instance of kit_Array or None.
+ * @param capacity The capacity of the container.
+ * @return
+ * - Ok => The operation was performed successfully, wraps the new container instance.
+ * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern OptionOf(struct kit_Array *)
+extern ResultOf(struct kit_Array *, OutOfMemoryError)
 kit_Array_new(size_t capacity);
 
 /**
  * Creates a new instance of kit_Array from a fixed sequence of elements.
- * In case of out of memory this function returns None.
- *
- * This function should never be used directly, used the exported macro instead.
  *
  * @attention
- *  This function iterates elements until Ellipsis is found, so the last element in the sequence must be Ellipsis.
- *  Is an unchecked runtime error to pass a pack which does not contain Ellipsis as its last value.
+ *  This function should never be used directly since it iterates elements until Ellipsis is found, so that the last 
+ *  element in the sequence must be Ellipsis; is an unchecked runtime error pass a sequence of arguments that 
+ *  does not contain Ellipsis as its last value.
  *
  * @param e0 The first element.
  * @param ... Other elements.
- * @return A new instance of kit_Array or None.
+ * @return
+ * - Ok => The operation was performed successfully, wraps the new container instance.
+ * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern OptionOf(struct kit_Array *)
+extern ResultOf(struct kit_Array *, OutOfMemoryError)
 __kit_Array_from(void *e0, ...);
 
 /**
@@ -67,30 +66,73 @@ __kit_Array_from(void *e0, ...);
 
 /**
  * Creates a new instance of kit_Array from arguments pack.
- * In case of out of memory this function returns None.
  *
  * @attention
- *  This function iterates elements until Ellipsis is found, so the last element in the sequence must be Ellipsis.
+ *  This function iterates arguments pack until Ellipsis is found, so the last element in the sequence must be Ellipsis.
  *  Is an unchecked runtime error to pass a pack which does not contain Ellipsis as its last value.
  *
  * @param pack The arguments pack [<b>must not be NULL</b>].
- * @return A new instance of kit_Array or None.
+ * @return
+ * - Ok => The operation was performed successfully, wraps the new container instance.
+ * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern OptionOf(struct kit_Array *)
+extern ResultOf(struct kit_Array *, OutOfMemoryError)
 kit_Array_fromPack(va_list pack)
 __attribute__((__nonnull__));
 
 /**
- * Deletes an instance of kit_Array.
- * If self is NULL no action will be performed.
+ * Replaces the element at the specified position in this container with the specified element.
  *
- * @param self The instance to be deleted.
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @param index The index of the element to be replaced.
+ * @param element The new element.
+ * @return
+ * - Ok => The operation was performed successfully, wraps the old element.
+ * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
-extern void
-kit_Array_delete(struct kit_Array *self);
+extern ResultOf(void *, OutOfRangeError)
+kit_Array_put(struct kit_Array *self, size_t index, void *element)
+__attribute__((__nonnull__(1)));
 
 /**
- * Sets all elements of the array to NULL.
+ * Returns the element at the specified position in this container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @param index The index of the element.
+ * @return
+ * - Ok => The operation was performed successfully, wraps the element at the given index.
+ * - OutOfRangeError => The given index is out of range, nothing has been done.
+ */
+extern ResultOf(void *, OutOfRangeError)
+kit_Array_get(const struct kit_Array *self, size_t index)
+__attribute__((__nonnull__));
+
+/**
+ * Returns the element stored at the back of this container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @return
+ * - Ok => wraps the element at back of the container.
+ * - OutOfRangeError => No such element, nothing has been done.
+ */
+extern ResultOf(void *, OutOfRangeError)
+kit_Array_back(const struct kit_Array *self)
+__attribute__((__nonnull__));
+
+/**
+ * Returns the element stored at the front of this container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @return
+ * - Ok => wraps the element at front of the container.
+ * - OutOfRangeError => No such element, nothing has been done.
+ */
+extern ResultOf(void *, OutOfRangeError)
+kit_Array_front(const struct kit_Array *self)
+__attribute__((__nonnull__));
+
+/**
+ * Removes all elements from the container.
  *
  * @param self The container instance [<b>must not be NULL</b>].
  */
@@ -99,78 +141,33 @@ kit_Array_clear(struct kit_Array *self)
 __attribute__((__nonnull__));
 
 /**
- * Replaces the element at the given index with a new element.
+ * Returns the number of elements the container can store without expanding.
  *
  * @param self The container instance [<b>must not be NULL</b>].
- * @param element The new element.
- * @param index The index of the element to be replaced.
- * @return
- * - Ok => wraps the previous element at the given index.
- * - OutOfRangeError => The given index is out of range, nothing has been done.
- */
-extern ResultOf(void *, OutOfRangeError)
-kit_Array_set(struct kit_Array *self, void *element, size_t index)
-__attribute__((__nonnull__(1)));
-
-/**
- * Gets the element at the given index.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @param index The index of the element requested.
- * @return
- * - Ok => wraps the element at the given index.
- * - OutOfRangeError => The given index is out of range, nothing has been done.
- */
-extern ResultOf(void *, OutOfRangeError)
-kit_Array_get(struct kit_Array *self, size_t index)
-__attribute__((__nonnull__));
-
-/**
- * Gets the element at the back of the container.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @return
- * - Ok => wraps the element at back of the container.
- * - OutOfRangeError => No such element, nothing has been done.
- */
-extern ResultOf(void *, OutOfRangeError)
-kit_Array_back(struct kit_Array *self)
-__attribute__((__nonnull__));
-
-/**
- * Gets the element at the front of the container.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @return
- * - Ok => wraps the element at front of the container.
- * - OutOfRangeError => No such element, nothing has been done.
- */
-extern ResultOf(void *, OutOfRangeError)
-kit_Array_front(struct kit_Array *self)
-__attribute__((__nonnull__));
-
-/**
- * Gets the number of elements that can be stored in the container.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @return The capacity of the container.
+ * @return The numbers of elements that can be stored before expansion.
  */
 extern size_t
-kit_Array_capacity(struct kit_Array *self)
+kit_Array_capacity(const struct kit_Array *self)
 __attribute__((__nonnull__));
 
 /**
- * Gets the raw data of the container.
- *
- * @attention
- *  Any direct modification of the raw data may break the container.
+ * Returns the raw data of the container.
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return The low level array of elements.
  */
 extern void **
-kit_Array_raw(struct kit_Array *self)
+kit_Array_raw(const struct kit_Array *self)
 __attribute__((__nonnull__));
+
+/**
+ * Deletes this instance of kit_Array.
+ * If self is NULL no action will be performed.
+ *
+ * @param self The instance to be deleted.
+ */
+extern void
+kit_Array_delete(struct kit_Array *self);
 
 #ifdef __cplusplus
 }

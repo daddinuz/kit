@@ -17,7 +17,7 @@ FeatureDefine(ArraySet) {
     struct kit_Array *sut = traits_context;
 
     for (i = 0, j = SEEDS_SIZE - 1; i < SEEDS_SIZE; i++, j--) {
-        result = kit_Array_set(sut, (void *) SEEDS[j], i);
+        result = kit_Array_put(sut, i, (void *) SEEDS[j]);
         assert_true(Result_isOk(result));
         assert_string_equal(SEEDS[i], (char *) Result_unwrap(result));
 
@@ -25,7 +25,7 @@ FeatureDefine(ArraySet) {
         assert_true(Result_isOk(result));
         assert_string_equal(SEEDS[j], (char *) Result_unwrap(result));
     }
-    result = kit_Array_set(sut, "x", i);
+    result = kit_Array_put(sut, i, "x");
     assert_true(Result_isError(result));
     assert_equal(&OutOfRangeError, Result_inspect(result));
 
