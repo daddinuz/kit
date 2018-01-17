@@ -27,7 +27,7 @@ FeatureDefine(ArraySet) {
     }
     result = kit_Array_put(sut, i, "x");
     assert_true(Result_isError(result));
-    assert_equal(&OutOfRangeError, Result_inspect(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 
     result = kit_Array_back(sut);
     assert_true(Result_isOk(result));

@@ -15,7 +15,7 @@ struct kit_Array {
     void **raw;
 };
 
-ResultOf(struct kit_Array *, OutOfMemoryError)
+OptionOf(struct kit_Array *)
 kit_Array_new(size_t capacity) {
     struct kit_Array *self = NULL;
     const size_t rawSize = sizeof(self->raw[0]) * capacity;
@@ -26,25 +26,25 @@ kit_Array_new(size_t capacity) {
         self->capacity = capacity;
         self->raw = (void **) (self + 1);
         kit_Allocator_set(self->raw, 0, rawSize);
-        return Result_ok(self);
+        return Option_new(self);
     }
 
-    return Result_error(&OutOfMemoryError);
+    return None;
 }
 
-ResultOf(struct kit_Array *, OutOfMemoryError)
+OptionOf(struct kit_Array *)
 __kit_Array_from(void *e0, ...) {
-    Result result;
+    Option option;
     va_list pack, packCopy;
     struct kit_Array *self = NULL;
 
     va_start(pack, e0);
     va_copy(packCopy, pack);
 
-    result = kit_Array_new(1 + kit_packSize(packCopy));
-    if (Result_isOk(result)) {
+    option = kit_Array_new(1 + kit_packSize(packCopy));
+    if (Option_isSome(option)) {
         size_t i = 0;
-        self = Result_unwrap(result);
+        self = Option_unwrap(option);
         for (void *e = e0; e != Ellipsis; e = va_arg(pack, void *)) {
             kit_Array_put(self, i, e);
             i++;
@@ -54,24 +54,23 @@ __kit_Array_from(void *e0, ...) {
     va_end(packCopy);
     va_end(pack);
 
-    assert((Result_isOk(result) && self) || (&OutOfMemoryError == Result_inspect(result) && NULL == self));
-    return Result_isOk(result) ? Result_ok(self) : Result_error(&OutOfMemoryError);
+    return option;
 }
 
-ResultOf(struct kit_Array *, OutOfMemoryError)
+OptionOf(struct kit_Array *)
 kit_Array_fromPack(va_list pack) {
     assert(pack);
 
-    Result result;
+    Option option;
     va_list packCopy;
     struct kit_Array *self = NULL;
 
     va_copy(packCopy, pack);
 
-    result = kit_Array_new(kit_packSize(packCopy));
-    if (Result_isOk(result)) {
+    option = kit_Array_new(kit_packSize(packCopy));
+    if (Option_isSome(option)) {
         size_t i = 0;
-        self = Result_unwrap(result);
+        self = Option_unwrap(option);
         for (void *e = va_arg(pack, void *); e != Ellipsis; e = va_arg(pack, void *)) {
             kit_Array_put(self, i, e);
             i++;
@@ -80,8 +79,7 @@ kit_Array_fromPack(va_list pack) {
 
     va_end(packCopy);
 
-    assert((Result_isOk(result) && self) || (&OutOfMemoryError == Result_inspect(result) && NULL == self));
-    return Result_isOk(result) ? Result_ok(self) : Result_error(&OutOfMemoryError);
+    return option;
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -92,7 +90,7 @@ kit_Array_put(struct kit_Array *self, const size_t index, void *element) {
         self->raw[index] = element;
         return Result_ok(oldElement);
     }
-    return Result_error(&OutOfRangeError);
+    return Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -101,14 +99,14 @@ kit_Array_get(const struct kit_Array *self, const size_t index) {
     if (index < self->capacity) {
         return Result_ok(self->raw[index]);
     }
-    return Result_error(&OutOfRangeError);
+    return Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)
 kit_Array_back(const struct kit_Array *self) {
     assert(self);
     const size_t capacity = self->capacity;
-    return capacity > 0 ? kit_Array_get(self, capacity - 1) : Result_error(&OutOfRangeError);
+    return capacity > 0 ? kit_Array_get(self, capacity - 1) : Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)

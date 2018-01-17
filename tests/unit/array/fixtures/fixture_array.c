@@ -15,7 +15,7 @@
  * Setups implementations
  */
 SetupDefine(SeededArraySetup) {
-    struct kit_Array *sut = Result_unwrap(kit_Array_new(SEEDS_SIZE));
+    struct kit_Array *sut = Option_unwrap(kit_Array_new(SEEDS_SIZE));
     assert_not_null(sut);
 
     assert_equal(SEEDS_SIZE, kit_Array_capacity(sut));

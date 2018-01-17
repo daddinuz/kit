@@ -34,7 +34,7 @@ FeatureDefine(ArrayGet) {
 
     result = kit_Array_get(sut, i);
     assert_true(Result_isError(result));
-    assert_equal(&OutOfRangeError, Result_inspect(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }
 
 FeatureDefine(ArrayBack) {

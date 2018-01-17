@@ -34,11 +34,9 @@ struct kit_Array;
  * Creates a new instance of kit_Array with a specified capacity.
  *
  * @param capacity The capacity of the container.
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Array of None.
  */
-extern ResultOf(struct kit_Array *, OutOfMemoryError)
+extern OptionOf(struct kit_Array *)
 kit_Array_new(size_t capacity);
 
 /**
@@ -51,11 +49,9 @@ kit_Array_new(size_t capacity);
  *
  * @param e0 The first element.
  * @param ... Other elements.
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Array of None.
  */
-extern ResultOf(struct kit_Array *, OutOfMemoryError)
+extern OptionOf(struct kit_Array *)
 __kit_Array_from(void *e0, ...);
 
 /**
@@ -72,11 +68,9 @@ __kit_Array_from(void *e0, ...);
  *  Is an unchecked runtime error to pass a pack which does not contain Ellipsis as its last value.
  *
  * @param pack The arguments pack [<b>must not be NULL</b>].
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Array of None.
  */
-extern ResultOf(struct kit_Array *, OutOfMemoryError)
+extern OptionOf(struct kit_Array *)
 kit_Array_fromPack(va_list pack)
 __attribute__((__nonnull__));
 
@@ -87,7 +81,7 @@ __attribute__((__nonnull__));
  * @param index The index of the element to be replaced.
  * @param element The new element.
  * @return
- * - Ok => The operation was performed successfully, wraps the old element.
+ * - Ok => Wraps the replaced element.
  * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -100,7 +94,7 @@ __attribute__((__nonnull__(1)));
  * @param self The container instance [<b>must not be NULL</b>].
  * @param index The index of the element.
  * @return
- * - Ok => The operation was performed successfully, wraps the element at the given index.
+ * - Ok => Wraps the specified element.
  * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -112,7 +106,7 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return
- * - Ok => wraps the element at back of the container.
+ * - Ok => Wraps the specified element.
  * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -124,7 +118,7 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return
- * - Ok => wraps the element at front of the container.
+ * - Ok => Wraps the specified element.
  * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
