@@ -101,7 +101,7 @@ Result kit_HashMap_put(struct kit_HashMap *self, const void *key, void *value) {
         return Result_ok(previousValue);
     }
 
-    return Result_error(&OutOfMemoryError);
+    return Result_error(OutOfMemoryError);
 }
 
 Result kit_HashMap_get(struct kit_HashMap *self, const void *key) {
@@ -115,7 +115,7 @@ Result kit_HashMap_get(struct kit_HashMap *self, const void *key) {
         }
     }
 
-    return Result_error(&OutOfRangeError);
+    return Result_error(OutOfRangeError);
 }
 
 bool kit_HashMap_has(struct kit_HashMap *self, const void *key) {
@@ -141,7 +141,7 @@ Result kit_HashMap_pop(struct kit_HashMap *self, const void *key) {
         }
     }
 
-    return Result_error(&OutOfRangeError);
+    return Result_error(OutOfRangeError);
 }
 
 void kit_HashMap_clear(struct kit_HashMap *self) {
@@ -226,7 +226,7 @@ Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_P
     assert(ref);
 
     if (kit_HashMap_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     }
 
     struct kit_HashMap_Bucket *currentBucket = self->next;
@@ -272,20 +272,20 @@ Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_P
     self->next = NULL;
     self->currentIndex = 0;
     // FIXME at this point *ref should not be modified
-    return Result_error(&OutOfRangeError);
+    return Result_error(OutOfRangeError);
 }
 
 Result kit_HashMap_Iterator_setLast(struct kit_HashMap_Iterator *self, void *value) {
     assert(self);
 
     if (kit_HashMap_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (self->last) {
         void *previousValue = self->last->value;
         self->last->value = value;
         return Result_ok(previousValue);
     } else {
-        return Result_error(&IllegalStateError);
+        return Result_error(IllegalStateError);
     }
 }
 

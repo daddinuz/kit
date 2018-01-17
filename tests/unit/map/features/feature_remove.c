@@ -36,11 +36,11 @@ FeatureDefine(MapPop) {
 
         result = kit_Map_get(sut, key);
         assert_true(Result_isError(result));
-        assert_equal(&OutOfRangeError, Result_inspect(result));
+        assert_equal(OutOfRangeError, Result_inspect(result));
 
         result = kit_Map_pop(sut, key);
         assert_true(Result_isError(result));
-        assert_equal(&OutOfRangeError, Result_inspect(result));
+        assert_equal(OutOfRangeError, Result_inspect(result));
 
         if (s == 0) {
             assert_true(kit_Map_isEmpty(sut));
@@ -72,10 +72,10 @@ FeatureDefine(MapClear) {
 
         result = kit_Map_pop(sut, key);
         assert_true(Result_isError(result));
-        assert_equal(&OutOfRangeError, Result_inspect(result));
+        assert_equal(OutOfRangeError, Result_inspect(result));
 
         result = kit_Map_get(sut, key);
         assert_true(Result_isError(result));
-        assert_equal(&OutOfRangeError, Result_inspect(result));
+        assert_equal(OutOfRangeError, Result_inspect(result));
     }
 }

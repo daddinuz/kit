@@ -25,17 +25,17 @@ FeatureDefine(MapIteratorFromEmptyMap) {
 
     result = kit_Map_Iterator_setLast(sut, "x");
     assert_true(Result_isError(result));
-    assert_equal(&IllegalStateError, Result_inspect(result));
+    assert_equal(IllegalStateError, Result_inspect(result));
 
     result = kit_Map_Iterator_next(sut, &pair);
     assert_true(Result_isError(result));
-    assert_equal(&OutOfRangeError, Result_inspect(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 
     assert_false(kit_Map_Iterator_isModified(sut));
 
     result = kit_Map_Iterator_setLast(sut, "x");
     assert_true(Result_isError(result));
-    assert_equal(&IllegalStateError, Result_inspect(result));
+    assert_equal(IllegalStateError, Result_inspect(result));
 
     kit_Pair_delete(pair);
 }
@@ -66,7 +66,7 @@ FeatureDefine(MapIteratorRetrieveElements) {
 
     result = kit_Map_Iterator_next(sut, &pair);
     assert_true(Result_isError(result));
-    assert_equal(&OutOfRangeError, Result_inspect(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 
     kit_Pair_delete(pair);
 }
@@ -83,7 +83,7 @@ FeatureDefine(MapIteratorUpdateElements) {
 
     result = kit_Map_Iterator_setLast(sut, "x");
     assert_true(Result_isError(result));
-    assert_equal(&IllegalStateError, Result_inspect(result));
+    assert_equal(IllegalStateError, Result_inspect(result));
 
     size_t i = 0;
     result = kit_Map_Iterator_next(sut, &pair);
@@ -107,7 +107,7 @@ FeatureDefine(MapIteratorUpdateElements) {
 
     result = kit_Map_Iterator_next(sut, &pair);
     assert_true(Result_isError(result));
-    assert_equal(&OutOfRangeError, Result_inspect(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 
     kit_Map_Iterator_rewind(sut);
 
@@ -148,17 +148,17 @@ FeatureDefine(MapIteratorDetectModifications) {
 
     result = kit_Map_Iterator_next(sut, &pair);
     assert_true(Result_isError(result));
-    assert_equal(&OutOfRangeError, Result_inspect(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 
     result = kit_Map_Iterator_setLast(sut, "x");
     assert_true(Result_isError(result));
-    assert_equal(&IllegalStateError, Result_inspect(result));
+    assert_equal(IllegalStateError, Result_inspect(result));
 
     assert_false(kit_Map_Iterator_isModified(sut));
 
     result = kit_Map_Iterator_setLast(sut, "x");
     assert_true(Result_isError(result));
-    assert_equal(&IllegalStateError, Result_inspect(result));
+    assert_equal(IllegalStateError, Result_inspect(result));
 
     key = Option_unwrap(kit_Atom_fromLiteral(SEEDS[0]));
     value = (char *) SEEDS[1];
@@ -169,11 +169,11 @@ FeatureDefine(MapIteratorDetectModifications) {
 
     result = kit_Map_Iterator_next(sut, &pair);
     assert_true(Result_isError(result));
-    assert_equal(&ConcurrentModificationError, Result_inspect(result));
+    assert_equal(ConcurrentModificationError, Result_inspect(result));
 
     result = kit_Map_Iterator_setLast(sut, "x");
     assert_true(Result_isError(result));
-    assert_equal(&ConcurrentModificationError, Result_inspect(result));
+    assert_equal(ConcurrentModificationError, Result_inspect(result));
 
     kit_Map_Iterator_rewind(sut);
 

@@ -32,7 +32,7 @@ FeatureDefine(MapAdd) {
 
         result = kit_Map_get(sut, key);
         assert_true(Result_isError(result));
-        assert_equal(&OutOfRangeError, Result_inspect(result));
+        assert_equal(OutOfRangeError, Result_inspect(result));
 
         kit_Pair_setKey(pair, key);
         kit_Pair_setValue(pair, value);
@@ -101,7 +101,7 @@ FeatureDefine(MapPut) {
 
         result = kit_Map_get(sut, key);
         assert_true(Result_isError(result));
-        assert_equal(&OutOfRangeError, Result_inspect(result));
+        assert_equal(OutOfRangeError, Result_inspect(result));
 
         result = kit_Map_put(sut, key, value);
         assert_true(Result_isOk(result));
