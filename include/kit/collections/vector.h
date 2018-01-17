@@ -37,11 +37,9 @@ struct kit_Vector;
  * Creates a new instance of kit_Vector with a default capacity.
  * @see vector_config.h
  *
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Vector or None.
  */
-extern ResultOf(struct kit_Vector *, OutOfMemoryError)
+extern OptionOf(struct kit_Vector *)
 kit_Vector_new(void);
 
 /**
@@ -52,93 +50,76 @@ kit_Vector_new(void);
  *
  * @see vector_config.h
  *
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Vector or None.
  */
-extern ResultOf(struct kit_Vector *, OutOfMemoryError)
+extern OptionOf(struct kit_Vector *)
 kit_Vector_withCapacity(size_t capacity);
 
 /**
  * Requests the container to expand to hold at least as many elements as specified by capacity.
  * If requested capacity is less than vector capacity nothing will be done.
  *
- * @attention
- *  Takes ownership invalidating *ref in case of success.
- *
- * @param ref The reference to the container instance [<b>both ref and *ref must not be NULL</b>].
+ * @param self The container instance [<b>must not be NULL</b>].
  * @param capacity The minimum capacity to hold.
  * @return
- * - Ok => The operation was performed successfully, wraps the modified container instance.
+ * - Ok => The operation was performed successfully.
  * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_expand(struct kit_Vector **ref, size_t capacity)
+extern OneOf(Ok, OutOfMemoryError)
+kit_Vector_expand(struct kit_Vector *self, size_t capacity)
 __attribute__((__nonnull__));
 
 /**
  * Requests the container to shrink in order to hold at least the stored elements freeing resources not used.
  *
- * @attention
- *  Takes ownership invalidating *ref in case of success.
- *
- * @param ref The reference to the container instance [<b>both ref and *ref must not be NULL</b>].
+ * @param self The container instance [<b>must not be NULL</b>].
  * @return
- * - Ok => The operation was performed successfully, wraps the modified container instance.
+ * - Ok => The operation was performed successfully.
  * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_shrink(struct kit_Vector **ref)
+extern OneOf(Ok, OutOfMemoryError)
+kit_Vector_shrink(struct kit_Vector *self)
 __attribute__((__nonnull__));
 
 /**
  * Inserts the specified element at the specified position in this container.
  *
- * @attention
- *  Takes ownership invalidating *ref in case of success.
- *
- * @param ref The reference to the container instance [<b>both ref and *ref must not be NULL</b>].
+ * @param self The container instance [<b>must not be NULL</b>].
  * @param element The element to be inserted.
  * @param index The index where the element has to be placed.
  * @return 
- * - Ok => The operation was performed successfully, wraps the modified container instance.
+ * - Ok => The operation was performed successfully.
  * - OutOfRangeError => The given index is out of range, nothing has been done.
  * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern ResultOf(struct kit_Vector *, OutOfRangeError, OutOfMemoryError)
-kit_Vector_insert(struct kit_Vector **ref, size_t index, void *element)
+extern OneOf(Ok, OutOfRangeError, OutOfMemoryError)
+kit_Vector_insert(struct kit_Vector *self, size_t index, void *element)
 __attribute__((__nonnull__(1)));
 
 /**
  * Inserts the specified element to the back of this container.
  *
- * @attention
- *  Takes ownership invalidating *ref in case of success.
- *
- * @param ref The reference to the container instance [<b>both ref and *ref must not be NULL</b>].
+ * @param self The the container instance [<b>must not be NULL</b>].
  * @param element The element to be inserted.
  * @return 
- * - Ok => The operation was performed successfully, wraps the modified container instance.
+ * - Ok => The operation was performed successfully.
  * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_pushBack(struct kit_Vector **ref, void *element)
+extern OneOf(Ok, OutOfMemoryError)
+kit_Vector_pushBack(struct kit_Vector *self, void *element)
 __attribute__((__nonnull__(1)));
 
 /**
  * Inserts the specified element to the front of this container.
  *
- * @attention
- *  Takes ownership invalidating *ref in case of success.
- *
- * @param ref The reference to the container instance [<b>both ref and *ref must not be NULL</b>].
+ * @param self The container instance [<b>must not be NULL</b>].
  * @param element The element to be inserted.
  * @return 
- * - Ok => The operation was performed successfully, wraps the modified container instance.
+ * - Ok => The operation was performed successfully.
  * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_pushFront(struct kit_Vector **ref, void *element)
+extern OneOf(Ok, OutOfMemoryError)
+kit_Vector_pushFront(struct kit_Vector *self, void *element)
 __attribute__((__nonnull__(1)));
 
 /**
@@ -147,7 +128,7 @@ __attribute__((__nonnull__(1)));
  * @param self The container instance [<b>must not be NULL</b>].
  * @param index The index of the element to remove.
  * @return
- * - Ok => The operation was performed successfully, wraps the removed element.
+ * - Ok => Wraps the removed element.
  * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -159,7 +140,7 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return 
- * - Ok => The operation was performed successfully, wraps the removed element.
+ * - Ok => Wraps the removed element.
  * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -171,7 +152,7 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return 
- * - Ok => The operation was performed successfully, wraps the removed element.
+ * - Ok => Wraps the removed element.
  * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -185,7 +166,7 @@ __attribute__((__nonnull__));
  * @param index The index of the element to be replaced.
  * @param element The new element.
  * @return
- * - Ok => The operation was performed successfully, wraps the old element.
+ * - Ok => Wraps the replaced element.
  * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -198,7 +179,7 @@ __attribute__((__nonnull__(1)));
  * @param self The container instance [<b>must not be NULL</b>].
  * @param index The index of the element.
  * @return
- * - Ok => The operation was performed successfully, wraps the element at the given index.
+ * - Ok => Wraps the specified element.
  * - OutOfRangeError => The given index is out of range, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -210,7 +191,7 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return
- * - Ok => wraps the element at back of the container.
+ * - Ok => wraps the specified element.
  * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -222,7 +203,7 @@ __attribute__((__nonnull__));
  *
  * @param self The container instance [<b>must not be NULL</b>].
  * @return
- * - Ok => wraps the element at front of the container.
+ * - Ok => wraps the specified element.
  * - OutOfRangeError => No such element, nothing has been done.
  */
 extern ResultOf(void *, OutOfRangeError)
@@ -297,11 +278,9 @@ struct kit_Vector_Iterator;
  *
  * @param container The instance of the container to iterate [<b>must not be NULL</b>].
  * @param bound The starting bound.
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Vector_Iterator or None.
  */
-extern ResultOf(struct kit_Vector_Iterator *, OutOfMemoryError)
+extern OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound)
 __attribute__((__nonnull__));
 
@@ -309,11 +288,9 @@ __attribute__((__nonnull__));
  * Creates a new instance of kit_Vector_Iterator starting from the begin of the container.
  *
  * @param container The instance of the container to iterate [<b>must not be NULL</b>].
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Vector_Iterator or None.
  */
-extern ResultOf(struct kit_Vector_Iterator *, OutOfMemoryError)
+extern OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromBegin(struct kit_Vector *container)
 __attribute__((__nonnull__));
 
@@ -321,11 +298,9 @@ __attribute__((__nonnull__));
  * Creates a new instance of kit_Vector_Iterator starting from the end of the container.
  *
  * @param container The instance of the container to iterate [<b>must not be NULL</b>].
- * @return
- * - Ok => The operation was performed successfully, wraps the new container instance.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
+ * @return A new instance of kit_Vector_Iterator or None.
  */
-extern ResultOf(struct kit_Vector_Iterator *, OutOfMemoryError)
+extern OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromEnd(struct kit_Vector *container)
 __attribute__((__nonnull__));
 
@@ -362,7 +337,7 @@ __attribute__((__nonnull__));
  *
  * @param self The iterator instance [<b>must not be NULL</b>].
  * @return
- * - Ok => The operation was performed successfully, wraps the retrieved element.
+ * - Ok => Wraps the retrieved element.
  * - OutOfRangeError => The iterator hit the end of the container, nothing has been done.
  * - ConcurrentModificationError => The container has been modified, nothing has been done.
  */
@@ -375,7 +350,7 @@ __attribute__((__nonnull__));
  *
  * @param self The iterator instance [<b>must not be NULL</b>].
  * @return
- * - Ok => The operation was performed successfully, wraps the retrieved element.
+ * - Ok => Wraps the retrieved element.
  * - OutOfRangeError => The iterator hit the end of the container, nothing has been done.
  * - ConcurrentModificationError => The container has been modified, nothing has been done.
  */
@@ -389,7 +364,7 @@ __attribute__((__nonnull__));
  * @param self The iterator instance [<b>must not be NULL</b>].
  * @param element The new element.
  * @return
- * - Ok => The operation was performed successfully, wraps the replaced element.
+ * - Ok => Wraps the replaced element.
  * - IllegalStateError => No elements have been retrieved yet, nothing has been done.
  * - ConcurrentModificationError => The container has been modified, nothing has been done.
  */

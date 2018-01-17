@@ -14,13 +14,13 @@
  *  
  */
 int main() {
-    struct kit_Vector *vector = Result_unwrap(kit_Vector_new());
-    struct kit_Vector_Iterator *iterator = Result_unwrap(kit_Vector_Iterator_fromBegin(vector));
+    struct kit_Vector *vector = Option_unwrap(kit_Vector_new());
+    struct kit_Vector_Iterator *iterator = Option_unwrap(kit_Vector_Iterator_fromBegin(vector));
 
-    vector = Result_unwrap(kit_Vector_pushBack(&vector, "World"));
-    vector = Result_unwrap(kit_Vector_pushFront(&vector, "Hello"));
-    vector = Result_unwrap(kit_Vector_insert(&vector, 1, " "));
-    vector = Result_unwrap(kit_Vector_insert(&vector, 3, "!"));
+    Error_unwrap(kit_Vector_pushBack(vector, "World"));
+    Error_unwrap(kit_Vector_pushFront(vector, "Hello"));
+    Error_unwrap(kit_Vector_insert(vector, 1, " "));
+    Error_unwrap(kit_Vector_insert(vector, 3, "!"));
 
     kit_Vector_Iterator_rewindToBegin(iterator);
 

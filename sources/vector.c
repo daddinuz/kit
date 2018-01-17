@@ -48,14 +48,14 @@ struct kit_Vector {
     void **raw;
 };
 
-ResultOf(struct kit_Vector *, OutOfMemoryError)
+OptionOf(struct kit_Vector *)
 kit_Vector_new(void) {
     assertConfigValidity();
 
     return kit_Vector_withCapacity(KIT_VECTOR_DEFAULT_CAPACITY);
 }
 
-ResultOf(struct kit_Vector *, OutOfMemoryError)
+OptionOf(struct kit_Vector *)
 kit_Vector_withCapacity(const size_t capacity) {
     assertConfigValidity();
 
@@ -72,20 +72,17 @@ kit_Vector_withCapacity(const size_t capacity) {
         if (Option_isSome(option)) {
             self->raw = Option_unwrap(option);
             self->capacity = actualCapacity;
-            return Result_ok(self);
+            return Option_new(self);
         }
     }
 
-    return Result_error(&OutOfMemoryError);
+    return None;
 }
 
-ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_expand(struct kit_Vector **ref, const size_t capacity) {
+OneOf(Ok, OutOfMemoryError)
+kit_Vector_expand(struct kit_Vector *self, const size_t capacity) {
     assertConfigValidity();
-    assert(ref);
-    assert(*ref);
-
-    struct kit_Vector *self = *ref;
+    assert(self);
 
     if (capacity > self->capacity) {
         const size_t newCapacity = calculateNewCapacity(self->capacity, capacity);
@@ -95,23 +92,19 @@ kit_Vector_expand(struct kit_Vector **ref, const size_t capacity) {
         if (Option_isSome(option)) {
             self->raw = Option_unwrap(option);
             self->capacity = newCapacity;
-            // TODO remove: kit_Allocator_set(&(self->raw[self->size]), 0, (self->capacity - self->size) * sizeof(self->raw[0]));
         } else {
-            return Result_error(&OutOfMemoryError);
+            return OutOfMemoryError;
         }
     }
 
-    *ref = NULL;
-    return Result_ok(self);
+    return Ok;
 }
 
-ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_shrink(struct kit_Vector **ref) {
+OneOf(Ok, OutOfMemoryError)
+kit_Vector_shrink(struct kit_Vector *self) {
     assertConfigValidity();
-    assert(ref);
-    assert(*ref);
+    assert(self);
 
-    struct kit_Vector *self = *ref;
     const size_t newCapacity = nextEven(max(self->size, KIT_VECTOR_DEFAULT_CAPACITY));
     const size_t rawSize = sizeof(self->raw[0]) * newCapacity;
     Option option = kit_Allocator_ralloc(self->raw, rawSize);
@@ -119,34 +112,26 @@ kit_Vector_shrink(struct kit_Vector **ref) {
     if (Option_isSome(option)) {
         self->raw = Option_unwrap(option);
         self->capacity = newCapacity;
-        // TODO remove: kit_Allocator_set(&(self->raw[self->size]), 0, (self->capacity - self->size) * sizeof(self->raw[0]));
     } else {
-        return Result_error(&OutOfMemoryError);
+        return OutOfMemoryError;
     }
 
-    *ref = NULL;
-    return Result_ok(self);
+    return Ok;
 }
 
-ResultOf(struct kit_Vector *, OutOfRangeError, OutOfMemoryError)
-kit_Vector_insert(struct kit_Vector **ref, size_t index, void *element) {
+OneOf(Ok, OutOfRangeError, OutOfMemoryError)
+kit_Vector_insert(struct kit_Vector *self, size_t index, void *element) {
     assertConfigValidity();
-    assert(ref);
-    assert(*ref);
-
-    struct kit_Vector *self = *ref;
+    assert(self);
 
     if (index > self->size) {
-        return Result_error(&OutOfRangeError);
+        return OutOfRangeError;
     }
 
-    Result result = kit_Vector_expand(&self, self->size + 1);
-    if (Result_isError(result)) {
-        assert(&OutOfMemoryError == Result_inspect(result));
-        return Result_error(&OutOfMemoryError);
+    if (Ok != kit_Vector_expand(self, self->size + 1)) {
+        return OutOfMemoryError;
     }
 
-    self = Result_unwrap(result);
     kit_Allocator_move(
             &(self->raw[index + 1]),
             &(self->raw[index]),
@@ -156,26 +141,23 @@ kit_Vector_insert(struct kit_Vector **ref, size_t index, void *element) {
     self->size += 1;
     self->operationId += 1;
 
-    *ref = NULL;
-    return Result_ok(self);
+    return Ok;
 }
 
-ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_pushBack(struct kit_Vector **ref, void *element) {
+OneOf(Ok, OutOfMemoryError)
+kit_Vector_pushBack(struct kit_Vector *self, void *element) {
     assertConfigValidity();
-    assert(ref);
-    assert(*ref);
+    assert(self);
 
-    return kit_Vector_insert(ref, (*ref)->size, element);
+    return kit_Vector_insert(self, self->size, element);
 }
 
-ResultOf(struct kit_Vector *, OutOfMemoryError)
-kit_Vector_pushFront(struct kit_Vector **ref, void *element) {
+OneOf(Ok, OutOfMemoryError)
+kit_Vector_pushFront(struct kit_Vector *self, void *element) {
     assertConfigValidity();
-    assert(ref);
-    assert(*ref);
+    assert(self);
 
-    return kit_Vector_insert(ref, 0, element);
+    return kit_Vector_insert(self, 0, element);
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -184,7 +166,7 @@ kit_Vector_remove(struct kit_Vector *self, size_t index) {
     assert(self);
 
     if (index >= self->size) {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 
     void *removedElement = self->raw[index];
@@ -204,7 +186,7 @@ kit_Vector_popBack(struct kit_Vector *self) {
     assert(self);
 
     const size_t size = self->size;
-    return size > 0 ? kit_Vector_remove(self, size - 1) : Result_error(&OutOfRangeError);
+    return size > 0 ? kit_Vector_remove(self, size - 1) : Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -221,7 +203,7 @@ kit_Vector_put(struct kit_Vector *self, size_t index, void *element) {
     assert(self);
 
     if (index >= self->size) {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 
     void *oldElement = self->raw[index];
@@ -234,7 +216,7 @@ kit_Vector_get(const struct kit_Vector *self, size_t index) {
     assertConfigValidity();
     assert(self);
 
-    return (index < self->size) ? Result_ok(self->raw[index]) : Result_error(&OutOfRangeError);
+    return (index < self->size) ? Result_ok(self->raw[index]) : Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -243,7 +225,7 @@ kit_Vector_back(const struct kit_Vector *self) {
     assert(self);
 
     const size_t size = self->size;
-    return size > 0 ? kit_Vector_get(self, size - 1) : Result_error(&OutOfRangeError);
+    return size > 0 ? kit_Vector_get(self, size - 1) : Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -313,7 +295,7 @@ struct kit_Vector_Iterator {
     size_t nextIndex;
 };
 
-ResultOf(struct kit_Vector_Iterator *, OutOfMemoryError)
+OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) {
     assertConfigValidity();
     assert(container);
@@ -326,13 +308,13 @@ kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) {
         self = Option_unwrap(option);
         self->container = container;
         kit_Vector_Iterator_rewind(self, bound);
-        return Result_ok(self);
+        return Option_new(self);
     }
 
-    return Result_error(&OutOfMemoryError);
+    return None;
 }
 
-ResultOf(struct kit_Vector_Iterator *, OutOfMemoryError)
+OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromBegin(struct kit_Vector *container) {
     assertConfigValidity();
     assert(container);
@@ -340,7 +322,7 @@ kit_Vector_Iterator_fromBegin(struct kit_Vector *container) {
     return kit_Vector_Iterator_new(container, KIT_BOUND_BEGIN);
 }
 
-ResultOf(struct kit_Vector_Iterator *, OutOfMemoryError)
+OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromEnd(struct kit_Vector *container) {
     assertConfigValidity();
     assert(container);
@@ -389,14 +371,14 @@ kit_Vector_Iterator_next(struct kit_Vector_Iterator *self) {
     assert(self);
 
     if (kit_Vector_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (0 < self->nextIndex && self->nextIndex <= self->container->size) {
         void *nextElement = self->container->raw[self->nextIndex - 1];
         self->lastIndex = self->prevIndex = self->nextIndex;
         self->nextIndex += 1;
         return Result_ok(nextElement);
     } else {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 }
 
@@ -406,14 +388,14 @@ kit_Vector_Iterator_previous(struct kit_Vector_Iterator *self) {
     assert(self);
 
     if (kit_Vector_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (0 < self->prevIndex && self->prevIndex <= self->container->size) {
         void *previousElement = self->container->raw[self->prevIndex - 1];
         self->lastIndex = self->nextIndex = self->prevIndex;
         self->prevIndex -= 1;
         return Result_ok(previousElement);
     } else {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 }
 
@@ -423,13 +405,13 @@ kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *self, void *element) {
     assert(self);
 
     if (kit_Vector_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (0 < self->lastIndex && self->lastIndex <= self->container->size) {
         void *lastElement = self->container->raw[self->lastIndex - 1];
         self->container->raw[self->lastIndex - 1] = element;
         return Result_ok(lastElement);
     } else {
-        return Result_error(&IllegalStateError);
+        return Result_error(IllegalStateError);
     };
 }
 

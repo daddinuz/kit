@@ -15,10 +15,10 @@ extern "C" {
 
 #include <option/option.h>
 
-extern Error OutOfRangeError;
-extern Error OutOfMemoryError;
-extern Error IllegalStateError;
-extern Error ConcurrentModificationError;
+extern const Error OutOfRangeError;
+extern const Error OutOfMemoryError;
+extern const Error IllegalStateError;
+extern const Error ConcurrentModificationError;
 
 #ifdef __cplusplus
 }
