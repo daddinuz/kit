@@ -16,7 +16,7 @@ struct kit_Array {
 };
 
 OptionOf(struct kit_Array *)
-kit_Array_new(size_t capacity) {
+kit_Array_new(const size_t capacity) {
     struct kit_Array *self = NULL;
     const size_t rawSize = sizeof(self->raw[0]) * capacity;
     Option option = kit_Allocator_malloc(sizeof(*self) + rawSize);
@@ -83,18 +83,18 @@ kit_Array_fromPack(va_list pack) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Array_put(struct kit_Array *self, const size_t index, void *element) {
+kit_Array_put(struct kit_Array *const self, const size_t index, void *const element) {
     assert(self);
     if (index < self->capacity) {
-        void *oldElement = self->raw[index];
+        void *replacedElement = self->raw[index];
         self->raw[index] = element;
-        return Result_ok(oldElement);
+        return Result_ok(replacedElement);
     }
     return Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Array_get(const struct kit_Array *self, const size_t index) {
+kit_Array_get(const struct kit_Array *const self, const size_t index) {
     assert(self);
     if (index < self->capacity) {
         return Result_ok(self->raw[index]);
@@ -103,32 +103,32 @@ kit_Array_get(const struct kit_Array *self, const size_t index) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Array_back(const struct kit_Array *self) {
+kit_Array_back(const struct kit_Array *const self) {
     assert(self);
     const size_t capacity = self->capacity;
     return capacity > 0 ? kit_Array_get(self, capacity - 1) : Result_error(OutOfRangeError);
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Array_front(const struct kit_Array *self) {
+kit_Array_front(const struct kit_Array *const self) {
     assert(self);
     return kit_Array_get(self, 0);
 }
 
 void
-kit_Array_clear(struct kit_Array *self) {
+kit_Array_clear(struct kit_Array *const self) {
     assert(self);
     kit_Allocator_set(self->raw, 0, sizeof(void *) * self->capacity);
 }
 
 size_t
-kit_Array_capacity(const struct kit_Array *self) {
+kit_Array_capacity(const struct kit_Array *const self) {
     assert(self);
     return self->capacity;
 }
 
 void **
-kit_Array_raw(const struct kit_Array *self) {
+kit_Array_raw(const struct kit_Array *const self) {
     assert(self);
     return self->raw;
 }

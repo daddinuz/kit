@@ -21,15 +21,15 @@ static void assertConfigValidity(void) {
 }
 #endif
 
-static size_t max(size_t a, size_t b) {
+static size_t max(const size_t a, const size_t b) {
     return a > b ? a : b;
 }
 
-static size_t nextEven(size_t size) {
+static size_t nextEven(const size_t size) {
     return size + (size % 2);
 }
 
-static size_t applyLoadFactor(size_t size) {
+static size_t applyLoadFactor(const size_t size) {
     return nextEven(size + (size_t) (size * KIT_VECTOR_LOAD_FACTOR));
 }
 
@@ -80,7 +80,7 @@ kit_Vector_withCapacity(const size_t capacity) {
 }
 
 OneOf(Ok, OutOfMemoryError)
-kit_Vector_expand(struct kit_Vector *self, const size_t capacity) {
+kit_Vector_expand(struct kit_Vector *const self, const size_t capacity) {
     assertConfigValidity();
     assert(self);
 
@@ -101,7 +101,7 @@ kit_Vector_expand(struct kit_Vector *self, const size_t capacity) {
 }
 
 OneOf(Ok, OutOfMemoryError)
-kit_Vector_shrink(struct kit_Vector *self) {
+kit_Vector_shrink(struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -120,7 +120,7 @@ kit_Vector_shrink(struct kit_Vector *self) {
 }
 
 OneOf(Ok, OutOfRangeError, OutOfMemoryError)
-kit_Vector_insert(struct kit_Vector *self, size_t index, void *element) {
+kit_Vector_insert(struct kit_Vector *const self, const size_t index, void *const element) {
     assertConfigValidity();
     assert(self);
 
@@ -145,7 +145,7 @@ kit_Vector_insert(struct kit_Vector *self, size_t index, void *element) {
 }
 
 OneOf(Ok, OutOfMemoryError)
-kit_Vector_pushBack(struct kit_Vector *self, void *element) {
+kit_Vector_pushBack(struct kit_Vector *const self, void *const element) {
     assertConfigValidity();
     assert(self);
 
@@ -153,7 +153,7 @@ kit_Vector_pushBack(struct kit_Vector *self, void *element) {
 }
 
 OneOf(Ok, OutOfMemoryError)
-kit_Vector_pushFront(struct kit_Vector *self, void *element) {
+kit_Vector_pushFront(struct kit_Vector *const self, void *const element) {
     assertConfigValidity();
     assert(self);
 
@@ -161,7 +161,7 @@ kit_Vector_pushFront(struct kit_Vector *self, void *element) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Vector_remove(struct kit_Vector *self, size_t index) {
+kit_Vector_remove(struct kit_Vector *const self, const size_t index) {
     assertConfigValidity();
     assert(self);
 
@@ -181,7 +181,7 @@ kit_Vector_remove(struct kit_Vector *self, size_t index) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Vector_popBack(struct kit_Vector *self) {
+kit_Vector_popBack(struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -190,7 +190,7 @@ kit_Vector_popBack(struct kit_Vector *self) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Vector_popFront(struct kit_Vector *self) {
+kit_Vector_popFront(struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -198,7 +198,7 @@ kit_Vector_popFront(struct kit_Vector *self) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Vector_put(struct kit_Vector *self, size_t index, void *element) {
+kit_Vector_put(struct kit_Vector *const self, const size_t index, void *const element) {
     assertConfigValidity();
     assert(self);
 
@@ -206,13 +206,13 @@ kit_Vector_put(struct kit_Vector *self, size_t index, void *element) {
         return Result_error(OutOfRangeError);
     }
 
-    void *oldElement = self->raw[index];
+    void *replacedElement = self->raw[index];
     self->raw[index] = element;
-    return Result_ok(oldElement);
+    return Result_ok(replacedElement);
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Vector_get(const struct kit_Vector *self, size_t index) {
+kit_Vector_get(const struct kit_Vector *const self, const size_t index) {
     assertConfigValidity();
     assert(self);
 
@@ -220,7 +220,7 @@ kit_Vector_get(const struct kit_Vector *self, size_t index) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Vector_back(const struct kit_Vector *self) {
+kit_Vector_back(const struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -229,7 +229,7 @@ kit_Vector_back(const struct kit_Vector *self) {
 }
 
 ResultOf(void *, OutOfRangeError)
-kit_Vector_front(const struct kit_Vector *self) {
+kit_Vector_front(const struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -237,7 +237,7 @@ kit_Vector_front(const struct kit_Vector *self) {
 }
 
 void
-kit_Vector_clear(struct kit_Vector *self) {
+kit_Vector_clear(struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -246,7 +246,7 @@ kit_Vector_clear(struct kit_Vector *self) {
 }
 
 size_t
-kit_Vector_size(const struct kit_Vector *self) {
+kit_Vector_size(const struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -254,7 +254,7 @@ kit_Vector_size(const struct kit_Vector *self) {
 }
 
 size_t
-kit_Vector_capacity(const struct kit_Vector *self) {
+kit_Vector_capacity(const struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -262,7 +262,7 @@ kit_Vector_capacity(const struct kit_Vector *self) {
 }
 
 bool
-kit_Vector_isEmpty(const struct kit_Vector *self) {
+kit_Vector_isEmpty(const struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -270,7 +270,7 @@ kit_Vector_isEmpty(const struct kit_Vector *self) {
 }
 
 void **
-kit_Vector_raw(const struct kit_Vector *self) {
+kit_Vector_raw(const struct kit_Vector *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -296,7 +296,7 @@ struct kit_Vector_Iterator {
 };
 
 OptionOf(struct kit_Vector_Iterator *)
-kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) {
+kit_Vector_Iterator_new(struct kit_Vector *const container, const enum kit_Bound bound) {
     assertConfigValidity();
     assert(container);
     assert(KIT_BOUND_BEGIN <= bound && bound <= KIT_BOUND_END);
@@ -315,7 +315,7 @@ kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound) {
 }
 
 OptionOf(struct kit_Vector_Iterator *)
-kit_Vector_Iterator_fromBegin(struct kit_Vector *container) {
+kit_Vector_Iterator_fromBegin(struct kit_Vector *const container) {
     assertConfigValidity();
     assert(container);
 
@@ -323,7 +323,7 @@ kit_Vector_Iterator_fromBegin(struct kit_Vector *container) {
 }
 
 OptionOf(struct kit_Vector_Iterator *)
-kit_Vector_Iterator_fromEnd(struct kit_Vector *container) {
+kit_Vector_Iterator_fromEnd(struct kit_Vector *const container) {
     assertConfigValidity();
     assert(container);
 
@@ -331,7 +331,7 @@ kit_Vector_Iterator_fromEnd(struct kit_Vector *container) {
 }
 
 void
-kit_Vector_Iterator_rewind(struct kit_Vector_Iterator *self, enum kit_Bound bound) {
+kit_Vector_Iterator_rewind(struct kit_Vector_Iterator *const self, const enum kit_Bound bound) {
     assertConfigValidity();
     assert(self);
     assert(KIT_BOUND_BEGIN <= bound && bound <= KIT_BOUND_END);
@@ -350,7 +350,7 @@ kit_Vector_Iterator_rewind(struct kit_Vector_Iterator *self, enum kit_Bound boun
 }
 
 void
-kit_Vector_Iterator_rewindToBegin(struct kit_Vector_Iterator *self) {
+kit_Vector_Iterator_rewindToBegin(struct kit_Vector_Iterator *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -358,7 +358,7 @@ kit_Vector_Iterator_rewindToBegin(struct kit_Vector_Iterator *self) {
 }
 
 void
-kit_Vector_Iterator_rewindToEnd(struct kit_Vector_Iterator *self) {
+kit_Vector_Iterator_rewindToEnd(struct kit_Vector_Iterator *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -366,7 +366,7 @@ kit_Vector_Iterator_rewindToEnd(struct kit_Vector_Iterator *self) {
 }
 
 ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
-kit_Vector_Iterator_next(struct kit_Vector_Iterator *self) {
+kit_Vector_Iterator_next(struct kit_Vector_Iterator *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -383,7 +383,7 @@ kit_Vector_Iterator_next(struct kit_Vector_Iterator *self) {
 }
 
 ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
-kit_Vector_Iterator_previous(struct kit_Vector_Iterator *self) {
+kit_Vector_Iterator_previous(struct kit_Vector_Iterator *const self) {
     assertConfigValidity();
     assert(self);
 
@@ -400,7 +400,7 @@ kit_Vector_Iterator_previous(struct kit_Vector_Iterator *self) {
 }
 
 ResultOf(void *, IllegalStateError, ConcurrentModificationError)
-kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *self, void *element) {
+kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *const self, void *const element) {
     assertConfigValidity();
     assert(self);
 
@@ -416,7 +416,7 @@ kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *self, void *element) {
 }
 
 bool
-kit_Vector_Iterator_isModified(struct kit_Vector_Iterator *self) {
+kit_Vector_Iterator_isModified(const struct kit_Vector_Iterator *const self) {
     assertConfigValidity();
     assert(self);
 

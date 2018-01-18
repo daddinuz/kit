@@ -381,7 +381,7 @@ __attribute__((__warn_unused_result__, __nonnull__(1)));
  * @return true if the container has been modified else false.
  */
 extern bool
-kit_Vector_Iterator_isModified(struct kit_Vector_Iterator *self)
+kit_Vector_Iterator_isModified(const struct kit_Vector_Iterator *self)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
