@@ -3,13 +3,16 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 23, 2017 
+ * Date:   January 18, 2018
  */
 
 #include <assert.h>
 #include <stdlib.h>
 #include <kit/allocator/allocator.h>
 #include <kit/collections/doubly_list.h>
+
+#define ignoreResult(x) \
+    ((void) ((x) ? 1 : 0))
 
 struct kit_DoublyList_Node {
     void *element;
@@ -18,15 +21,16 @@ struct kit_DoublyList_Node {
 };
 
 static OptionOf(struct kit_DoublyList_Node *)
-kit_DoublyList_Node_new(void *e);
+kit_DoublyList_Node_new(void *element)
+__attribute__((__warn_unused_result__));
+
+static ResultOf(struct kit_DoublyList_Node *, OutOfRangeError)
+kit_DoublyList_Node_fetch(const struct kit_DoublyList *list, size_t index)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static void *
 kit_DoublyList_Node_delete(struct kit_DoublyList_Node *self)
-__attribute__((__nonnull__));
-
-static ResultOf(struct kit_DoublyList_Node *, OutOfRangeError)
-kit_DoublyList_Node_fetch(struct kit_DoublyList *list, size_t index)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 struct kit_DoublyList {
     int operationId;
@@ -35,46 +39,25 @@ struct kit_DoublyList {
     struct kit_DoublyList_Node *back;
 };
 
-Option kit_DoublyList_new(void) {
+OptionOf(struct kit_DoublyList *)
+kit_DoublyList_new(void) {
     struct kit_DoublyList *self;
     return kit_Allocator_calloc(1, sizeof(*self));
 }
 
-void kit_DoublyList_clear(struct kit_DoublyList *self) {
-    assert(self);
-    struct kit_DoublyList_Node *base = self->front;
-    struct kit_DoublyList_Node *next = NULL;
-
-    while (base) {
-        next = base->next;
-        kit_DoublyList_Node_delete(base);
-        base = next;
-    }
-
-    self->size = 0;
-    self->operationId += 1;
-    self->back = self->front = NULL;
-}
-
-void kit_DoublyList_delete(struct kit_DoublyList *self) {
-    if (self) {
-        kit_DoublyList_clear(self);
-        kit_Allocator_free(self);
-    }
-}
-
-Result kit_DoublyList_insert(struct kit_DoublyList *const self, void *const e, const size_t index) {
+OneOf(Ok, OutOfRangeError, OutOfMemoryError)
+kit_DoublyList_insert(struct kit_DoublyList *const self, const size_t index, void *const element) {
     assert(self);
     Option newNodeOption;
     struct kit_DoublyList_Node *newNode = NULL;
 
     if (index > self->size) {
-        return Result_error(&OutOfRangeError);
+        return OutOfRangeError;
     }
 
-    newNodeOption = kit_DoublyList_Node_new(e);
+    newNodeOption = kit_DoublyList_Node_new(element);
     if (Option_isNone(newNodeOption)) {
-        return Result_error(&OutOfMemoryError);
+        return OutOfMemoryError;
     }
     newNode = Option_unwrap(newNodeOption);
 
@@ -101,31 +84,23 @@ Result kit_DoublyList_insert(struct kit_DoublyList *const self, void *const e, c
 
     self->size += 1;
     self->operationId += 1;
-    return Result_ok(e);
+    return Ok;
 }
 
-Result kit_DoublyList_pushBack(struct kit_DoublyList *self, void *e) {
+OneOf(Ok, OutOfMemoryError)
+kit_DoublyList_pushBack(struct kit_DoublyList *const self, void *const element) {
     assert(self);
-    return kit_DoublyList_insert(self, e, self->size);
+    return kit_DoublyList_insert(self, self->size, element);
 }
 
-Result kit_DoublyList_pushFront(struct kit_DoublyList *self, void *e) {
+OneOf(Ok, OutOfMemoryError)
+kit_DoublyList_pushFront(struct kit_DoublyList *const self, void *const element) {
     assert(self);
-    return kit_DoublyList_insert(self, e, 0);
+    return kit_DoublyList_insert(self, 0, element);
 }
 
-Result kit_DoublyList_popBack(struct kit_DoublyList *self) {
-    assert(self);
-    const size_t size = self->size;
-    return size > 0 ? kit_DoublyList_remove(self, size - 1) : Result_error(&OutOfRangeError);
-}
-
-Result kit_DoublyList_popFront(struct kit_DoublyList *self) {
-    assert(self);
-    return kit_DoublyList_remove(self, 0);
-}
-
-Result kit_DoublyList_remove(struct kit_DoublyList *self, const size_t index) {
+ResultOf(void *, OutOfRangeError)
+kit_DoublyList_remove(struct kit_DoublyList *const self, const size_t index) {
     assert(self);
     Result result = kit_DoublyList_Node_fetch(self, index);
 
@@ -146,26 +121,41 @@ Result kit_DoublyList_remove(struct kit_DoublyList *self, const size_t index) {
         Result_ok(kit_DoublyList_Node_delete(node));
     }
 
-    assert(&OutOfRangeError == Result_inspect(result));
+    assert(OutOfRangeError == Result_inspect(result));
     return result;
 }
 
-Result kit_DoublyList_set(struct kit_DoublyList *self, void *e, const size_t index) {
+ResultOf(void *, OutOfRangeError)
+kit_DoublyList_popBack(struct kit_DoublyList *const self) {
+    assert(self);
+    const size_t size = self->size;
+    return size > 0 ? kit_DoublyList_remove(self, size - 1) : Result_error(OutOfRangeError);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_DoublyList_popFront(struct kit_DoublyList *const self) {
+    assert(self);
+    return kit_DoublyList_remove(self, 0);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_DoublyList_put(struct kit_DoublyList *const self, const size_t index, void *const element) {
     assert(self);
     Result result = kit_DoublyList_Node_fetch(self, index);
 
     if (Result_isOk(result)) {
         struct kit_DoublyList_Node *node = Result_unwrap(result);
-        void *oldElement = node->element;
-        node->element = e;
-        Result_ok(oldElement);
+        void *replacedElement = node->element;
+        node->element = element;
+        Result_ok(replacedElement);
     }
 
-    assert(&OutOfRangeError == Result_inspect(result));
+    assert(OutOfRangeError == Result_inspect(result));
     return result;
 }
 
-Result kit_DoublyList_get(struct kit_DoublyList *self, const size_t index) {
+ResultOf(void *, OutOfRangeError)
+kit_DoublyList_get(const struct kit_DoublyList *const self, const size_t index) {
     assert(self);
     Result result = kit_DoublyList_Node_fetch(self, index);
 
@@ -174,29 +164,58 @@ Result kit_DoublyList_get(struct kit_DoublyList *self, const size_t index) {
         Result_ok(node->element);
     }
 
-    assert(&OutOfRangeError == Result_inspect(result));
+    assert(OutOfRangeError == Result_inspect(result));
     return result;
 }
 
-Result kit_DoublyList_back(struct kit_DoublyList *self) {
+ResultOf(void *, OutOfRangeError)
+kit_DoublyList_back(const struct kit_DoublyList *const self) {
     assert(self);
     const size_t size = self->size;
-    return size > 0 ? kit_DoublyList_get(self, size - 1) : Result_error(&OutOfRangeError);
+    return size > 0 ? kit_DoublyList_get(self, size - 1) : Result_error(OutOfRangeError);
 }
 
-Result kit_DoublyList_front(struct kit_DoublyList *self) {
+ResultOf(void *, OutOfRangeError)
+kit_DoublyList_front(const struct kit_DoublyList *const self) {
     assert(self);
     return kit_DoublyList_get(self, 0);
 }
 
-size_t kit_DoublyList_size(struct kit_DoublyList *self) {
+void
+kit_DoublyList_clear(struct kit_DoublyList *const self) {
+    assert(self);
+    struct kit_DoublyList_Node *base = self->front;
+    struct kit_DoublyList_Node *next = NULL;
+
+    while (base) {
+        next = base->next;
+        ignoreResult(kit_DoublyList_Node_delete(base));
+        base = next;
+    }
+
+    self->size = 0;
+    self->operationId += 1;
+    self->back = self->front = NULL;
+}
+
+size_t
+kit_DoublyList_size(const struct kit_DoublyList *const self) {
     assert(self);
     return self->size;
 }
 
-bool kit_DoublyList_isEmpty(struct kit_DoublyList *self) {
+bool
+kit_DoublyList_isEmpty(const struct kit_DoublyList *const self) {
     assert(self);
     return 0 == self->size;
+}
+
+void
+kit_DoublyList_delete(struct kit_DoublyList *self) {
+    if (self) {
+        kit_DoublyList_clear(self);
+        kit_Allocator_free(self);
+    }
 }
 
 struct kit_DoublyList_Iterator {
@@ -207,7 +226,8 @@ struct kit_DoublyList_Iterator {
     struct kit_DoublyList_Node *next;
 };
 
-Option kit_DoublyList_Iterator_new(struct kit_DoublyList *container, enum kit_Bound bound) {
+OptionOf(struct kit_DoublyList_Iterator *)
+kit_DoublyList_Iterator_new(struct kit_DoublyList *const container, const enum kit_Bound bound) {
     assert(container);
     assert(KIT_BOUND_BEGIN <= bound && bound <= KIT_BOUND_END);
     struct kit_DoublyList_Iterator *self;
@@ -222,17 +242,20 @@ Option kit_DoublyList_Iterator_new(struct kit_DoublyList *container, enum kit_Bo
     return selfOption;
 }
 
-Option kit_DoublyList_Iterator_fromBegin(struct kit_DoublyList *container) {
+OptionOf(struct kit_DoublyList_Iterator *)
+kit_DoublyList_Iterator_fromBegin(struct kit_DoublyList *const container) {
     assert(container);
     return kit_DoublyList_Iterator_new(container, KIT_BOUND_BEGIN);
 }
 
-Option kit_DoublyList_Iterator_fromEnd(struct kit_DoublyList *container) {
+OptionOf(struct kit_DoublyList_Iterator *)
+kit_DoublyList_Iterator_fromEnd(struct kit_DoublyList *const container) {
     assert(container);
     return kit_DoublyList_Iterator_new(container, KIT_BOUND_END);
 }
 
-void kit_DoublyList_Iterator_rewind(struct kit_DoublyList_Iterator *self, enum kit_Bound bound) {
+void
+kit_DoublyList_Iterator_rewind(struct kit_DoublyList_Iterator *const self, const enum kit_Bound bound) {
     assert(self);
     assert(self->container);
     assert(KIT_BOUND_BEGIN <= bound && bound <= KIT_BOUND_END);
@@ -249,98 +272,100 @@ void kit_DoublyList_Iterator_rewind(struct kit_DoublyList_Iterator *self, enum k
     }
 }
 
-void kit_DoublyList_Iterator_rewindToBegin(struct kit_DoublyList_Iterator *self) {
+void
+kit_DoublyList_Iterator_rewindToBegin(struct kit_DoublyList_Iterator *const self) {
     assert(self);
     kit_DoublyList_Iterator_rewind(self, KIT_BOUND_BEGIN);
 }
 
-void kit_DoublyList_Iterator_rewindToEnd(struct kit_DoublyList_Iterator *self) {
+void
+kit_DoublyList_Iterator_rewindToEnd(struct kit_DoublyList_Iterator *const self) {
     assert(self);
     kit_DoublyList_Iterator_rewind(self, KIT_BOUND_END);
 }
 
-void kit_DoublyList_Iterator_delete(struct kit_DoublyList_Iterator *self) {
-    kit_Allocator_free(self);
-}
-
-Result kit_DoublyList_Iterator_next(struct kit_DoublyList_Iterator *self) {
+ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
+kit_DoublyList_Iterator_next(struct kit_DoublyList_Iterator *const self) {
     assert(self);
 
     if (kit_DoublyList_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (self->next) {
         void *nextElement = self->next->element;
         self->last = self->prev = self->next;
         self->next = self->next->next;
         return Result_ok(nextElement);
     } else {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 }
 
-Result kit_DoublyList_Iterator_previous(struct kit_DoublyList_Iterator *self) {
+ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
+kit_DoublyList_Iterator_previous(struct kit_DoublyList_Iterator *const self) {
     assert(self);
 
     if (kit_DoublyList_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (self->prev) {
         void *previousElement = self->prev->element;
         self->last = self->next = self->prev;
         self->prev = self->prev->prev;
         return Result_ok(previousElement);
     } else {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 }
 
-Result kit_DoublyList_Iterator_setLast(struct kit_DoublyList_Iterator *self, void *e) {
+ResultOf(void *, IllegalStateError, ConcurrentModificationError)
+kit_DoublyList_Iterator_setLast(struct kit_DoublyList_Iterator *const self, void *const element) {
     assert(self);
 
     if (kit_DoublyList_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (self->last) {
-        void *lastElement = self->last->element;
-        self->last->element = e;
-        return Result_ok(lastElement);
+        void *replacedElement = self->last->element;
+        self->last->element = element;
+        return Result_ok(replacedElement);
     } else {
-        return Result_error(&IllegalStateError);
+        return Result_error(IllegalStateError);
     }
 }
 
-bool kit_DoublyList_Iterator_isModified(struct kit_DoublyList_Iterator *self) {
+bool
+kit_DoublyList_Iterator_isModified(struct kit_DoublyList_Iterator *const self) {
     assert(self);
     struct kit_DoublyList *container = self->container;
     return NULL == container || self->operationId != container->operationId;
 }
 
+void
+kit_DoublyList_Iterator_delete(struct kit_DoublyList_Iterator *self) {
+    kit_Allocator_free(self);
+}
+
 /*
  * Internals
  */
-Option kit_DoublyList_Node_new(void *e) {
+OptionOf(struct kit_DoublyList_Node *)
+kit_DoublyList_Node_new(void *const element) {
     struct kit_DoublyList_Node *self;
     Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
     if (Option_isSome(selfOption)) {
         self = Option_unwrap(selfOption);
-        self->element = e;
+        self->element = element;
     }
 
     return selfOption;
 }
 
-void *kit_DoublyList_Node_delete(struct kit_DoublyList_Node *self) {
-    assert(self);
-    void *e = self->element;
-    kit_Allocator_free(self);
-    return e;
-}
-
-Result kit_DoublyList_Node_fetch(struct kit_DoublyList *list, const size_t index) {
+ResultOf(struct kit_DoublyList_Node *, OutOfRangeError)
+kit_DoublyList_Node_fetch(const struct kit_DoublyList *const list, const size_t index) {
     assert(list);
     struct kit_DoublyList_Node *node;
 
     if (index >= list->size) {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 
     if (index < list->size / 2) {
@@ -356,4 +381,12 @@ Result kit_DoublyList_Node_fetch(struct kit_DoublyList *list, const size_t index
     }
 
     return Result_ok(node);
+}
+
+void *
+kit_DoublyList_Node_delete(struct kit_DoublyList_Node *self) {
+    assert(self);
+    void *e = self->element;
+    kit_Allocator_free(self);
+    return e;
 }
