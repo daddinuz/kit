@@ -3,12 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 21, 2017 
- */
-
-/*
- * Pairs couple together a key with a paired value.
- * The key of a pair must not be NULL.
+ * Date:   January 16, 2018
  */
 
 #ifndef KIT_PAIR_INCLUDED
@@ -21,6 +16,10 @@ extern "C" {
 #include <option/option.h>
 #include <kit/compiler_steroids.h>
 
+/**
+ * Pairs couple together a key with a paired value.
+ * The key of a pair must not be NULL.
+ */
 struct kit_Pair;
 
 /**
@@ -33,7 +32,7 @@ struct kit_Pair;
  */
 extern OptionOf(struct kit_Pair *)
 kit_Pair_new(const void *key, void *value)
-__attribute__((__nonnull__(1)));
+__attribute__((__warn_unused_result__, __nonnull__(1)));
 
 /**
  * Gets the key element of the pair.
@@ -43,7 +42,7 @@ __attribute__((__nonnull__(1)));
  */
 extern const void *
 kit_Pair_getKey(struct kit_Pair *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Gets the value element of the pair.
@@ -53,7 +52,7 @@ __attribute__((__nonnull__));
  */
 extern void *
 kit_Pair_getValue(struct kit_Pair *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Sets the key element of the pair.
