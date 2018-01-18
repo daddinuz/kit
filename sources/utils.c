@@ -13,14 +13,15 @@
 
 #ifndef NDEBUG
 
-#   include <stdio.h>
+    #include <stdio.h>
 
 #endif
 
 static void *_Ellipsis = NULL;
 const void *const Ellipsis = &_Ellipsis;
 
-size_t kit_packSize(va_list pack) {
+size_t
+kit_packSize(va_list pack) {
     assert(pack);
 
     size_t size = 0;
@@ -40,7 +41,8 @@ size_t kit_packSize(va_list pack) {
     return size;
 }
 
-void kit_swap(void **a, void **b) {
+void
+kit_swap(void **const a, void **const b) {
     assert(a);
     assert(b);
     void *tmp = *a;
@@ -48,20 +50,23 @@ void kit_swap(void **a, void **b) {
     *b = tmp;
 }
 
-void *kit_move(void **ref) {
+void *
+kit_move(void **const ref) {
     assert(ref);
     void *data = *ref;
     *ref = NULL;
     return data;
 }
 
-int kit_compareFn(const void *a, const void *b) {
+int
+kit_compareFn(const void *const a, const void *const b) {
     assert(a);
     assert(b);
     return (int) ((intptr_t) b - (intptr_t) a);
 }
 
-size_t kit_hashFn(const void *key) {
+size_t
+kit_hashFn(const void *const key) {
     assert(key);
     return (size_t) ((uintptr_t) key >> 2);
 }
