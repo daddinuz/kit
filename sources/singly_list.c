@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 25, 2017 
+ * Date:   January 18, 2018
  */
 
 #include <assert.h>
@@ -17,15 +17,16 @@ struct kit_SinglyList_Node {
 };
 
 static OptionOf(struct kit_SinglyList_Node *)
-kit_SinglyList_Node_new(void *e);
+kit_SinglyList_Node_new(void *element)
+__attribute__((__warn_unused_result__));
+
+static ResultOf(struct kit_SinglyList_Node *, OutOfRangeError)
+kit_SinglyList_Node_fetch(const struct kit_SinglyList *list, size_t index)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static void *
 kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self)
-__attribute__((__nonnull__));
-
-static ResultOf(struct kit_SinglyList_Node *, OutOfRangeError)
-kit_SinglyList_Node_fetch(struct kit_SinglyList *list, size_t index)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 struct kit_SinglyList {
     int operationId;
@@ -34,46 +35,25 @@ struct kit_SinglyList {
     struct kit_SinglyList_Node *back;
 };
 
-Option kit_SinglyList_new(void) {
+OptionOf(struct kit_SinglyList *)
+kit_SinglyList_new(void) {
     struct kit_SinglyList *self;
     return kit_Allocator_calloc(1, sizeof(*self));
 }
 
-void kit_SinglyList_clear(struct kit_SinglyList *self) {
-    assert(self);
-    struct kit_SinglyList_Node *leftNode = NULL, *middleNode = self->front;
-
-    while (middleNode) {
-        leftNode = middleNode;
-        middleNode = middleNode->next;
-        kit_SinglyList_Node_delete(leftNode);
-    }
-
-    self->size = 0;
-    self->back = NULL;
-    self->front = NULL;
-    self->operationId += 1;
-}
-
-void kit_SinglyList_delete(struct kit_SinglyList *self) {
-    if (self) {
-        kit_SinglyList_clear(self);
-        kit_Allocator_free(self);
-    }
-}
-
-Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, const size_t index) {
+OneOf(Ok, OutOfRangeError, OutOfMemoryError)
+kit_SinglyList_insert(struct kit_SinglyList *const self, const size_t index, void *element) {
     assert(self);
     Option newNodeOption;
     struct kit_SinglyList_Node *newNode = NULL;
 
     if (index > self->size) {
-        return Result_error(&OutOfRangeError);
+        return OutOfRangeError;
     }
 
-    newNodeOption = kit_SinglyList_Node_new(e);
+    newNodeOption = kit_SinglyList_Node_new(element);
     if (Option_isNone(newNodeOption)) {
-        return Result_error(&OutOfMemoryError);
+        return OutOfMemoryError;
     }
     newNode = Option_unwrap(newNodeOption);
 
@@ -98,36 +78,28 @@ Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, const size_t 
 
     self->size += 1;
     self->operationId += 1;
-    return Result_ok(newNode);
+    return Ok;
 }
 
-Result kit_SinglyList_pushBack(struct kit_SinglyList *self, void *e) {
+OneOf(Ok, OutOfMemoryError)
+kit_SinglyList_pushBack(struct kit_SinglyList *const self, void *const element) {
     assert(self);
-    return kit_SinglyList_insert(self, e, self->size);
+    return kit_SinglyList_insert(self, self->size, element);
 }
 
-Result kit_SinglyList_pushFront(struct kit_SinglyList *self, void *e) {
+OneOf(Ok, OutOfMemoryError)
+kit_SinglyList_pushFront(struct kit_SinglyList *const self, void *const element) {
     assert(self);
-    return kit_SinglyList_insert(self, e, 0);
+    return kit_SinglyList_insert(self, 0, element);
 }
 
-Result kit_SinglyList_popBack(struct kit_SinglyList *self) {
-    assert(self);
-    const size_t size = self->size;
-    return size > 0 ? kit_SinglyList_remove(self, size - 1) : Result_error(&OutOfRangeError);
-}
-
-Result kit_SinglyList_popFront(struct kit_SinglyList *self) {
-    assert(self);
-    return kit_SinglyList_remove(self, 0);
-}
-
-Result kit_SinglyList_remove(struct kit_SinglyList *self, const size_t index) {
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_remove(struct kit_SinglyList *const self, const size_t index) {
     assert(self);
     struct kit_SinglyList_Node *leftNode, *middleNode;
 
     if (index >= self->size) {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 
     if (index > 0) {
@@ -153,22 +125,37 @@ Result kit_SinglyList_remove(struct kit_SinglyList *self, const size_t index) {
     return Result_ok(kit_SinglyList_Node_delete(middleNode));
 }
 
-Result kit_SinglyList_set(struct kit_SinglyList *self, void *e, const size_t index) {
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_popBack(struct kit_SinglyList *const self) {
+    assert(self);
+    const size_t size = self->size;
+    return size > 0 ? kit_SinglyList_remove(self, size - 1) : Result_error(OutOfRangeError);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_popFront(struct kit_SinglyList *const self) {
+    assert(self);
+    return kit_SinglyList_remove(self, 0);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_put(struct kit_SinglyList *const self, const size_t index, void *const element) {
     assert(self);
     Result result = kit_SinglyList_Node_fetch(self, index);
 
     if (Result_isOk(result)) {
         struct kit_SinglyList_Node *node = Result_unwrap(result);
-        void *oldElement = node->element;
-        node->element = e;
-        return Result_ok(oldElement);
+        void *replacedElement = node->element;
+        node->element = element;
+        return Result_ok(replacedElement);
     }
 
-    assert(&OutOfRangeError == Result_inspect(result));
+    assert(OutOfRangeError == Result_inspect(result));
     return result;
 }
 
-Result kit_SinglyList_get(struct kit_SinglyList *self, const size_t index) {
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_get(const struct kit_SinglyList *const self, const size_t index) {
     assert(self);
     Result result = kit_SinglyList_Node_fetch(self, index);
 
@@ -177,29 +164,51 @@ Result kit_SinglyList_get(struct kit_SinglyList *self, const size_t index) {
         Result_ok(node->element);
     }
 
-    assert(&OutOfRangeError == Result_inspect(result));
+    assert(OutOfRangeError == Result_inspect(result));
     return result;
 }
 
-Result kit_SinglyList_back(struct kit_SinglyList *self) {
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_back(const struct kit_SinglyList *const self) {
     assert(self);
     const size_t size = self->size;
-    return size > 0 ? kit_SinglyList_get(self, size - 1) : Result_error(&OutOfRangeError);
+    return size > 0 ? kit_SinglyList_get(self, size - 1) : Result_error(OutOfRangeError);
 }
 
-Result kit_SinglyList_front(struct kit_SinglyList *self) {
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_front(const struct kit_SinglyList *const self) {
     assert(self);
     return kit_SinglyList_get(self, 0);
 }
 
-size_t kit_SinglyList_size(struct kit_SinglyList *self) {
+void
+kit_SinglyList_clear(struct kit_SinglyList *const self) {
+    assert(self);
+
+    for (size_t i = self->size; i > 0; i--) {
+        Result_unwrap(kit_SinglyList_popFront(self));
+    }
+
+    self->operationId += 1;
+}
+
+size_t
+kit_SinglyList_size(const struct kit_SinglyList *const self) {
     assert(self);
     return self->size;
 }
 
-bool kit_SinglyList_isEmpty(struct kit_SinglyList *self) {
+bool
+kit_SinglyList_isEmpty(const struct kit_SinglyList *const self) {
     assert(self);
     return 0 == self->size;
+}
+
+void kit_SinglyList_delete(struct kit_SinglyList *self) {
+    if (self) {
+        kit_SinglyList_clear(self);
+        kit_Allocator_free(self);
+    }
 }
 
 struct kit_SinglyList_Iterator {
@@ -209,7 +218,8 @@ struct kit_SinglyList_Iterator {
     struct kit_SinglyList_Node *next;
 };
 
-Option kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) {
+OptionOf(struct kit_SinglyList_Iterator *)
+kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *const container) {
     assert(container);
     struct kit_SinglyList_Iterator *self;
     Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
@@ -223,7 +233,8 @@ Option kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) {
     return selfOption;
 }
 
-void kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self) {
+void
+kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *const self) {
     assert(self);
     assert(self->container);
     struct kit_SinglyList *container = self->container;
@@ -233,68 +244,68 @@ void kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self)
     self->next = container->front;
 }
 
-void kit_SinglyList_Iterator_delete(struct kit_SinglyList_Iterator *self) {
-    kit_Allocator_free(self);
-}
-
-Result kit_SinglyList_Iterator_next(struct kit_SinglyList_Iterator *self) {
+ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
+kit_SinglyList_Iterator_next(struct kit_SinglyList_Iterator *const self) {
     assert(self);
 
     if (kit_SinglyList_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (self->next) {
         void *nextElement = self->next->element;
         self->last = self->next;
         self->next = self->next->next;
         return Result_ok(nextElement);
     } else {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
 }
 
-Result kit_SinglyList_Iterator_setLast(struct kit_SinglyList_Iterator *self, void *e) {
+ResultOf(void *, IllegalStateError, ConcurrentModificationError)
+kit_SinglyList_Iterator_setLast(struct kit_SinglyList_Iterator *const self, void *const element) {
     assert(self);
 
     if (kit_SinglyList_Iterator_isModified(self)) {
-        return Result_error(&ConcurrentModificationError);
+        return Result_error(ConcurrentModificationError);
     } else if (self->last) {
-        void *lastElement = self->last->element;
-        self->last->element = e;
-        return Result_ok(lastElement);
+        void *replacedElement = self->last->element;
+        self->last->element = element;
+        return Result_ok(replacedElement);
     } else {
-        return Result_error(&IllegalStateError);
+        return Result_error(IllegalStateError);
     }
 }
 
-bool kit_SinglyList_Iterator_isModified(struct kit_SinglyList_Iterator *self) {
+bool
+kit_SinglyList_Iterator_isModified(const struct kit_SinglyList_Iterator *const self) {
     assert(self);
     struct kit_SinglyList *container = self->container;
     return NULL == container || self->operationId != container->operationId;
 }
 
+void kit_SinglyList_Iterator_delete(struct kit_SinglyList_Iterator *self) {
+    if (self) {
+        kit_Allocator_free(self);
+    }
+}
+
 /*
  * Internals
  */
-Option kit_SinglyList_Node_new(void *e) {
+OptionOf(struct kit_SinglyList_Node *)
+kit_SinglyList_Node_new(void *element) {
     struct kit_SinglyList_Node *self;
     Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
     if (Option_isSome(selfOption)) {
         self = Option_unwrap(selfOption);
-        self->element = e;
+        self->element = element;
     }
 
     return selfOption;
 }
 
-void *kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self) {
-    assert(self);
-    void *e = self->element;
-    kit_Allocator_free(self);
-    return e;
-}
-
-Result kit_SinglyList_Node_fetch(struct kit_SinglyList *list, const size_t index) {
+ResultOf(struct kit_SinglyList_Node *, OutOfRangeError)
+kit_SinglyList_Node_fetch(const struct kit_SinglyList *const list, const size_t index) {
     assert(list);
 
     if (index < list->size) {
@@ -304,6 +315,14 @@ Result kit_SinglyList_Node_fetch(struct kit_SinglyList *list, const size_t index
         }
         return Result_ok(node);
     } else {
-        return Result_error(&OutOfRangeError);
+        return Result_error(OutOfRangeError);
     }
+}
+
+void *
+kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self) {
+    assert(self);
+    void *e = self->element;
+    kit_Allocator_free(self);
+    return e;
 }
