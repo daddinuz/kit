@@ -11,9 +11,6 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/doubly_list.h>
 
-#define ignoreResult(x) \
-    ((void) ((x) ? 1 : 0))
-
 struct kit_DoublyList_Node {
     void *element;
     struct kit_DoublyList_Node *prev;
@@ -184,18 +181,12 @@ kit_DoublyList_front(const struct kit_DoublyList *const self) {
 void
 kit_DoublyList_clear(struct kit_DoublyList *const self) {
     assert(self);
-    struct kit_DoublyList_Node *base = self->front;
-    struct kit_DoublyList_Node *next = NULL;
 
-    while (base) {
-        next = base->next;
-        ignoreResult(kit_DoublyList_Node_delete(base));
-        base = next;
+    for (size_t i = self->size; i > 0; i--) {
+        Result_unwrap(kit_DoublyList_popFront(self));
     }
 
-    self->size = 0;
     self->operationId += 1;
-    self->back = self->front = NULL;
 }
 
 size_t
@@ -332,7 +323,7 @@ kit_DoublyList_Iterator_setLast(struct kit_DoublyList_Iterator *const self, void
 }
 
 bool
-kit_DoublyList_Iterator_isModified(struct kit_DoublyList_Iterator *const self) {
+kit_DoublyList_Iterator_isModified(const struct kit_DoublyList_Iterator *const self) {
     assert(self);
     struct kit_DoublyList *container = self->container;
     return NULL == container || self->operationId != container->operationId;

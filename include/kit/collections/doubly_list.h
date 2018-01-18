@@ -316,7 +316,7 @@ __attribute__((__warn_unused_result__, __nonnull__(1)));
  * @return true if the container has been modified else false.
  */
 extern bool
-kit_DoublyList_Iterator_isModified(struct kit_DoublyList_Iterator *self)
+kit_DoublyList_Iterator_isModified(const struct kit_DoublyList_Iterator *self)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
