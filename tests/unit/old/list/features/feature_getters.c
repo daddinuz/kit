@@ -9,7 +9,7 @@
 #include <seeds.h>
 #include <traits/traits.h>
 #include <features/feature_getters.h>
-#include <kit/collections/list.h.old>
+#include <kit/collections/list.h>
 
 FeatureDefine(ListGet) {
     size_t i;

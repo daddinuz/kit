@@ -9,7 +9,7 @@
 #include <seeds.h>
 #include <traits/traits.h>
 #include <features/feature_growable.h>
-#include <kit/collections/list.h.old>
+#include <kit/collections/list.h>
 
 FeatureDefine(ListCapacity) {
     struct kit_List *sut = traits_context;

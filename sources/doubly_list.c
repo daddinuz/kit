@@ -118,7 +118,6 @@ kit_DoublyList_remove(struct kit_DoublyList *const self, const size_t index) {
         Result_ok(kit_DoublyList_Node_delete(node));
     }
 
-    assert(OutOfRangeError == Result_inspect(result));
     return result;
 }
 
