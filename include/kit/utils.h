@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 21, 2017 
+ * Date:   January 18, 2018
  */
 
 #ifndef KIT_UTILS_INCLUDED
