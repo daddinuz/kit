@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 22, 2017 
+ * Date:   January 18, 2018
  */
 
 #include <stdio.h>
@@ -13,9 +13,6 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/atom.h>
 
-/*
- * Private
- */
 #define KIT_ATOM_NODE_TABLE_SIZE    (2039)
 
 struct kit_Atom_Node {
@@ -25,13 +22,13 @@ struct kit_Atom_Node {
     kit_Atom atom;
 };
 
-static Option
+static OptionOf(struct kit_Atom_Node *)
 kit_Atom_table_put(const char *bytes, size_t length, size_t hash)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
-static Option
+static OptionOf(struct kit_Atom_Node *)
 kit_Atom_table_fetch(const char *bytes, size_t length, size_t hash)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static void
 kit_Atom_table_clear(void);
@@ -41,15 +38,13 @@ kit_Atom_assertValidInstance(kit_Atom atom);
 
 static size_t
 kit_Atom_hash(const char *bytes, size_t length)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static bool clearCallbackRegistered = false;
 static struct kit_Atom_Node *atomsTable[KIT_ATOM_NODE_TABLE_SIZE] = {0};
 
-/*
- * Public
- */
-Option kit_Atom_put(const void *bytes, size_t length) {
+OptionOf(kit_Atom)
+kit_Atom_put(const void *const bytes, const size_t length) {
     assert(bytes);
     Option nodeOption = kit_Atom_table_put(bytes, length, kit_Atom_hash(bytes, length));
 
@@ -61,12 +56,14 @@ Option kit_Atom_put(const void *bytes, size_t length) {
     return None;
 }
 
-Option kit_Atom_fromLiteral(const char *const literal) {
+OptionOf(kit_Atom)
+kit_Atom_fromLiteral(const char *const literal) {
     assert(literal);
     return kit_Atom_put(literal, strlen(literal));
 }
 
-Option kit_Atom_fromInteger(long long n) {
+OptionOf(kit_Atom)
+kit_Atom_fromInteger(const long long n) {
     char buffer[32] = {0};
     const size_t bufferSize = sizeof(buffer) / sizeof(buffer[0]);
     const int length = snprintf(buffer, bufferSize, "%lld", n);
@@ -74,7 +71,8 @@ Option kit_Atom_fromInteger(long long n) {
     return kit_Atom_put(buffer, (size_t) length);
 }
 
-Option kit_Atom_fromFloating(long double n) {
+OptionOf(kit_Atom)
+kit_Atom_fromFloating(const long double n) {
     char buffer[32] = {0};
     const size_t bufferSize = sizeof(buffer) / sizeof(buffer[0]);
     const int length = snprintf(buffer, bufferSize, "%Lf", n);
@@ -82,7 +80,8 @@ Option kit_Atom_fromFloating(long double n) {
     return kit_Atom_put(buffer, (size_t) length);
 }
 
-size_t kit_Atom_length(kit_Atom atom) {
+size_t
+kit_Atom_length(kit_Atom atom) {
     assert(atom);
     kit_Atom_assertValidInstance(atom);
     struct kit_Atom_Node *node = ((struct kit_Atom_Node *) atom) - 1;
@@ -90,9 +89,10 @@ size_t kit_Atom_length(kit_Atom atom) {
 }
 
 /*
- * Private implementations
+ * Internals
  */
-Option kit_Atom_table_put(const char *bytes, size_t length, size_t hash) {
+OptionOf(struct kit_Atom_Node *)
+kit_Atom_table_put(const char *const bytes, const size_t length, const size_t hash) {
     assert(bytes);
     Option nodeOption = kit_Atom_table_fetch(bytes, length, hash);
 
@@ -122,7 +122,8 @@ Option kit_Atom_table_put(const char *bytes, size_t length, size_t hash) {
     return nodeOption;
 }
 
-Option kit_Atom_table_fetch(const char *bytes, size_t length, size_t hash) {
+OptionOf(struct kit_Atom_Node *)
+kit_Atom_table_fetch(const char *const bytes, const size_t length, const size_t hash) {
     assert(bytes);
     const size_t index = hash % KIT_ATOM_NODE_TABLE_SIZE;
     Option nodeOption = None;
@@ -143,7 +144,8 @@ Option kit_Atom_table_fetch(const char *bytes, size_t length, size_t hash) {
     return nodeOption;
 }
 
-void kit_Atom_table_clear(void) {
+void
+kit_Atom_table_clear(void) {
     for (size_t i = 0; i < KIT_ATOM_NODE_TABLE_SIZE; i++) {
         struct kit_Atom_Node *node = atomsTable[i];
         if (node) {
@@ -155,7 +157,8 @@ void kit_Atom_table_clear(void) {
     }
 }
 
-void kit_Atom_assertValidInstance(kit_Atom atom) {
+void
+kit_Atom_assertValidInstance(kit_Atom atom) {
     assert(atom);
     (void) atom;
 #ifndef NDEBUG
@@ -164,8 +167,9 @@ void kit_Atom_assertValidInstance(kit_Atom atom) {
 #endif
 }
 
-/* Jenkins one at time */
-size_t kit_Atom_hash(const char *bytes, size_t length) {
+size_t
+kit_Atom_hash(const char *const bytes, const size_t length) {
+    /* Jenkins one at time */
     assert(bytes);
     size_t hash = 0;
 

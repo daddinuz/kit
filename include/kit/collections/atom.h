@@ -3,16 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 21, 2017 
- */
-
-/*
- * Atoms are pointers to a unique, immutable, sequence of zero or more arbitrary bytes.
- * There is only a single occurrence of any atom, which is why it’s called an atom.
- * Two atoms are identical if they point to the same location.
- * One of the advantages of atoms is that comparing two byte sequences for equality is performed by simply comparing pointers.
- * Another advantage is that using atoms saves space because there’s only one occurrence of each sequence.
- * Atoms are often used as keys in data structures that are indexed by sequences of arbitrary bytes instead of by integers.
+ * Date:   January 18, 2018
  */
 
 #ifndef KIT_ATOM_INCLUDED
@@ -27,6 +18,14 @@ extern "C" {
 #include <option/option.h>
 #include <kit/compiler_steroids.h>
 
+/**
+ * Atoms are pointers to a unique, immutable, sequence of zero or more arbitrary bytes.
+ * There is only a single occurrence of any atom, which is why it’s called an atom.
+ * Two atoms are identical if they point to the same location.
+ * One of the advantages of atoms is that comparing two byte sequences for equality is performed by simply comparing pointers.
+ * Another advantage is that using atoms saves space because there’s only one occurrence of each sequence.
+ * Atoms are often used as keys in data structures that are indexed by sequences of arbitrary bytes instead of by integers.
+ */
 typedef const char *kit_Atom;
 
 /**
@@ -38,7 +37,7 @@ typedef const char *kit_Atom;
  */
 extern OptionOf(kit_Atom)
 kit_Atom_put(const void *bytes, size_t length)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Behaves like kit_Atom_put but takes a string literal and converts it to an atom.
@@ -48,7 +47,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_Atom)
 kit_Atom_fromLiteral(const char *literal)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Behaves like kit_Atom_put but takes an integer number and converts it to an atom.
@@ -57,7 +56,8 @@ __attribute__((__nonnull__));
  * @return A new instance of kit_Atom or None.
  */
 extern OptionOf(kit_Atom)
-kit_Atom_fromInteger(long long n);
+kit_Atom_fromInteger(long long n)
+__attribute__((__warn_unused_result__));
 
 /**
  * Behaves like kit_Atom_put but takes an floating number and converts it to an atom.
@@ -66,7 +66,8 @@ kit_Atom_fromInteger(long long n);
  * @return A new instance of kit_Atom or None.
  */
 extern OptionOf(kit_Atom)
-kit_Atom_fromFloating(long double n);
+kit_Atom_fromFloating(long double n)
+__attribute__((__warn_unused_result__));
 
 /**
  * Gets the length of the atom.
@@ -79,7 +80,7 @@ kit_Atom_fromFloating(long double n);
  */
 extern size_t
 kit_Atom_length(kit_Atom atom)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 #ifdef __cplusplus
 }
