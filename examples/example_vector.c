@@ -29,7 +29,7 @@ int main() {
         const char *element = Result_unwrap(result);
 
         printf("[%zu]: %s\n", index++, element);
-        kit_Vector_Iterator_setLast(iterator, "x");
+        Result_unwrap(kit_Vector_Iterator_setLast(iterator, "x"));
     }
 
     puts("");

@@ -40,7 +40,8 @@ struct kit_Vector;
  * @return A new instance of kit_Vector or None.
  */
 extern OptionOf(struct kit_Vector *)
-kit_Vector_new(void);
+kit_Vector_new(void)
+__attribute__((__warn_unused_result__));
 
 /**
  * Creates a new instance of kit_Vector with at least specified capacity.
@@ -53,7 +54,8 @@ kit_Vector_new(void);
  * @return A new instance of kit_Vector or None.
  */
 extern OptionOf(struct kit_Vector *)
-kit_Vector_withCapacity(size_t capacity);
+kit_Vector_withCapacity(size_t capacity)
+__attribute__((__warn_unused_result__));
 
 /**
  * Requests the container to expand to hold at least as many elements as specified by capacity.
@@ -67,7 +69,7 @@ kit_Vector_withCapacity(size_t capacity);
  */
 extern OneOf(Ok, OutOfMemoryError)
 kit_Vector_expand(struct kit_Vector *self, size_t capacity)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Requests the container to shrink in order to hold at least the stored elements freeing resources not used.
@@ -79,7 +81,7 @@ __attribute__((__nonnull__));
  */
 extern OneOf(Ok, OutOfMemoryError)
 kit_Vector_shrink(struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Inserts the specified element at the specified position in this container.
@@ -94,7 +96,7 @@ __attribute__((__nonnull__));
  */
 extern OneOf(Ok, OutOfRangeError, OutOfMemoryError)
 kit_Vector_insert(struct kit_Vector *self, size_t index, void *element)
-__attribute__((__nonnull__(1)));
+__attribute__((__warn_unused_result__, __nonnull__(1)));
 
 /**
  * Inserts the specified element to the back of this container.
@@ -107,7 +109,7 @@ __attribute__((__nonnull__(1)));
  */
 extern OneOf(Ok, OutOfMemoryError)
 kit_Vector_pushBack(struct kit_Vector *self, void *element)
-__attribute__((__nonnull__(1)));
+__attribute__((__warn_unused_result__, __nonnull__(1)));
 
 /**
  * Inserts the specified element to the front of this container.
@@ -120,7 +122,7 @@ __attribute__((__nonnull__(1)));
  */
 extern OneOf(Ok, OutOfMemoryError)
 kit_Vector_pushFront(struct kit_Vector *self, void *element)
-__attribute__((__nonnull__(1)));
+__attribute__((__warn_unused_result__, __nonnull__(1)));
 
 /**
  * Removes the element at the specified position in this container.
@@ -133,7 +135,7 @@ __attribute__((__nonnull__(1)));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Vector_remove(struct kit_Vector *self, size_t index)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Removes the element at the back of this container.
@@ -145,7 +147,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Vector_popBack(struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Removes the element at the front of this container.
@@ -157,7 +159,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Vector_popFront(struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Replaces the element at the specified position in this container with the specified element.
@@ -171,7 +173,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Vector_put(struct kit_Vector *self, size_t index, void *element)
-__attribute__((__nonnull__(1)));
+__attribute__((__warn_unused_result__, __nonnull__(1)));
 
 /**
  * Returns the element at the specified position in this container.
@@ -184,7 +186,7 @@ __attribute__((__nonnull__(1)));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Vector_get(const struct kit_Vector *self, size_t index)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the element stored at the back of this container.
@@ -196,7 +198,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Vector_back(const struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the element stored at the front of this container.
@@ -208,7 +210,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Vector_front(const struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Removes all elements from the container.
@@ -227,7 +229,7 @@ __attribute__((__nonnull__));
  */
 extern size_t
 kit_Vector_size(const struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the number of elements the container can store without expanding.
@@ -237,7 +239,7 @@ __attribute__((__nonnull__));
  */
 extern size_t
 kit_Vector_capacity(const struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Tests if this container has no elements.
@@ -247,7 +249,7 @@ __attribute__((__nonnull__));
  */
 extern bool
 kit_Vector_isEmpty(const struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the raw data of the container.
@@ -257,7 +259,7 @@ __attribute__((__nonnull__));
  */
 extern void **
 kit_Vector_raw(const struct kit_Vector *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Deletes this instance of kit_Vector.
@@ -282,7 +284,7 @@ struct kit_Vector_Iterator;
  */
 extern OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_new(struct kit_Vector *container, enum kit_Bound bound)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Creates a new instance of kit_Vector_Iterator starting from the begin of the container.
@@ -292,7 +294,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromBegin(struct kit_Vector *container)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Creates a new instance of kit_Vector_Iterator starting from the end of the container.
@@ -302,7 +304,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(struct kit_Vector_Iterator *)
 kit_Vector_Iterator_fromEnd(struct kit_Vector *container)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Rewinds the iterator to the specified bound.
@@ -343,7 +345,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
 kit_Vector_Iterator_next(struct kit_Vector_Iterator *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the previous element moving backword in the container.
@@ -356,7 +358,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
 kit_Vector_Iterator_previous(struct kit_Vector_Iterator *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Replaces the last retrieved element with the specified element.
@@ -370,7 +372,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, IllegalStateError, ConcurrentModificationError)
 kit_Vector_Iterator_setLast(struct kit_Vector_Iterator *self, void *element)
-__attribute__((__nonnull__(1)));
+__attribute__((__warn_unused_result__, __nonnull__(1)));
 
 /**
  * Tests the associated container for modifications.
@@ -380,7 +382,7 @@ __attribute__((__nonnull__(1)));
  */
 extern bool
 kit_Vector_Iterator_isModified(struct kit_Vector_Iterator *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Deletes this instance of kit_Vector_Iterator.

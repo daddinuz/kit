@@ -37,7 +37,8 @@ struct kit_Array;
  * @return A new instance of kit_Array of None.
  */
 extern OptionOf(struct kit_Array *)
-kit_Array_new(size_t capacity);
+kit_Array_new(size_t capacity)
+__attribute__((__warn_unused_result__));
 
 /**
  * Creates a new instance of kit_Array from a fixed sequence of elements.
@@ -52,7 +53,8 @@ kit_Array_new(size_t capacity);
  * @return A new instance of kit_Array of None.
  */
 extern OptionOf(struct kit_Array *)
-__kit_Array_from(void *e0, ...);
+__kit_Array_from(void *e0, ...)
+__attribute__((__warn_unused_result__));
 
 /**
  * @see __kit_Array_from(void *e0, ...)
@@ -72,7 +74,7 @@ __kit_Array_from(void *e0, ...);
  */
 extern OptionOf(struct kit_Array *)
 kit_Array_fromPack(va_list pack)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Replaces the element at the specified position in this container with the specified element.
@@ -86,7 +88,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_put(struct kit_Array *self, size_t index, void *element)
-__attribute__((__nonnull__(1)));
+__attribute__((__warn_unused_result__, __nonnull__(1)));
 
 /**
  * Returns the element at the specified position in this container.
@@ -99,7 +101,7 @@ __attribute__((__nonnull__(1)));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_get(const struct kit_Array *self, size_t index)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the element stored at the back of this container.
@@ -111,7 +113,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_back(const struct kit_Array *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the element stored at the front of this container.
@@ -123,7 +125,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Array_front(const struct kit_Array *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Removes all elements from the container.
@@ -142,7 +144,7 @@ __attribute__((__nonnull__));
  */
 extern size_t
 kit_Array_capacity(const struct kit_Array *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Returns the raw data of the container.
@@ -152,7 +154,7 @@ __attribute__((__nonnull__));
  */
 extern void **
 kit_Array_raw(const struct kit_Array *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Deletes this instance of kit_Array.

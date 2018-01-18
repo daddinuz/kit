@@ -46,7 +46,7 @@ __kit_Array_from(void *e0, ...) {
         size_t i = 0;
         self = Option_unwrap(option);
         for (void *e = e0; e != Ellipsis; e = va_arg(pack, void *)) {
-            kit_Array_put(self, i, e);
+            Result_unwrap(kit_Array_put(self, i, e));
             i++;
         };
     }
@@ -72,7 +72,7 @@ kit_Array_fromPack(va_list pack) {
         size_t i = 0;
         self = Option_unwrap(option);
         for (void *e = va_arg(pack, void *); e != Ellipsis; e = va_arg(pack, void *)) {
-            kit_Array_put(self, i, e);
+            Result_unwrap(kit_Array_put(self, i, e));
             i++;
         };
     }
