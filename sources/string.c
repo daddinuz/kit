@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   December 06, 2017 
+ * Date:   January 18, 2018
  */
 
 #include <stdio.h>
@@ -25,15 +25,16 @@ struct kit_String_Object {
 };
 
 static OptionOf(struct kit_String_Object *)
-kit_String_Object_new(size_t capacityHint);
+kit_String_Object_new(size_t capacityHint)
+__attribute__((__warn_unused_result__));
 
 static OptionOf(struct kit_String_Object *)
 kit_String_Object_reserve(struct kit_String_Object **ref, size_t capacity)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static OptionOf(struct kit_String_Object *)
 kit_String_Object_shrink(struct kit_String_Object **ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static void
 kit_String_Object_delete(struct kit_String_Object *self);
@@ -57,7 +58,8 @@ __attribute__((__nonnull__));
 /*
  *
  */
-Option kit_String_new(const size_t capacityHint) {
+OptionOf(kit_String)
+kit_String_new(const size_t capacityHint) {
     Option stringObjectOption = kit_String_Object_new(capacityHint);
 
     if (Option_isSome(stringObjectOption)) {
@@ -68,7 +70,8 @@ Option kit_String_new(const size_t capacityHint) {
     return None;
 }
 
-Option kit_String_quoted(const void *bytes, const size_t size) {
+OptionOf(kit_String)
+kit_String_quoted(const void *const bytes, const size_t size) {
     assert(bytes);
 
     const char *data = bytes;
@@ -175,7 +178,8 @@ Option kit_String_quoted(const void *bytes, const size_t size) {
     return Option_new((void *) string);
 }
 
-Option kit_String_fromPack(const char *format, va_list pack) {
+OptionOf(kit_String)
+kit_String_fromPack(const char *const format, va_list pack) {
     assert(format);
     assert(pack);
 
@@ -200,7 +204,8 @@ Option kit_String_fromPack(const char *format, va_list pack) {
     return None;
 }
 
-Option kit_String_fromBytes(const void *bytes, size_t size) {
+OptionOf(kit_String)
+kit_String_fromBytes(const void *const bytes, const size_t size) {
     assert(bytes);
     Option stringObjectOption = kit_String_Object_new(size);
 
@@ -216,7 +221,8 @@ Option kit_String_fromBytes(const void *bytes, size_t size) {
     return None;
 }
 
-Option kit_String_fromFormat(const char *format, ...) {
+OptionOf(kit_String)
+kit_String_fromFormat(const char *const format, ...) {
     assert(format);
 
     va_list pack;
@@ -228,20 +234,23 @@ Option kit_String_fromFormat(const char *format, ...) {
     return result;
 }
 
-Option kit_String_fromLiteral(const char *literal) {
+OptionOf(kit_String)
+kit_String_fromLiteral(const char *const literal) {
     assert(literal);
 
     return kit_String_fromBytes(literal, strlen(literal));
 }
 
-Option kit_String_duplicate(kit_String s) {
+OptionOf(kit_String)
+kit_String_duplicate(kit_String s) {
     assert(s);
     kit_String_assertValidInstance(s);
 
     return kit_String_fromBytes(s, kit_String_size(s));
 }
 
-Option kit_String_clear(kit_String *ref) {
+OptionOf(kit_String)
+kit_String_clear(kit_String *const ref) {
     assert(ref);
     assert(*ref);
     kit_String_assertValidInstance(*ref);
@@ -254,7 +263,8 @@ Option kit_String_clear(kit_String *ref) {
     return Option_new(stringObject->raw);
 }
 
-Option kit_String_append(kit_String *ref, kit_String other) {
+OptionOf(kit_String)
+kit_String_append(kit_String *const ref, kit_String other) {
     assert(ref);
     assert(*ref);
     assert(other);
@@ -266,7 +276,8 @@ Option kit_String_append(kit_String *ref, kit_String other) {
     return kit_String_appendBytes(ref, other, otherObject->size);
 }
 
-Option kit_String_appendPack(kit_String *ref, const char *format, va_list pack) {
+OptionOf(kit_String)
+kit_String_appendPack(kit_String *const ref, const char *const format, va_list pack) {
     assert(ref);
     assert(*ref);
     assert(format);
@@ -296,7 +307,8 @@ Option kit_String_appendPack(kit_String *ref, const char *format, va_list pack) 
     return None;
 }
 
-Option kit_String_appendBytes(kit_String *ref, const void *bytes, const size_t size) {
+OptionOf(kit_String)
+kit_String_appendBytes(kit_String *const ref, const void *const bytes, const size_t size) {
     assert(ref);
     assert(*ref);
     assert(bytes);
@@ -321,7 +333,8 @@ Option kit_String_appendBytes(kit_String *ref, const void *bytes, const size_t s
     return None;
 }
 
-Option kit_String_appendFormat(kit_String *ref, const char *format, ...) {
+OptionOf(kit_String)
+kit_String_appendFormat(kit_String *const ref, const char *const format, ...) {
     assert(ref);
     assert(*ref);
     assert(format);
@@ -336,7 +349,8 @@ Option kit_String_appendFormat(kit_String *ref, const char *format, ...) {
     return result;
 }
 
-Option kit_String_appendLiteral(kit_String *ref, const char *literal) {
+OptionOf(kit_String)
+kit_String_appendLiteral(kit_String *const ref, const char *const literal) {
     assert(ref);
     assert(*ref);
     assert(literal);
@@ -348,7 +362,8 @@ Option kit_String_appendLiteral(kit_String *ref, const char *literal) {
     return kit_String_appendBytes(ref, literal, SIZE);
 }
 
-Option kit_String_set(kit_String *ref, kit_String other) {
+OptionOf(kit_String)
+kit_String_set(kit_String *const ref, kit_String other) {
     assert(ref);
     assert(*ref);
     assert(other);
@@ -360,7 +375,8 @@ Option kit_String_set(kit_String *ref, kit_String other) {
     return kit_String_setBytes(ref, other, otherObject->size);
 }
 
-Option kit_String_setPack(kit_String *ref, const char *format, va_list pack) {
+OptionOf(kit_String)
+kit_String_setPack(kit_String *const ref, const char *const format, va_list pack) {
     assert(ref);
     assert(*ref);
     assert(format);
@@ -388,7 +404,8 @@ Option kit_String_setPack(kit_String *ref, const char *format, va_list pack) {
     return None;
 }
 
-Option kit_String_setBytes(kit_String *ref, const void *bytes, size_t size) {
+OptionOf(kit_String)
+kit_String_setBytes(kit_String *const ref, const void *const bytes, const size_t size) {
     assert(ref);
     assert(*ref);
     assert(bytes);
@@ -412,7 +429,8 @@ Option kit_String_setBytes(kit_String *ref, const void *bytes, size_t size) {
     return None;
 }
 
-Option kit_String_setFormat(kit_String *ref, const char *format, ...) {
+OptionOf(kit_String)
+kit_String_setFormat(kit_String *const ref, const char *const format, ...) {
     assert(ref);
     assert(*ref);
     assert(format);
@@ -427,7 +445,8 @@ Option kit_String_setFormat(kit_String *ref, const char *format, ...) {
     return result;
 }
 
-Option kit_String_setLiteral(kit_String *ref, const char *literal) {
+OptionOf(kit_String)
+kit_String_setLiteral(kit_String *const ref, const char *const literal) {
     assert(ref);
     assert(*ref);
     assert(literal);
@@ -439,7 +458,8 @@ Option kit_String_setLiteral(kit_String *ref, const char *literal) {
     return kit_String_setBytes(ref, literal, SIZE);
 }
 
-Option kit_String_quote(kit_String *ref) {
+OptionOf(kit_String)
+kit_String_quote(kit_String *const ref) {
     assert(ref);
     assert(*ref);
     kit_String_assertValidInstance(*ref);
@@ -455,7 +475,8 @@ Option kit_String_quote(kit_String *ref) {
     return option;
 }
 
-Option kit_String_reserve(kit_String *ref, size_t capacity) {
+OptionOf(kit_String)
+kit_String_reserve(kit_String *const ref, const size_t capacity) {
     assert(ref);
     assert(*ref);
     kit_String_assertValidInstance(*ref);
@@ -474,7 +495,8 @@ Option kit_String_reserve(kit_String *ref, size_t capacity) {
     }
 }
 
-Option kit_String_shrink(kit_String *ref) {
+OptionOf(kit_String)
+kit_String_shrink(kit_String *const ref) {
     assert(ref);
     assert(*ref);
     kit_String_assertValidInstance(*ref);
@@ -493,7 +515,8 @@ Option kit_String_shrink(kit_String *ref) {
     }
 }
 
-size_t kit_String_size(kit_String self) {
+size_t
+kit_String_size(kit_String self) {
     assert(self);
     kit_String_assertValidInstance(self);
 
@@ -501,7 +524,8 @@ size_t kit_String_size(kit_String self) {
     return stringObject->size;
 }
 
-size_t kit_String_capacity(kit_String self) {
+size_t
+kit_String_capacity(kit_String self) {
     assert(self);
     kit_String_assertValidInstance(self);
 
@@ -509,7 +533,8 @@ size_t kit_String_capacity(kit_String self) {
     return stringObject->capacity;
 }
 
-bool kit_String_isEqual(kit_String self, kit_String other) {
+bool
+kit_String_isEqual(kit_String self, kit_String other) {
     assert(self);
     assert(other);
     kit_String_assertValidInstance(self);
@@ -520,7 +545,8 @@ bool kit_String_isEqual(kit_String self, kit_String other) {
     return (selfObject->size == otherObject->size) && (0 == memcmp(self, other, selfObject->size));
 }
 
-bool kit_String_isEmpty(kit_String self) {
+bool
+kit_String_isEmpty(kit_String self) {
     assert(self);
     kit_String_assertValidInstance(self);
 
@@ -528,7 +554,8 @@ bool kit_String_isEmpty(kit_String self) {
     return 0 == selfObject->size;
 }
 
-void kit_String_delete(kit_String self) {
+void
+kit_String_delete(kit_String self) {
     if (self) {
         kit_String_assertValidInstance(self);
         struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
@@ -537,9 +564,10 @@ void kit_String_delete(kit_String self) {
 }
 
 /*
- *
+ * Internals
  */
-Option kit_String_Object_new(const size_t capacityHint) {
+OptionOf(struct kit_String_Object *)
+kit_String_Object_new(const size_t capacityHint) {
     struct kit_String_Object *stringObject;
     const size_t capacity = capacityHint > KIT_STRING_DEFAULT_CAPACITY ? capacityHint : KIT_STRING_DEFAULT_CAPACITY;
     Option stringObjectOption = kit_Allocator_malloc(sizeof(*stringObject) + capacity + 1);
@@ -557,7 +585,8 @@ Option kit_String_Object_new(const size_t capacityHint) {
     return stringObjectOption;
 }
 
-Option kit_String_Object_reserve(struct kit_String_Object **ref, const size_t capacity) {
+OptionOf(struct kit_String_Object *)
+kit_String_Object_reserve(struct kit_String_Object **const ref, const size_t capacity) {
     assert(ref);
     assert(*ref);
 
@@ -580,7 +609,8 @@ Option kit_String_Object_reserve(struct kit_String_Object **ref, const size_t ca
     return Option_new(stringObject);
 }
 
-Option kit_String_Object_shrink(struct kit_String_Object **ref) {
+OptionOf(struct kit_String_Object *)
+kit_String_Object_shrink(struct kit_String_Object **const ref) {
     assert(ref);
     assert(*ref);
 
@@ -603,7 +633,8 @@ Option kit_String_Object_shrink(struct kit_String_Object **ref) {
     return Option_new(stringObject);
 }
 
-void kit_String_Object_delete(struct kit_String_Object *self) {
+void
+kit_String_Object_delete(struct kit_String_Object *self) {
     if (self) {
         kit_Allocator_free(self);
     }
@@ -611,7 +642,8 @@ void kit_String_Object_delete(struct kit_String_Object *self) {
 
 #ifndef NDEBUG
 
-void __kit_String_assertValidInstance(const char *file, const size_t line, kit_String string) {
+void
+__kit_String_assertValidInstance(const char *const file, const size_t line, kit_String string) {
     assert(file);
     assert(string);
     const struct kit_String_Object *stringObject = ((struct kit_String_Object *) string) - 1;
@@ -621,8 +653,11 @@ void __kit_String_assertValidInstance(const char *file, const size_t line, kit_S
     }
 }
 
-void __kit_String_assertNotOverlapping(
-        const char *file, const size_t line, const void *p1, const size_t s1, const void *p2, const size_t s2
+void
+__kit_String_assertNotOverlapping(
+        const char *const file, const size_t line,
+        const void *const p1, const size_t s1,
+        const void *const p2, const size_t s2
 ) {
     assert(file);
     assert(p1);

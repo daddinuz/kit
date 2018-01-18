@@ -3,14 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   December 06, 2017 
- */
-
-/*
- * kit_String are highly inspired by antirez's sds string library.
- * kit_String must be changed only using functions within this interface.
- * kit_String are binary safe and grows automatically.
- * kit_String are compatible with standard C string functions that accesses strings in a read only way.
+ * Date:   January 18, 2018
  */
 
 #ifndef KIT_STRING_INCLUDED
@@ -27,6 +20,12 @@ extern "C" {
 #include <kit/compiler_steroids.h>
 #include <kit/collections/string_config.h>
 
+/**
+ * kit_String are highly inspired by antirez's sds string library.
+ * kit_String must be changed only using functions within this interface.
+ * kit_String are binary safe and grows automatically.
+ * kit_String are compatible with standard C string functions that accesses strings in a read only way.
+ */
 typedef const char *kit_String;
 
 /**
@@ -39,7 +38,8 @@ typedef const char *kit_String;
  * @return A new instance of kit_String or None.
  */
 extern OptionOf(kit_String)
-kit_String_new(size_t capacityHint);
+kit_String_new(size_t capacityHint)
+__attribute__((__warn_unused_result__));
 
 /**
  * Creates a new quoted instance of kit_String starting from bytes.
@@ -62,7 +62,7 @@ kit_String_new(size_t capacityHint);
  */
 extern OptionOf(kit_String)
 kit_String_quoted(const void *bytes, size_t size)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Creates a new instance of kit_String using printf-like format as seed, behaves like kit_String_fromFormat but takes a va_list.
@@ -74,7 +74,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_fromPack(const char *format, va_list pack)
-__attribute__((__nonnull__(1), __format__(__printf__, 1, 0)));
+__attribute__((__warn_unused_result__, __nonnull__, __format__(__printf__, 1, 0)));
 
 /**
  * Creates a new instance of kit_String using bytes as seed.
@@ -86,7 +86,7 @@ __attribute__((__nonnull__(1), __format__(__printf__, 1, 0)));
  */
 extern OptionOf(kit_String)
 kit_String_fromBytes(const void *bytes, size_t size)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Creates a new instance of kit_String using printf-like format as seed.
@@ -98,7 +98,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_fromFormat(const char *format, ...)
-__attribute__((__nonnull__(1), __format__(printf, 1, 2)));
+__attribute__((__warn_unused_result__, __nonnull__(1), __format__(printf, 1, 2)));
 
 /**
  * Creates a new instance of kit_String using literal as seed.
@@ -109,7 +109,7 @@ __attribute__((__nonnull__(1), __format__(printf, 1, 2)));
  */
 extern OptionOf(kit_String)
 kit_String_fromLiteral(const char *literal)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Duplicates a string instance.
@@ -123,7 +123,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_duplicate(kit_String s)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Appends content to string.
@@ -142,7 +142,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_append(kit_String *ref, kit_String other)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Appends content to string using printf-like format, behaves like kit_String_appendFormat but takes a va_list.
@@ -160,7 +160,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_appendPack(kit_String *ref, const char *format, va_list pack)
-__attribute__((__nonnull__, __format__(printf, 2, 0)));
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 0)));
 
 /**
  * Appends bytes to string.
@@ -179,7 +179,7 @@ __attribute__((__nonnull__, __format__(printf, 2, 0)));
  */
 extern OptionOf(kit_String)
 kit_String_appendBytes(kit_String *ref, const void *bytes, size_t size)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Appends content to string using printf-like format.
@@ -197,7 +197,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_appendFormat(kit_String *ref, const char *format, ...)
-__attribute__((__nonnull__, __format__(printf, 2, 3)));
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 3)));
 
 /**
  * Appends literal to string.
@@ -215,7 +215,7 @@ __attribute__((__nonnull__, __format__(printf, 2, 3)));
  */
 extern OptionOf(kit_String)
 kit_String_appendLiteral(kit_String *ref, const char *literal)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Sets the content of string.
@@ -234,7 +234,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_set(kit_String *ref, kit_String other)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Sets content of string using printf-like format, behaves like kit_String_setFormat but takes a va_list.
@@ -252,7 +252,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_setPack(kit_String *ref, const char *format, va_list pack)
-__attribute__((__nonnull__, __format__(printf, 2, 0)));
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 0)));
 
 /**
  * Sets bytes of string.
@@ -271,7 +271,7 @@ __attribute__((__nonnull__, __format__(printf, 2, 0)));
  */
 extern OptionOf(kit_String)
 kit_String_setBytes(kit_String *ref, const void *bytes, size_t size)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Sets content of string using printf-like format.
@@ -289,7 +289,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_setFormat(kit_String *ref, const char *format, ...)
-__attribute__((__nonnull__, __format__(printf, 2, 3)));
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 3)));
 
 /**
  * Sets content of string.
@@ -307,7 +307,7 @@ __attribute__((__nonnull__, __format__(printf, 2, 3)));
  */
 extern OptionOf(kit_String)
 kit_String_setLiteral(kit_String *ref, const char *literal)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Modifies string quoting is content.
@@ -334,7 +334,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_quote(kit_String *ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Clears the string resetting its size to 0.
@@ -350,7 +350,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_clear(kit_String *ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Explicitly request an expansion to hold at least as many elements as capacity.
@@ -367,7 +367,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_reserve(kit_String *ref, size_t capacity)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Requests the container to shrink in order to fit at least the stored elements freeing resources not used.
@@ -383,7 +383,7 @@ __attribute__((__nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_shrink(kit_String *ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Gets the size of the string.
@@ -393,7 +393,7 @@ __attribute__((__nonnull__));
  */
 extern size_t
 kit_String_size(kit_String self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Gets the capacity of the string before expansion.
@@ -403,7 +403,7 @@ __attribute__((__nonnull__));
  */
 extern size_t
 kit_String_capacity(kit_String self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Checks if the string is equal to the another.
@@ -414,7 +414,7 @@ __attribute__((__nonnull__));
  */
 extern bool
 kit_String_isEqual(kit_String self, kit_String other)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Checks if the string is empty.
@@ -424,7 +424,7 @@ __attribute__((__nonnull__));
  */
 extern bool
 kit_String_isEmpty(kit_String self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Deletes an instance of kit_String.
