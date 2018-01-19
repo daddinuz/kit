@@ -30,10 +30,8 @@ Describe("List",
                  Run(ListGet, SeededListDoublyListFixture),
                  Run(ListBack, SeededListDoublyListFixture),
                  Run(ListFront, SeededListDoublyListFixture),
-                 Run(ListSize, SeededListDoublyListFixture),
                  Run(ListSet, SeededListDoublyListFixture),
-                 Run(ListCapacity, EmptyListDoublyListFixture),
-                 Run(ListReserve, EmptyListDoublyListFixture),
+                 Run(ListExpand, EmptyListDoublyListFixture),
                  Run(ListShrink, SeededListDoublyListFixture)
          ),
          Trait(
@@ -48,10 +46,8 @@ Describe("List",
                  Run(ListGet, SeededListXorListFixture),
                  Run(ListBack, SeededListXorListFixture),
                  Run(ListFront, SeededListXorListFixture),
-                 Run(ListSize, SeededListXorListFixture),
                  Run(ListSet, SeededListXorListFixture),
-                 Run(ListCapacity, EmptyListXorListFixture),
-                 Run(ListReserve, EmptyListXorListFixture),
+                 Run(ListExpand, EmptyListXorListFixture),
                  Run(ListShrink, SeededListXorListFixture)
          ),
          Trait(
@@ -66,10 +62,8 @@ Describe("List",
                  Run(ListGet, SeededListVectorFixture),
                  Run(ListBack, SeededListVectorFixture),
                  Run(ListFront, SeededListVectorFixture),
-                 Run(ListSize, SeededListVectorFixture),
                  Run(ListSet, SeededListVectorFixture),
-                 Run(ListCapacity, EmptyListVectorFixture),
-                 Run(ListReserve, EmptyListVectorFixture),
+                 Run(ListExpand, EmptyListVectorFixture),
                  Run(ListShrink, SeededListVectorFixture)
-         ),
+         )
 )

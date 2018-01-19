@@ -15,8 +15,7 @@ extern "C" {
 
 #include <traits-unit/traits-unit.h>
 
-FeatureDeclare(ListCapacity);
-FeatureDeclare(ListReserve);
+FeatureDeclare(ListExpand);
 FeatureDeclare(ListShrink);
 
 #ifdef __cplusplus

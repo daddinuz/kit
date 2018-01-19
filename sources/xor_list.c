@@ -142,10 +142,10 @@ kit_XorList_remove(struct kit_XorList *const self, const size_t index) {
         self->size -= 1;
         self->operationId += 1;
         return Result_ok(kit_XorList_Node_delete(node));
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    assert(OutOfRangeError == Result_inspect(result));
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -170,11 +170,11 @@ kit_XorList_put(struct kit_XorList *const self, const size_t index, void *const 
     if (Result_isOk(result)) {
         void *replacedElement = pair.base->element;
         pair.base->element = element;
-        Result_ok(replacedElement);
+        return Result_ok(replacedElement);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    assert(OutOfRangeError == Result_inspect(result));
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -184,11 +184,11 @@ kit_XorList_get(const struct kit_XorList *const self, const size_t index) {
     Result result = kit_XorList_Node_Pair_fetch(self, index, &pair);
 
     if (Result_isOk(result)) {
-        Result_ok(pair.base->element);
+        return Result_ok(pair.base->element);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    assert(OutOfRangeError == Result_inspect(result));
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)

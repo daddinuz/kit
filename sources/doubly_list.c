@@ -115,10 +115,11 @@ kit_DoublyList_remove(struct kit_DoublyList *const self, const size_t index) {
         }
         self->size -= 1;
         self->operationId += 1;
-        Result_ok(kit_DoublyList_Node_delete(node));
+        return Result_ok(kit_DoublyList_Node_delete(node));
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -143,11 +144,11 @@ kit_DoublyList_put(struct kit_DoublyList *const self, const size_t index, void *
         struct kit_DoublyList_Node *node = Result_unwrap(result);
         void *replacedElement = node->element;
         node->element = element;
-        Result_ok(replacedElement);
+        return Result_ok(replacedElement);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    assert(OutOfRangeError == Result_inspect(result));
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -157,11 +158,11 @@ kit_DoublyList_get(const struct kit_DoublyList *const self, const size_t index) 
 
     if (Result_isOk(result)) {
         struct kit_DoublyList_Node *node = Result_unwrap(result);
-        Result_ok(node->element);
+        return Result_ok(node->element);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    assert(OutOfRangeError == Result_inspect(result));
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)

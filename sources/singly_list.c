@@ -148,10 +148,10 @@ kit_SinglyList_put(struct kit_SinglyList *const self, const size_t index, void *
         void *replacedElement = node->element;
         node->element = element;
         return Result_ok(replacedElement);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    assert(OutOfRangeError == Result_inspect(result));
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)
@@ -161,11 +161,11 @@ kit_SinglyList_get(const struct kit_SinglyList *const self, const size_t index) 
 
     if (Result_isOk(result)) {
         struct kit_SinglyList_Node *node = Result_unwrap(result);
-        Result_ok(node->element);
+        return Result_ok(node->element);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
     }
-
-    assert(OutOfRangeError == Result_inspect(result));
-    return result;
 }
 
 ResultOf(void *, OutOfRangeError)
