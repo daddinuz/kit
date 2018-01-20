@@ -6,8 +6,8 @@
  * Date:   November 25, 2017 
  */
 
-#ifndef KIT_FEATURE_SETTERS_INCLUDED
-#define KIT_FEATURE_SETTERS_INCLUDED
+#ifndef KIT_FEATURE_GETTERS_INCLUDED
+#define KIT_FEATURE_GETTERS_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,10 +15,12 @@ extern "C" {
 
 #include <traits-unit/traits-unit.h>
 
-FeatureDeclare(SequenceSet);
+FeatureDeclare(SequenceGet);
+FeatureDeclare(SequenceBack);
+FeatureDeclare(SequenceFront);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* KIT_FEATURE_SETTERS_INCLUDED */
+#endif /* KIT_FEATURE_GETTERS_INCLUDED */

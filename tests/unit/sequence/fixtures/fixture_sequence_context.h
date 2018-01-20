@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-#include <kit/collections/sequence.h.old>
+#include <kit/collections/sequence.h>
 
 struct kit_Traits_SequenceIteratorContext {
     struct kit_Sequence *sequence;
