@@ -9,7 +9,7 @@
 #include <seeds.h>
 #include <traits/traits.h>
 #include <fixtures/fixture_queue.h>
-#include <kit/collections/queue.h.old>
+#include <kit/collections/queue.h>
 
 /*
  * kit_QueueType
@@ -93,16 +93,16 @@ struct kit_Queue *setup_helper(enum kit_QueueType type, const char *const seeds[
 
     switch (type) {
         case KIT_QUEUE_TYPE_DOUBLY_LIST:
-            sut = MutableOption_unwrap(kit_Queue_fromDoublyList());
+            sut = Option_unwrap(kit_Queue_fromDoublyList());
             break;
         case KIT_QUEUE_TYPE_SINGLY_LIST:
-            sut = MutableOption_unwrap(kit_Queue_fromSinglyList());
+            sut = Option_unwrap(kit_Queue_fromSinglyList());
             break;
         case KIT_QUEUE_TYPE_XOR_LIST:
-            sut = MutableOption_unwrap(kit_Queue_fromXorList());
+            sut = Option_unwrap(kit_Queue_fromXorList());
             break;
         case KIT_QUEUE_TYPE_VECTOR:
-            sut = MutableOption_unwrap(kit_Queue_fromVector(0));
+            sut = Option_unwrap(kit_Queue_fromVector(0));
             break;
         default:
             traits_assert(false);
@@ -112,7 +112,7 @@ struct kit_Queue *setup_helper(enum kit_QueueType type, const char *const seeds[
 
     if (seeds) {
         for (size_t i = 0; i < seeds_size; i++) {
-            assert_equal(KIT_RESULT_OK, kit_Queue_push(sut, (void *) seeds[i]));
+            assert_equal(Ok, kit_Queue_push(sut, (void *) seeds[i]));
         }
     }
 
