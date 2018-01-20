@@ -11,7 +11,7 @@
 #include <features/feature_setters.h>
 #include <kit/collections/list.h>
 
-FeatureDefine(ListSet) {
+FeatureDefine(ListPut) {
     size_t i, j;
     struct kit_List *sut = traits_context;
 

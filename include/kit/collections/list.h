@@ -29,9 +29,9 @@ struct kit_List;
 
 /**
  * Creates a new instance of kit_List using DoublyList as underlying container.
- * In case of out of memory this function returns MutableOption_None.
+ * In case of out of memory this function returns None.
  *
- * @return A new instance of kit_List or MutableOption_None.
+ * @return A new instance of kit_List or None.
  */
 extern OptionOf(struct kit_List *)
 kit_List_fromDoublyList(void)
@@ -39,9 +39,9 @@ __attribute__((__warn_unused_result__));
 
 /**
  * Creates a new instance of kit_List using XorList as underlying container.
- * In case of out of memory this function returns MutableOption_None.
+ * In case of out of memory this function returns None.
  *
- * @return A new instance of kit_List or MutableOption_None.
+ * @return A new instance of kit_List or None.
  */
 extern OptionOf(struct kit_List *)
 kit_List_fromXorList(void)
@@ -49,12 +49,12 @@ __attribute__((__warn_unused_result__));
 
 /**
  * Creates a new instance of kit_List using Vector as underlying container.
- * In case of out of memory this function returns MutableOption_None.
+ * In case of out of memory this function returns None.
  *
  * If capacity is 0 then a default capacity will be used.
  *
  * @param capacity An hint about the average capacity.
- * @return A new instance of kit_List or MutableOption_None.
+ * @return A new instance of kit_List or None.
  */
 extern OptionOf(struct kit_List *)
 kit_List_fromVector(size_t capacity)
@@ -380,6 +380,7 @@ __attribute__((__warn_unused_result__, __nonnull__));
 /**
  * Deletes this instance of kit_List_Iterator.
  * If self is NULL no action will be performed.
+ *
  *
  * @param self The instance to be deleted.
  */
