@@ -273,7 +273,7 @@ extern void
 kit_Sequence_delete(struct kit_Sequence *self);
 
 /**
- * List iterators permit to iterate over the elements of a sequence in forward direction and to update the retrieved elements.
+ * Sequence iterators permit to iterate over the elements of a sequence in forward direction and to update the retrieved elements.
  */
 struct kit_Sequence_Iterator;
 
