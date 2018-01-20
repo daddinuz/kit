@@ -18,7 +18,6 @@ extern "C" {
 FeatureDeclare(ListGet);
 FeatureDeclare(ListBack);
 FeatureDeclare(ListFront);
-FeatureDeclare(ListSize);
 
 #ifdef __cplusplus
 }

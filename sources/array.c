@@ -1,9 +1,9 @@
 /*
- * C Source File
+ * C Header File
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 22, 2017 
+ * Date:   January 16, 2018
  */
 
 #include <assert.h>
@@ -15,118 +15,127 @@ struct kit_Array {
     void **raw;
 };
 
-MutableOption kit_Array_new(size_t capacity) {
-    struct kit_Array *self;
-    MutableOption selfOption = kit_Allocator_malloc(sizeof(*self) + sizeof(self->raw[0]) * capacity);
+OptionOf(struct kit_Array *)
+kit_Array_new(const size_t capacity) {
+    struct kit_Array *self = NULL;
+    const size_t rawSize = sizeof(self->raw[0]) * capacity;
+    Option option = kit_Allocator_malloc(sizeof(*self) + rawSize);
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(option)) {
+        self = Option_unwrap(option);
         self->capacity = capacity;
         self->raw = (void **) (self + 1);
+        kit_Allocator_set(self->raw, 0, rawSize);
+        return Option_new(self);
     }
 
-    return selfOption;
+    return None;
 }
 
-MutableOption __kit_Array_from(void *e0, ...) {
-    MutableOption selfOption;
-    va_list pack;
-    va_list packCopy;
+OptionOf(struct kit_Array *)
+__kit_Array_from(void *e0, ...) {
+    Option option;
+    va_list pack, packCopy;
+    struct kit_Array *self = NULL;
 
     va_start(pack, e0);
     va_copy(packCopy, pack);
-    selfOption = kit_Array_new(1 + kit_packSize(packCopy));
-    if (MutableOption_isSome(selfOption)) {
+
+    option = kit_Array_new(1 + kit_packSize(packCopy));
+    if (Option_isSome(option)) {
         size_t i = 0;
-        struct kit_Array *self = MutableOption_unwrap(selfOption);
+        self = Option_unwrap(option);
         for (void *e = e0; e != Ellipsis; e = va_arg(pack, void *)) {
-            kit_Array_set(self, e, i);
+            Result_unwrap(kit_Array_put(self, i, e));
             i++;
         };
     }
+
     va_end(packCopy);
     va_end(pack);
 
-    return selfOption;
+    return option;
 }
 
-MutableOption kit_Array_fromPack(va_list pack) {
+OptionOf(struct kit_Array *)
+kit_Array_fromPack(va_list pack) {
     assert(pack);
-    MutableOption selfOption;
+
+    Option option;
     va_list packCopy;
+    struct kit_Array *self = NULL;
 
     va_copy(packCopy, pack);
-    selfOption = kit_Array_new(kit_packSize(packCopy));
-    if (MutableOption_isSome(selfOption)) {
+
+    option = kit_Array_new(kit_packSize(packCopy));
+    if (Option_isSome(option)) {
         size_t i = 0;
-        struct kit_Array *self = MutableOption_unwrap(selfOption);
+        self = Option_unwrap(option);
         for (void *e = va_arg(pack, void *); e != Ellipsis; e = va_arg(pack, void *)) {
-            kit_Array_set(self, e, i);
+            Result_unwrap(kit_Array_put(self, i, e));
             i++;
         };
     }
+
     va_end(packCopy);
 
-    return selfOption;
+    return option;
 }
 
-void kit_Array_delete(struct kit_Array *self) {
-    if (self) {
-        kit_Allocator_free(self);
+ResultOf(void *, OutOfRangeError)
+kit_Array_put(struct kit_Array *const self, const size_t index, void *const element) {
+    assert(self);
+    if (index < self->capacity) {
+        void *replacedElement = self->raw[index];
+        self->raw[index] = element;
+        return Result_ok(replacedElement);
     }
+    return Result_error(OutOfRangeError);
 }
 
-void kit_Array_clear(struct kit_Array *self) {
+ResultOf(void *, OutOfRangeError)
+kit_Array_get(const struct kit_Array *const self, const size_t index) {
+    assert(self);
+    if (index < self->capacity) {
+        return Result_ok(self->raw[index]);
+    }
+    return Result_error(OutOfRangeError);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_Array_back(const struct kit_Array *const self) {
+    assert(self);
+    const size_t capacity = self->capacity;
+    return capacity > 0 ? kit_Array_get(self, capacity - 1) : Result_error(OutOfRangeError);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_Array_front(const struct kit_Array *const self) {
+    assert(self);
+    return kit_Array_get(self, 0);
+}
+
+void
+kit_Array_clear(struct kit_Array *const self) {
     assert(self);
     kit_Allocator_set(self->raw, 0, sizeof(void *) * self->capacity);
 }
 
-enum kit_Result kit_Array_set(struct kit_Array *self, void *e, const size_t index) {
-    assert(self);
-    enum kit_Result result = KIT_RESULT_OK;
-
-    if (index < self->capacity) {
-        self->raw[index] = e;
-    } else {
-        result = KIT_RESULT_OUT_OF_RANGE_ERROR;
-    }
-
-    return result;
-}
-
-enum kit_Result kit_Array_get(struct kit_Array *self, void **out, const size_t index) {
-    assert(self);
-    assert(out);
-    enum kit_Result result = KIT_RESULT_OK;
-
-    if (index < self->capacity) {
-        *out = self->raw[index];
-    } else {
-        result = KIT_RESULT_OUT_OF_RANGE_ERROR;
-    }
-
-    return result;
-}
-
-enum kit_Result kit_Array_back(struct kit_Array *self, void **out) {
-    assert(self);
-    assert(out);
-    const size_t size = self->capacity;
-    return size > 0 ? kit_Array_get(self, out, size - 1) : KIT_RESULT_OUT_OF_RANGE_ERROR;
-}
-
-enum kit_Result kit_Array_front(struct kit_Array *self, void **out) {
-    assert(self);
-    assert(out);
-    return kit_Array_get(self, out, 0);
-}
-
-size_t kit_Array_capacity(struct kit_Array *self) {
+size_t
+kit_Array_capacity(const struct kit_Array *const self) {
     assert(self);
     return self->capacity;
 }
 
-void **kit_Array_raw(struct kit_Array *self) {
+void **
+kit_Array_raw(const struct kit_Array *const self) {
     assert(self);
     return self->raw;
+}
+
+void
+kit_Array_delete(struct kit_Array *self) {
+    if (self) {
+        kit_Allocator_free(self);
+    }
 }

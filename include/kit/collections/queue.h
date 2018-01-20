@@ -3,12 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 21, 2017 
- */
-
-/*
- * Queues are a type of container adaptor, specifically designed to operate in a FIFO context (first-in first-out),
- * where elements are inserted into one end of the container and extracted from the other.
+ * Date:   January 20, 2018
  */
 
 #ifndef KIT_QUEUE_INCLUDED
@@ -21,154 +16,135 @@ extern "C" {
 #include <stddef.h>
 #include <stdbool.h>
 #include <option/option.h>
+#include <kit/errors.h>
 #include <kit/compiler_steroids.h>
-#include <kit/collections/result.h>
 
 /**
- * kit_Queue interface.
+ * Queues are a type of container adaptor, specifically designed to operate in a FIFO context (first-in first-out),
+ * where elements are inserted into one end of the container and extracted from the other.
  */
 struct kit_Queue;
 
 /**
  * Creates a new instance of kit_Queue using DoublyList as underlying container.
- * In case of out of memory this function returns MutableOption_None.
+ * In case of out of memory this function returns None.
  *
- * @return A new instance of kit_Queue or MutableOption_None.
+ * @return A new instance of kit_Queue or None.
  */
-extern MutableOptional(struct kit_Queue *)
-kit_Queue_fromDoublyList(void);
+extern OptionOf(struct kit_Queue *)
+kit_Queue_fromDoublyList(void)
+__attribute__((__warn_unused_result__));
 
 /**
  * Creates a new instance of kit_Queue using SinglyList as underlying container.
- * In case of out of memory this function returns MutableOption_None.
+ * In case of out of memory this function returns None.
  *
- * @return A new instance of kit_Queue or MutableOption_None.
+ * @return A new instance of kit_Queue or None.
  */
-extern MutableOptional(struct kit_Queue *)
-kit_Queue_fromSinglyList(void);
+extern OptionOf(struct kit_Queue *)
+kit_Queue_fromSinglyList(void)
+__attribute__((__warn_unused_result__));
 
 /**
  * Creates a new instance of kit_Queue using XorList as underlying container.
- * In case of out of memory this function returns MutableOption_None.
+ * In case of out of memory this function returns None.
  *
- * @return A new instance of kit_Queue or MutableOption_None.
+ * @return A new instance of kit_Queue or None.
  */
-extern MutableOptional(struct kit_Queue *)
-kit_Queue_fromXorList(void);
+extern OptionOf(struct kit_Queue *)
+kit_Queue_fromXorList(void)
+__attribute__((__warn_unused_result__));
 
 /**
  * Creates a new instance of kit_Queue using Vector as underlying container.
- * In case of out of memory this function returns MutableOption_None.
+ * In case of out of memory this function returns None.
  *
- * If capacityHint is 0 then a default capacity will be used.
+ * If capacity is 0 then a default capacity will be used.
  *
- * @param capacityHint An hint about the average capacity.
- * @return A new instance of kit_Queue or MutableOption_None.
+ * @param capacity An hint about the average capacity.
+ * @return A new instance of kit_Queue or None.
  */
-extern MutableOptional(struct kit_Queue *)
-kit_Queue_fromVector(size_t capacityHint);
+extern OptionOf(struct kit_Queue *)
+kit_Queue_fromVector(size_t capacity)
+__attribute__((__warn_unused_result__));
 
 /**
- * Deletes an instance of kit_Queue.
- * If @param self is NULL no action will be performed.
+ * Inserts the specified element at the back of the container.
+ *
+ * @param self The the container instance [<b>must not be NULL</b>].
+ * @param element The element to be inserted.
+ * @return
+ * - Ok => The operation was performed successfully.
+ * - OutOfMemoryError => There's no more space left, nothing has been done.
+ */
+extern OneOf(Ok, OutOfMemoryError)
+kit_Queue_push(struct kit_Queue *self, void *element)
+__attribute__((__warn_unused_result__, __nonnull__(1)));
+
+/**
+ * Removes the element at the front of the container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @return
+ * - Ok => Wraps the removed element.
+ * - OutOfRangeError => No such element, nothing has been done.
+ */
+extern ResultOf(void *, OutOfRangeError)
+kit_Queue_pop(struct kit_Queue *self)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Returns the element stored at the back of this container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @return
+ * - Ok => wraps the specified element.
+ * - OutOfRangeError => No such element, nothing has been done.
+ */
+extern ResultOf(void *, OutOfRangeError)
+kit_Queue_back(const struct kit_Queue *self)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Returns the element stored at the front of this container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @return
+ * - Ok => wraps the specified element.
+ * - OutOfRangeError => No such element, nothing has been done.
+ */
+extern ResultOf(void *, OutOfRangeError)
+kit_Queue_front(const struct kit_Queue *self)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Returns the number of elements currently stored in the container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @return The numbers of elements in the container.
+ */
+extern size_t
+kit_Queue_size(const struct kit_Queue *self)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Tests if this container has no elements.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @return true if the container is empty false otherwise.
+ */
+extern bool
+kit_Queue_isEmpty(const struct kit_Queue *self)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Deletes this instance of kit_Queue.
+ * If self is NULL no action will be performed.
  *
  * @param self The instance to be deleted.
  */
 extern void
 kit_Queue_delete(struct kit_Queue *self);
-
-/**
- * Inserts elements at the back of the container.
- *
- * Checked runtime errors:
- *      - @param self must not be NULL.
- *
- * @param self The container instance.
- * @param e The element to be inserted.
- * @return
- *      - KIT_RESULT_OK            :   The operation was performed successfully.
- *      - KIT_RESULT_OUT_OF_MEMORY :   There's no more space left, nothing has been done.
- */
-extern enum kit_Result
-kit_Queue_push(struct kit_Queue *self, void *e)
-__attribute__((__nonnull__(1)));
-
-/**
- * Removes elements at the front of the container.
- *
- * Checked runtime errors:
- *      - @param self must not be NULL.
- *      - @param out must not be NULL.
- *
- * @param self The container instance.
- * @param out The removed element.
- * @return
- *      - KIT_RESULT_OK            :   The operation was performed successfully.
- *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
- */
-extern enum kit_Result
-kit_Queue_pop(struct kit_Queue *self, void **out)
-__attribute__((__nonnull__));
-
-/**
- * Gets the element stored at the back of the container.
- *
- * Checked runtime errors:
- *      - @param self must not be NULL.
- *      - @param out must not be NULL.
- *
- * @param self The container instance.
- * @param out The element requested.
- * @return
- *      - KIT_RESULT_OK            :   The operation was performed successfully.
- *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
- */
-extern enum kit_Result
-kit_Queue_back(struct kit_Queue *self, void **out)
-__attribute__((__nonnull__));
-
-/**
- * Gets the element stored at the front of the container.
- *
- * Checked runtime errors:
- *      - @param self must not be NULL.
- *      - @param out must not be NULL.
- *
- * @param self The container instance.
- * @param out The element requested.
- * @return
- *      - KIT_RESULT_OK            :   The operation was performed successfully.
- *      - KIT_RESULT_OUT_OF_RANGE  :   No such element in the container, nothing has been done.
- */
-extern enum kit_Result
-kit_Queue_front(struct kit_Queue *self, void **out)
-__attribute__((__nonnull__));
-
-/**
- * Gets the number of elements currently stored in the container.
- *
- * Checked runtime errors:
- *      - @param self must not be NULL.
- *
- * @param self The container instance.
- * @return The numbers of elements in the container.
- */
-extern size_t
-kit_Queue_size(struct kit_Queue *self)
-__attribute__((__nonnull__));
-
-/**
- * Checks if the container is empty.
- *
- * Checked runtime errors:
- *      - @param self must not be NULL.
- *
- * @param self The container instance.
- * @return true if the container is empty false otherwise.
- */
-extern bool
-kit_Queue_isEmpty(struct kit_Queue *self)
-__attribute__((__nonnull__));
 
 #ifdef __cplusplus
 }

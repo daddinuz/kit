@@ -12,32 +12,26 @@
 #include <kit/collections/stack.h>
 
 FeatureDefine(StackPop) {
-    void *e;
     struct kit_Stack *sut = traits_context;
 
-    for (size_t i = 0; i < SEEDS_SIZE; i++) {
-        assert_equal(SEEDS_SIZE - i, kit_Stack_size(sut));
-        assert_false(kit_Stack_isEmpty(sut));
+    assert_not_null(sut);
+    assert_false(kit_Stack_isEmpty(sut));
+    assert_equal(SEEDS_SIZE, kit_Stack_size(sut));
 
-        e = NULL;
-        assert_equal(KIT_RESULT_OK, kit_Stack_pop(sut, &e));
-        assert_string_equal(SEEDS[SEEDS_SIZE - i - 1], (char *) e);
+    for (size_t i = 0; i < SEEDS_SIZE; i++) {
+        assert_false(kit_Stack_isEmpty(sut));
+        assert_equal(SEEDS_SIZE - i, kit_Stack_size(sut));
+
+        assert_string_equal(SEEDS[SEEDS_SIZE - i - 1], Result_unwrap(kit_Stack_pop(sut)));
 
         if (i < SEEDS_SIZE - 1) {
-            e = NULL;
-            assert_equal(KIT_RESULT_OK, kit_Stack_back(sut, &e));
-            assert_string_equal(SEEDS[SEEDS_SIZE - i - 2], (char *) e);
+            assert_string_equal(SEEDS[SEEDS_SIZE - i - 2], Result_unwrap(kit_Stack_back(sut)));
         }
     }
 
-    assert_equal(0, kit_Stack_size(sut));
     assert_true(kit_Stack_isEmpty(sut));
+    assert_equal(0, kit_Stack_size(sut));
 
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Stack_pop(sut, &e));
-    assert_null(e);
-
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Stack_back(sut, &e));
-    assert_null(e);
+    assert_equal(OutOfRangeError, Result_inspect(kit_Stack_pop(sut)));
+    assert_equal(OutOfRangeError, Result_inspect(kit_Stack_back(sut)));
 }

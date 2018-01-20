@@ -15,8 +15,7 @@ extern "C" {
 
 #include <traits-unit/traits-unit.h>
 
-FeatureDeclare(SequenceCapacity);
-FeatureDeclare(SequenceReserve);
+FeatureDeclare(SequenceExpand);
 FeatureDeclare(SequenceShrink);
 
 #ifdef __cplusplus

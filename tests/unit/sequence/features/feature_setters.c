@@ -11,24 +11,16 @@
 #include <features/feature_setters.h>
 #include <kit/collections/sequence.h>
 
-FeatureDefine(SequenceSet) {
+FeatureDefine(SequencePut) {
     size_t i, j;
-    void *e;
     struct kit_Sequence *sut = traits_context;
 
     for (i = 0, j = SEEDS_SIZE - 1; i < SEEDS_SIZE; i++, j--) {
-        assert_equal(KIT_RESULT_OK, kit_Sequence_set(sut, (void *) SEEDS[j], i));
-        e = NULL;
-        assert_equal(KIT_RESULT_OK, kit_Sequence_get(sut, &e, i));
-        assert_string_equal(SEEDS[j], (char *) e);
+        void *replacedElement = (void *) SEEDS[i];
+
+        assert_string_equal(replacedElement, Result_unwrap(kit_Sequence_put(sut, i, (void *) SEEDS[j])));
+        assert_string_equal(SEEDS[j], Result_unwrap(kit_Sequence_get(sut, i)));
     }
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Sequence_set(sut, "x", i));
 
-    e = NULL;
-    assert_equal(KIT_RESULT_OK, kit_Sequence_back(sut, &e));
-    assert_string_equal(SEEDS[0], (char *) e);
-
-    e = NULL;
-    assert_equal(KIT_RESULT_OK, kit_Sequence_front(sut, &e));
-    assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) e);
+    assert_equal(OutOfRangeError, Result_inspect(kit_Sequence_put(sut, i, "x")));
 }

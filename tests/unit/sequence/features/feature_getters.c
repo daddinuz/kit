@@ -12,34 +12,70 @@
 #include <kit/collections/sequence.h>
 
 FeatureDefine(SequenceGet) {
-    size_t i;
-    void *e;
+    Result result;
     struct kit_Sequence *sut = traits_context;
-    for (i = 0; i < SEEDS_SIZE; i++) {
-        e = NULL;
-        assert_equal(KIT_RESULT_OK, kit_Sequence_get(sut, &e, i));
-        assert_string_equal(SEEDS[i], (char *) e);
+
+    assert_not_null(sut);
+    assert_false(kit_Sequence_isEmpty(sut));
+    assert_equal(SEEDS_SIZE, kit_Sequence_size(sut));
+
+    for (size_t i = 0; i < SEEDS_SIZE; i++) {
+        result = kit_Sequence_get(sut, i);
+        assert_true(Result_isOk(result));
+        assert_string_equal(SEEDS[i], Result_unwrap(result));
     }
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Sequence_get(sut, &e, i));
-    assert_null(e);
+
+    result = kit_Sequence_get(sut, SEEDS_SIZE);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
+
+    kit_Sequence_clear(sut);
+    assert_true(kit_Sequence_isEmpty(sut));
+    assert_equal(0, kit_Sequence_size(sut));
+
+    result = kit_Sequence_get(sut, 0);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }
 
 FeatureDefine(SequenceBack) {
-    void *e = NULL;
+    Result result;
     struct kit_Sequence *sut = traits_context;
-    assert_equal(KIT_RESULT_OK, kit_Sequence_back(sut, &e));
-    assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) e);
+
+    assert_not_null(sut);
+    assert_false(kit_Sequence_isEmpty(sut));
+    assert_equal(SEEDS_SIZE, kit_Sequence_size(sut));
+
+    result = kit_Sequence_back(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[SEEDS_SIZE - 1], Result_unwrap(result));
+
+    kit_Sequence_clear(sut);
+    assert_true(kit_Sequence_isEmpty(sut));
+    assert_equal(0, kit_Sequence_size(sut));
+
+    result = kit_Sequence_back(sut);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }
 
 FeatureDefine(SequenceFront) {
-    void *e = NULL;
+    Result result;
     struct kit_Sequence *sut = traits_context;
-    assert_equal(KIT_RESULT_OK, kit_Sequence_front(sut, &e));
-    assert_string_equal(SEEDS[0], (char *) e);
-}
 
-FeatureDefine(SequenceSize) {
-    struct kit_Sequence *sut = traits_context;
+    assert_not_null(sut);
+    assert_false(kit_Sequence_isEmpty(sut));
     assert_equal(SEEDS_SIZE, kit_Sequence_size(sut));
+
+    result = kit_Sequence_front(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[0], Result_unwrap(result));
+
+    kit_Sequence_clear(sut);
+    assert_true(kit_Sequence_isEmpty(sut));
+    assert_equal(0, kit_Sequence_size(sut));
+
+    result = kit_Sequence_front(sut);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }

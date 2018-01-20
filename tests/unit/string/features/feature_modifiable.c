@@ -7,10 +7,10 @@
  */
 
 #include <traits/traits.h>
-#include <features/feature_mutable.h>
+#include <features/feature_modifiable.h>
 #include <kit/collections/string.h>
 
-#define I(x)    ImmutableOption_unwrap((x))
+#define u(x)    Option_unwrap((x))
 
 struct Seed {
     const char *SUT;
@@ -78,33 +78,33 @@ FeatureDefine(StringAppend) {
 
     kit_String sut;
     kit_String other;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < BYTES_SEEDS_SIZE; i++) {
         const struct Seed SEED = BYTES_SEEDS[i];
         traits_assert(SEED.UNION_SIZE == SEED.SUT_SIZE + SEED.OTHER_SIZE);
 
-        sut = I(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
+        sut = u(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
-        other = I(kit_String_fromBytes(SEED.OTHER, SEED.OTHER_SIZE));
+        other = u(kit_String_fromBytes(SEED.OTHER, SEED.OTHER_SIZE));
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
         option = kit_String_append(&sut, other);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.UNION_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -118,27 +118,27 @@ FeatureDefine(StringAppend) {
         const struct Seed SEED = LITERAL_SEEDS[i];
         traits_assert(SEED.UNION_SIZE == SEED.SUT_SIZE + SEED.OTHER_SIZE);
 
-        sut = I(kit_String_fromLiteral(SEED.SUT));
+        sut = u(kit_String_fromLiteral(SEED.SUT));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
-        other = I(kit_String_fromLiteral(SEED.OTHER));
+        other = u(kit_String_fromLiteral(SEED.OTHER));
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
         option = kit_String_append(&sut, other);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.UNION_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -153,23 +153,23 @@ FeatureDefine(StringAppendBytes) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < BYTES_SEEDS_SIZE; i++) {
         const struct Seed SEED = BYTES_SEEDS[i];
         traits_assert(SEED.UNION_SIZE == SEED.SUT_SIZE + SEED.OTHER_SIZE);
 
-        sut = I(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
+        sut = u(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
         option = kit_String_appendBytes(&sut, SEED.OTHER, SEED.OTHER_SIZE);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.UNION_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -183,23 +183,23 @@ FeatureDefine(StringAppendFormat) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < LITERAL_SEEDS_SIZE; i++) {
         const struct Seed SEED = LITERAL_SEEDS[i];
         traits_assert(SEED.UNION_SIZE == SEED.SUT_SIZE + SEED.OTHER_SIZE);
 
-        sut = I(kit_String_fromLiteral(SEED.SUT));
+        sut = u(kit_String_fromLiteral(SEED.SUT));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
         option = kit_String_appendFormat(&sut, "%s", SEED.OTHER);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.UNION_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -213,23 +213,23 @@ FeatureDefine(StringAppendLiteral) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < LITERAL_SEEDS_SIZE; i++) {
         const struct Seed SEED = LITERAL_SEEDS[i];
         traits_assert(SEED.UNION_SIZE == SEED.SUT_SIZE + SEED.OTHER_SIZE);
 
-        sut = I(kit_String_fromLiteral(SEED.SUT));
+        sut = u(kit_String_fromLiteral(SEED.SUT));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
         option = kit_String_appendLiteral(&sut, SEED.OTHER);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.UNION_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -244,32 +244,32 @@ FeatureDefine(StringSet) {
 
     kit_String sut;
     kit_String other;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < BYTES_SEEDS_SIZE; i++) {
         const struct Seed SEED = BYTES_SEEDS[i];
 
-        sut = I(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
+        sut = u(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
-        other = I(kit_String_fromBytes(SEED.OTHER, SEED.OTHER_SIZE));
+        other = u(kit_String_fromBytes(SEED.OTHER, SEED.OTHER_SIZE));
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
         option = kit_String_set(&sut, other);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -282,27 +282,27 @@ FeatureDefine(StringSet) {
     for (size_t i = 0; i < LITERAL_SEEDS_SIZE; i++) {
         const struct Seed SEED = LITERAL_SEEDS[i];
 
-        sut = I(kit_String_fromLiteral(SEED.SUT));
+        sut = u(kit_String_fromLiteral(SEED.SUT));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
-        other = I(kit_String_fromLiteral(SEED.OTHER));
+        other = u(kit_String_fromLiteral(SEED.OTHER));
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
         option = kit_String_set(&sut, other);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
         assert_equal(kit_String_size(other), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(other), kit_String_size(other));
         assert_greater_equal(kit_String_capacity(other), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(other, SEED.OTHER, SEED.OTHER_SIZE));
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -317,22 +317,22 @@ FeatureDefine(StringSetBytes) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < BYTES_SEEDS_SIZE; i++) {
         const struct Seed SEED = BYTES_SEEDS[i];
 
-        sut = I(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
+        sut = u(kit_String_fromBytes(SEED.SUT, SEED.SUT_SIZE));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
         option = kit_String_setBytes(&sut, SEED.OTHER, SEED.OTHER_SIZE);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -346,22 +346,22 @@ FeatureDefine(StringSetFormat) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < LITERAL_SEEDS_SIZE; i++) {
         const struct Seed SEED = LITERAL_SEEDS[i];
 
-        sut = I(kit_String_fromLiteral(SEED.SUT));
+        sut = u(kit_String_fromLiteral(SEED.SUT));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
         option = kit_String_setFormat(&sut, "%s", SEED.OTHER);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -375,22 +375,22 @@ FeatureDefine(StringSetLiteral) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < LITERAL_SEEDS_SIZE; i++) {
         const struct Seed SEED = LITERAL_SEEDS[i];
 
-        sut = I(kit_String_fromLiteral(SEED.SUT));
+        sut = u(kit_String_fromLiteral(SEED.SUT));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
         option = kit_String_setLiteral(&sut, SEED.OTHER);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -404,7 +404,7 @@ FeatureDefine(StringQuote) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     {
         const char BYTES[] = "";
@@ -413,17 +413,17 @@ FeatureDefine(StringQuote) {
         const char EXPECTED[] = "\"\"";
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
 
-        sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_equal(kit_String_size(sut), BYTES_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, BYTES, BYTES_SIZE));
 
         option = kit_String_quote(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -439,17 +439,17 @@ FeatureDefine(StringQuote) {
         const char EXPECTED[] = "\"\\a\\b\\n\\r\\t\\\\\\\"\\x00abc123!\"";
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
 
-        sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_equal(kit_String_size(sut), BYTES_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, BYTES, BYTES_SIZE));
 
         option = kit_String_quote(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -465,17 +465,17 @@ FeatureDefine(StringQuote) {
         const char EXPECTED[] = "\"\\x00\\a\\b\\n\\r\\t\\\\\\\"\\x00abc123!\\x00\"";
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
 
-        sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_equal(kit_String_size(sut), BYTES_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, BYTES, BYTES_SIZE));
 
         option = kit_String_quote(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -491,17 +491,17 @@ FeatureDefine(StringQuote) {
         const char EXPECTED[] = "\"\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00ABC\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00DEF\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00GHI\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00LMN\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00OPQ\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00RST\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00UVZ\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00\"";
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
 
-        sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_equal(kit_String_size(sut), BYTES_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, BYTES, BYTES_SIZE));
 
         option = kit_String_quote(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -515,23 +515,23 @@ FeatureDefine(StringClear) {
     (void) traits_context;
 
     kit_String sut;
-    ImmutableOption option;
+    Option option;
 
     for (size_t i = 0; i < LITERAL_SEEDS_SIZE; i++) {
         const struct Seed SEED = LITERAL_SEEDS[i];
         traits_assert(SEED.UNION_SIZE == SEED.SUT_SIZE + SEED.OTHER_SIZE);
 
-        sut = I(kit_String_fromLiteral(SEED.SUT));
+        sut = u(kit_String_fromLiteral(SEED.SUT));
         assert_equal(kit_String_size(sut), SEED.SUT_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.SUT, SEED.SUT_SIZE));
 
         option = kit_String_clear(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), 0);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -539,17 +539,17 @@ FeatureDefine(StringClear) {
 
         kit_String_delete(sut);
 
-        sut = I(kit_String_fromLiteral(SEED.OTHER));
+        sut = u(kit_String_fromLiteral(SEED.OTHER));
         assert_equal(kit_String_size(sut), SEED.OTHER_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.OTHER, SEED.OTHER_SIZE));
 
         option = kit_String_clear(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), 0);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
@@ -557,17 +557,17 @@ FeatureDefine(StringClear) {
 
         kit_String_delete(sut);
 
-        sut = I(kit_String_fromLiteral(SEED.UNION));
+        sut = u(kit_String_fromLiteral(SEED.UNION));
         assert_equal(kit_String_size(sut), SEED.UNION_SIZE);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
         assert_equal(0, memcmp(sut, SEED.UNION, SEED.UNION_SIZE));
 
         option = kit_String_clear(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = I(option);
+        sut = u(option);
         assert_equal(kit_String_size(sut), 0);
         assert_greater_equal(kit_String_capacity(sut), kit_String_size(sut));
         assert_greater_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
