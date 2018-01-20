@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   December 01, 2017 
+ * Date:   January 20, 2018
  */
 
 /*
@@ -31,7 +31,8 @@ struct kit_HashMap {
     struct kit_HashMap_Bucket **buckets;
 };
 
-Option kit_HashMap_new(size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
+Option
+kit_HashMap_new(const size_t capacityHint, int compareFn(const void *, const void *), size_t hashFn(const void *)) {
     assert(compareFn);
     assert(hashFn);
 
@@ -54,20 +55,24 @@ Option kit_HashMap_new(size_t capacityHint, int compareFn(const void *, const vo
     return selfOption;
 }
 
-void kit_HashMap_delete(struct kit_HashMap *self) {
-    if (self) {
-        kit_HashMap_clear(self);
-        kit_Allocator_free(self);
+void kit_HashMap_clear(struct kit_HashMap *const self) {
+    assert(self);
+
+    if (self->size > 0) {
+        struct kit_HashMap_Bucket *current, *next;
+        for (size_t i = 0; i < self->capacity; i++) {
+            for (current = self->buckets[i]; current; current = next) {
+                next = current->next;
+                kit_Allocator_free(current);
+            }
+            self->buckets[i] = NULL;
+        }
+        self->size = 0;
+        self->operationId += 1;
     }
 }
 
-Result kit_HashMap_add(struct kit_HashMap *self, struct kit_Pair *pair) {
-    assert(self);
-    assert(pair);
-    return kit_HashMap_put(self, kit_Pair_getKey(pair), kit_Pair_getValue(pair));
-}
-
-Result kit_HashMap_put(struct kit_HashMap *self, const void *key, void *value) {
+Result kit_HashMap_put(struct kit_HashMap *const self, const void *const key, void *const value) {
     assert(self);
     assert(key);
 
@@ -104,27 +109,7 @@ Result kit_HashMap_put(struct kit_HashMap *self, const void *key, void *value) {
     return Result_error(OutOfMemoryError);
 }
 
-Result kit_HashMap_get(struct kit_HashMap *self, const void *key) {
-    assert(self);
-    assert(key);
-
-    const size_t index = self->hashFn(key) % self->capacity;
-    for (struct kit_HashMap_Bucket *bucket = self->buckets[index]; bucket; bucket = bucket->next) {
-        if (self->compareFn(key, bucket->key) == 0) {
-            return Result_ok(bucket->value);
-        }
-    }
-
-    return Result_error(OutOfRangeError);
-}
-
-bool kit_HashMap_has(struct kit_HashMap *self, const void *key) {
-    assert(self);
-    assert(key);
-    return Result_isOk(kit_HashMap_get(self, key));
-}
-
-Result kit_HashMap_pop(struct kit_HashMap *self, const void *key) {
+Result kit_HashMap_pop(struct kit_HashMap *const self, const void *const key) {
     assert(self);
     assert(key);
 
@@ -144,31 +129,41 @@ Result kit_HashMap_pop(struct kit_HashMap *self, const void *key) {
     return Result_error(OutOfRangeError);
 }
 
-void kit_HashMap_clear(struct kit_HashMap *self) {
+Result kit_HashMap_get(const struct kit_HashMap *const self, const void *const key) {
     assert(self);
+    assert(key);
 
-    if (self->size > 0) {
-        struct kit_HashMap_Bucket *current, *next;
-        for (size_t i = 0; i < self->capacity; i++) {
-            for (current = self->buckets[i]; current; current = next) {
-                next = current->next;
-                kit_Allocator_free(current);
-            }
-            self->buckets[i] = NULL;
+    const size_t index = self->hashFn(key) % self->capacity;
+    for (struct kit_HashMap_Bucket *bucket = self->buckets[index]; bucket; bucket = bucket->next) {
+        if (self->compareFn(key, bucket->key) == 0) {
+            return Result_ok(bucket->value);
         }
-        self->size = 0;
-        self->operationId += 1;
     }
+
+    return Result_error(OutOfRangeError);
 }
 
-size_t kit_HashMap_size(struct kit_HashMap *self) {
+bool kit_HashMap_has(const struct kit_HashMap *const self, const void *const key) {
+    assert(self);
+    assert(key);
+    return Result_isOk(kit_HashMap_get(self, key));
+}
+
+size_t kit_HashMap_size(const struct kit_HashMap *const self) {
     assert(self);
     return self->size;
 }
 
-bool kit_HashMap_isEmpty(struct kit_HashMap *self) {
+bool kit_HashMap_isEmpty(const struct kit_HashMap *const self) {
     assert(self);
     return 0 == self->size;
+}
+
+void kit_HashMap_delete(struct kit_HashMap *self) {
+    if (self) {
+        kit_HashMap_clear(self);
+        kit_Allocator_free(self);
+    }
 }
 
 struct kit_HashMap_Iterator {
@@ -179,7 +174,7 @@ struct kit_HashMap_Iterator {
     struct kit_HashMap_Bucket *next;
 };
 
-Option kit_HashMap_Iterator_new(struct kit_HashMap *container) {
+Option kit_HashMap_Iterator_new(struct kit_HashMap *const container) {
     assert(container);
 
     struct kit_HashMap_Iterator *self;
@@ -194,13 +189,7 @@ Option kit_HashMap_Iterator_new(struct kit_HashMap *container) {
     return selfOption;
 }
 
-void kit_HashMap_Iterator_delete(struct kit_HashMap_Iterator *self) {
-    if (self) {
-        kit_Allocator_free(self);
-    }
-}
-
-void kit_HashMap_Iterator_rewind(struct kit_HashMap_Iterator *self) {
+void kit_HashMap_Iterator_rewind(struct kit_HashMap_Iterator *const self) {
     assert(self);
     assert(self->container);
 
@@ -221,7 +210,7 @@ void kit_HashMap_Iterator_rewind(struct kit_HashMap_Iterator *self) {
     self->next = buckets[currentIndex];
 }
 
-Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_Pair **ref) {
+Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *const self, struct kit_Pair **const ref) {
     assert(self);
     assert(ref);
 
@@ -275,7 +264,7 @@ Result kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_P
     return Result_error(OutOfRangeError);
 }
 
-Result kit_HashMap_Iterator_setLast(struct kit_HashMap_Iterator *self, void *value) {
+Result kit_HashMap_Iterator_setLast(struct kit_HashMap_Iterator *const self, void *const value) {
     assert(self);
 
     if (kit_HashMap_Iterator_isModified(self)) {
@@ -289,8 +278,14 @@ Result kit_HashMap_Iterator_setLast(struct kit_HashMap_Iterator *self, void *val
     }
 }
 
-bool kit_HashMap_Iterator_isModified(struct kit_HashMap_Iterator *self) {
+bool kit_HashMap_Iterator_isModified(const struct kit_HashMap_Iterator *const self) {
     assert(self);
     struct kit_HashMap *container = self->container;
     return NULL == container || self->operationId != container->operationId;
+}
+
+void kit_HashMap_Iterator_delete(struct kit_HashMap_Iterator *self) {
+    if (self) {
+        kit_Allocator_free(self);
+    }
 }

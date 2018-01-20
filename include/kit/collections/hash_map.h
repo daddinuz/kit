@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   December 01, 2017 
+ * Date:   January 20, 2018
  */
 
 #ifndef KIT_HASH_MAP_INCLUDED
@@ -20,6 +20,9 @@ extern "C" {
 #include <kit/compiler_steroids.h>
 #include <kit/collections/pair.h>
 
+/**
+ * TODO
+ */
 struct kit_HashMap;
 
 /**
@@ -35,29 +38,15 @@ struct kit_HashMap;
  */
 extern OptionOf(struct kit_HashMap *)
 kit_HashMap_new(size_t capacityHint, int compareFn(const void *x, const void *y), size_t hashFn(const void *key))
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
- * Deletes an instance of kit_HashMap.
- * If self is NULL no action will be performed.
- *
- * @param self The instance to be deleted.
- */
-extern void
-kit_HashMap_delete(struct kit_HashMap *self);
-
-/**
- * Adds a pair to the map.
- * The operation performed is actually an insert or update.
+ * Removes all elements from the container.
  *
  * @param self The container instance [<b>must not be NULL</b>].
- * @param pair The pair to be added [<b>pair must not be NULL</b>].
- * @return
- * - Ok => wraps the previous value at the given key if present else NULL.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern ResultOf(void *, OutOfMemoryError)
-kit_HashMap_add(struct kit_HashMap *self, struct kit_Pair *pair)
+extern void
+kit_HashMap_clear(struct kit_HashMap *self)
 __attribute__((__nonnull__));
 
 /**
@@ -73,31 +62,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfMemoryError)
 kit_HashMap_put(struct kit_HashMap *self, const void *key, void *value)
-__attribute__((__nonnull__(1, 2)));
-
-/**
- * Gets the value at the given key.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @param key The key to look for [<b>must not be NULL</b>].
- * @return
- * - Ok => wraps the value at the given key.
- * - OutOfRangeError => No such key, nothing has been done.
- */
-extern ResultOf(void *, OutOfRangeError)
-kit_HashMap_get(struct kit_HashMap *self, const void *key)
-__attribute__((__nonnull__));
-
-/**
- * Checks if a key is present in the container.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @param key The key to look for [<b>must not be NULL</b>].
- * @return true if the key is present else false
- */
-extern bool
-kit_HashMap_has(struct kit_HashMap *self, const void *key)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__(1, 2)));
 
 /**
  * Removes an element from the container.
@@ -110,16 +75,31 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_HashMap_pop(struct kit_HashMap *self, const void *key)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
- * Removes all elements from the container, leaving it with a size of 0.
+ * Returns the value at the given key.
  *
  * @param self The container instance [<b>must not be NULL</b>].
+ * @param key The key to look for [<b>must not be NULL</b>].
+ * @return
+ * - Ok => wraps the value at the given key.
+ * - OutOfRangeError => No such key, nothing has been done.
  */
-extern void
-kit_HashMap_clear(struct kit_HashMap *self)
-__attribute__((__nonnull__));
+extern ResultOf(void *, OutOfRangeError)
+kit_HashMap_get(const struct kit_HashMap *self, const void *key)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Checks if a key is present in the container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @param key The key to look for [<b>must not be NULL</b>].
+ * @return true if the key is present else false
+ */
+extern bool
+kit_HashMap_has(const struct kit_HashMap *self, const void *key)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -128,8 +108,8 @@ __attribute__((__nonnull__));
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_HashMap_size(struct kit_HashMap *self)
-__attribute__((__nonnull__));
+kit_HashMap_size(const struct kit_HashMap *self)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -138,9 +118,21 @@ __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_HashMap_isEmpty(struct kit_HashMap *self)
-__attribute__((__nonnull__));
+kit_HashMap_isEmpty(const struct kit_HashMap *self)
+__attribute__((__warn_unused_result__, __nonnull__));
 
+/**
+ * Deletes an instance of kit_HashMap.
+ * If self is NULL no action will be performed.
+ *
+ * @param self The instance to be deleted.
+ */
+extern void
+kit_HashMap_delete(struct kit_HashMap *self);
+
+/**
+ * Map iterators permit to iterate the pairs stored in the map and update retrieved values.
+ */
 struct kit_HashMap_Iterator;
 
 /**
@@ -152,16 +144,7 @@ struct kit_HashMap_Iterator;
  */
 extern OptionOf(struct kit_HashMap_Iterator *)
 kit_HashMap_Iterator_new(struct kit_HashMap *container)
-__attribute__((__nonnull__));
-
-/**
- * Deletes an instance of kit_HashMap_Iterator.
- * If self is NULL no action will be performed.
- *
- * @param self The instance to be deleted.
- */
-extern void
-kit_HashMap_Iterator_delete(struct kit_HashMap_Iterator *self);
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Rewinds the iterator.
@@ -173,9 +156,10 @@ kit_HashMap_Iterator_rewind(struct kit_HashMap_Iterator *self)
 __attribute__((__nonnull__));
 
 /**
- * Gets the next pair in the map.
+ * Returns the next pair in the map.
  *
- * Note: Takes ownership invalidating *ref in case of success.
+ * @attention
+ *  Takes ownership invalidating *ref in case of success.
  *
  * @param self The iterator instance [<b>must not be NULL</b>].
  * @param ref The reference to the pair in which the result will be store [<b>must not be NULL</b>].
@@ -186,7 +170,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(struct kit_Pair *, OutOfRangeError, ConcurrentModificationError)
 kit_HashMap_Iterator_next(struct kit_HashMap_Iterator *self, struct kit_Pair **ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Updates the value of the last retrieved pair.
@@ -209,8 +193,17 @@ __attribute__((__nonnull__(1)));
  * @return true if the container has been modified else false
  */
 extern bool
-kit_HashMap_Iterator_isModified(struct kit_HashMap_Iterator *self)
+kit_HashMap_Iterator_isModified(const struct kit_HashMap_Iterator *self)
 __attribute__((__nonnull__));
+
+/**
+ * Deletes an instance of kit_HashMap_Iterator.
+ * If self is NULL no action will be performed.
+ *
+ * @param self The instance to be deleted.
+ */
+extern void
+kit_HashMap_Iterator_delete(struct kit_HashMap_Iterator *self);
 
 #ifdef __cplusplus
 }

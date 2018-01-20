@@ -3,13 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 22, 2017 
- */
-
-/*
- * Maps are associative containers that store elements formed by a combination of a key value and a mapped value.
- * In a map, the keys are generally used to sort and uniquely identify the elements, while the mapped values
- * store the content associated to this key.
+ * Date:   January 20, 2018
  */
 
 #ifndef KIT_MAP_INCLUDED
@@ -26,6 +20,11 @@ extern "C" {
 #include <kit/compiler_steroids.h>
 #include <kit/collections/pair.h>
 
+/**
+ * Maps are associative containers that store elements formed by a combination of a key value and a mapped value.
+ * In a map, the keys are generally used to sort and uniquely identify the elements, while the mapped values
+ * store the content associated to this key.
+ */
 struct kit_Map;
 
 /**
@@ -41,29 +40,15 @@ struct kit_Map;
  */
 extern OptionOf(struct kit_Map *)
 kit_Map_fromHashMap(size_t capacityHint, int compareFn(const void *x, const void *y), size_t hashFn(const void *key))
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
- * Deletes an instance of kit_Map.
- * If self is NULL no action will be performed.
- *
- * @param self The instance to be deleted.
- */
-extern void
-kit_Map_delete(struct kit_Map *self);
-
-/**
- * Adds a pair to the map.
- * The operation performed is actually an insert or update.
+ * Removes all elements from the container.
  *
  * @param self The container instance [<b>must not be NULL</b>].
- * @param pair The pair to be added [<b>pair must not be NULL</b>].
- * @return
- * - Ok => wraps the previous value at the given key if present else NULL.
- * - OutOfMemoryError => There's no more space left, nothing has been done.
  */
-extern ResultOf(void *, OutOfMemoryError)
-kit_Map_add(struct kit_Map *self, struct kit_Pair *pair)
+extern void
+kit_Map_clear(struct kit_Map *self)
 __attribute__((__nonnull__));
 
 /**
@@ -79,31 +64,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfMemoryError)
 kit_Map_put(struct kit_Map *self, const void *key, void *value)
-__attribute__((__nonnull__(1, 2)));
-
-/**
- * Gets the value at the given key.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @param key The key to look for [<b>must not be NULL</b>].
- * @return
- * - Ok => wraps the value at the given key.
- * - OutOfRangeError => No such key, nothing has been done.
- */
-extern ResultOf(void *, OutOfRangeError)
-kit_Map_get(struct kit_Map *self, const void *key)
-__attribute__((__nonnull__));
-
-/**
- * Checks if a key is present in the container.
- *
- * @param self The container instance [<b>must not be NULL</b>].
- * @param key The key to look for [<b>must not be NULL</b>].
- * @return true if the key is present else false
- */
-extern bool
-kit_Map_has(struct kit_Map *self, const void *key)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__(1, 2)));
 
 /**
  * Removes an element from the container.
@@ -116,16 +77,31 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(void *, OutOfRangeError)
 kit_Map_pop(struct kit_Map *self, const void *key)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
- * Removes all elements from the container, leaving it with a size of 0.
+ * Returns the value at the given key.
  *
  * @param self The container instance [<b>must not be NULL</b>].
+ * @param key The key to look for [<b>must not be NULL</b>].
+ * @return
+ * - Ok => wraps the value at the given key.
+ * - OutOfRangeError => No such key, nothing has been done.
  */
-extern void
-kit_Map_clear(struct kit_Map *self)
-__attribute__((__nonnull__));
+extern ResultOf(void *, OutOfRangeError)
+kit_Map_get(const struct kit_Map *self, const void *key)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Checks if a key is present in the container.
+ *
+ * @param self The container instance [<b>must not be NULL</b>].
+ * @param key The key to look for [<b>must not be NULL</b>].
+ * @return true if the key is present else false
+ */
+extern bool
+kit_Map_has(const struct kit_Map *self, const void *key)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Gets the number of elements currently stored in the container.
@@ -134,8 +110,8 @@ __attribute__((__nonnull__));
  * @return The numbers of elements in the container.
  */
 extern size_t
-kit_Map_size(struct kit_Map *self)
-__attribute__((__nonnull__));
+kit_Map_size(const struct kit_Map *self)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Checks if the container is empty.
@@ -144,9 +120,21 @@ __attribute__((__nonnull__));
  * @return true if the container is empty false otherwise.
  */
 extern bool
-kit_Map_isEmpty(struct kit_Map *self)
-__attribute__((__nonnull__));
+kit_Map_isEmpty(const struct kit_Map *self)
+__attribute__((__warn_unused_result__, __nonnull__));
 
+/**
+ * Deletes an instance of kit_Map.
+ * If self is NULL no action will be performed.
+ *
+ * @param self The instance to be deleted.
+ */
+extern void
+kit_Map_delete(struct kit_Map *self);
+
+/**
+ * Map iterators permit to iterate the pairs stored in the map and update retrieved values.
+ */
 struct kit_Map_Iterator;
 
 /**
@@ -158,16 +146,7 @@ struct kit_Map_Iterator;
  */
 extern OptionOf(struct kit_Map_Iterator *)
 kit_Map_Iterator_new(struct kit_Map *container)
-__attribute__((__nonnull__));
-
-/**
- * Deletes an instance of kit_Map_Iterator.
- * If self is NULL no action will be performed.
- *
- * @param self The instance to be deleted.
- */
-extern void
-kit_Map_Iterator_delete(struct kit_Map_Iterator *self);
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Rewinds the iterator.
@@ -179,9 +158,10 @@ kit_Map_Iterator_rewind(struct kit_Map_Iterator *self)
 __attribute__((__nonnull__));
 
 /**
- * Gets the next pair in the map.
+ * Returns the next pair in the map.
  *
- * Note: Takes ownership invalidating *ref in case of success.
+ * @attention
+ *  Takes ownership invalidating *ref in case of success.
  *
  * @param self The iterator instance [<b>must not be NULL</b>].
  * @param ref The reference to the pair in which the result will be store [<b>must not be NULL</b>].
@@ -192,7 +172,7 @@ __attribute__((__nonnull__));
  */
 extern ResultOf(struct kit_Pair *, OutOfRangeError, ConcurrentModificationError)
 kit_Map_Iterator_next(struct kit_Map_Iterator *self, struct kit_Pair **ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Updates the value of the last retrieved pair.
@@ -215,8 +195,17 @@ __attribute__((__nonnull__(1)));
  * @return true if the container has been modified else false
  */
 extern bool
-kit_Map_Iterator_isModified(struct kit_Map_Iterator *self)
+kit_Map_Iterator_isModified(const struct kit_Map_Iterator *self)
 __attribute__((__nonnull__));
+
+/**
+ * Deletes an instance of kit_Map_Iterator.
+ * If self is NULL no action will be performed.
+ *
+ * @param self The instance to be deleted.
+ */
+extern void
+kit_Map_Iterator_delete(struct kit_Map_Iterator *self);
 
 #ifdef __cplusplus
 }
