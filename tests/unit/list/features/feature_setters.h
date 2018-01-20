@@ -15,7 +15,7 @@ extern "C" {
 
 #include <traits-unit/traits-unit.h>
 
-FeatureDeclare(ListSet);
+FeatureDeclare(ListPut);
 
 #ifdef __cplusplus
 }

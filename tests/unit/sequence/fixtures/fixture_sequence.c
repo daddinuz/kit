@@ -131,38 +131,46 @@ FixtureDefine(SeededSequenceXorListFixture, SeededSequenceXorListSetup, Sequence
 FixtureDefine(EmptySequenceVectorFixture, EmptySequenceVectorSetup, SequenceTeardown);
 FixtureDefine(SeededSequenceVectorFixture, SeededSequenceVectorSetup, SequenceTeardown);
 
-FixtureDefine(SequenceIteratorFromEmptySequenceDoublyListFixture, SequenceIteratorFromEmptySequenceDoublyListSetup, SequenceIteratorTeardown);
-FixtureDefine(SequenceIteratorFromSeededSequenceDoublyListFixture, SequenceIteratorFromSeededSequenceDoublyListSetup, SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromEmptySequenceDoublyListFixture, SequenceIteratorFromEmptySequenceDoublyListSetup,
+              SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromSeededSequenceDoublyListFixture, SequenceIteratorFromSeededSequenceDoublyListSetup,
+              SequenceIteratorTeardown);
 
-FixtureDefine(SequenceIteratorFromEmptySequenceSinglyListFixture, SequenceIteratorFromEmptySequenceSinglyListSetup, SequenceIteratorTeardown);
-FixtureDefine(SequenceIteratorFromSeededSequenceSinglyListFixture, SequenceIteratorFromSeededSequenceSinglyListSetup, SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromEmptySequenceSinglyListFixture, SequenceIteratorFromEmptySequenceSinglyListSetup,
+              SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromSeededSequenceSinglyListFixture, SequenceIteratorFromSeededSequenceSinglyListSetup,
+              SequenceIteratorTeardown);
 
-FixtureDefine(SequenceIteratorFromEmptySequenceXorListFixture, SequenceIteratorFromEmptySequenceXorListSetup, SequenceIteratorTeardown);
-FixtureDefine(SequenceIteratorFromSeededSequenceXorListFixture, SequenceIteratorFromSeededSequenceXorListSetup, SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromEmptySequenceXorListFixture, SequenceIteratorFromEmptySequenceXorListSetup,
+              SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromSeededSequenceXorListFixture, SequenceIteratorFromSeededSequenceXorListSetup,
+              SequenceIteratorTeardown);
 
-FixtureDefine(SequenceIteratorFromEmptySequenceVectorFixture, SequenceIteratorFromEmptySequenceVectorSetup, SequenceIteratorTeardown);
-FixtureDefine(SequenceIteratorFromSeededSequenceVectorFixture, SequenceIteratorFromSeededSequenceVectorSetup, SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromEmptySequenceVectorFixture, SequenceIteratorFromEmptySequenceVectorSetup,
+              SequenceIteratorTeardown);
+FixtureDefine(SequenceIteratorFromSeededSequenceVectorFixture, SequenceIteratorFromSeededSequenceVectorSetup,
+              SequenceIteratorTeardown);
 
 /*
  * Helpers implementations
  */
 struct kit_Sequence *
-setup_sequence_helper(enum kit_SequenceType type, const char *const seeds[], const size_t seeds_size) {
+setup_sequence_helper(const enum kit_SequenceType type, const char *const seeds[], const size_t seeds_size) {
     assert_true((seeds && seeds_size) > 0 || (NULL == seeds && seeds_size == 0));
     struct kit_Sequence *sut = NULL;
 
     switch (type) {
         case KIT_SEQUENCE_TYPE_DOUBLY_LIST:
-            sut = MutableOption_unwrap(kit_Sequence_fromDoublyList());
+            sut = Option_unwrap(kit_Sequence_fromDoublyList());
             break;
         case KIT_SEQUENCE_TYPE_SINGLY_LIST:
-            sut = MutableOption_unwrap(kit_Sequence_fromSinglyList());
+            sut = Option_unwrap(kit_Sequence_fromSinglyList());
             break;
         case KIT_SEQUENCE_TYPE_XOR_LIST:
-            sut = MutableOption_unwrap(kit_Sequence_fromXorList());
+            sut = Option_unwrap(kit_Sequence_fromXorList());
             break;
         case KIT_SEQUENCE_TYPE_VECTOR:
-            sut = MutableOption_unwrap(kit_Sequence_fromVector(16));
+            sut = Option_unwrap(kit_Sequence_fromVector(16));
             break;
         default:
             traits_assert(false);
@@ -172,7 +180,7 @@ setup_sequence_helper(enum kit_SequenceType type, const char *const seeds[], con
 
     if (seeds) {
         for (size_t i = 0; i < seeds_size; i++) {
-            assert_equal(KIT_RESULT_OK, kit_Sequence_pushBack(sut, (void *) seeds[i]));
+            assert_equal(Ok, kit_Sequence_pushBack(sut, (void *) seeds[i]));
         }
     }
 
@@ -189,7 +197,7 @@ setup_sequence_iterator_helper(enum kit_SequenceType type, const char *const *se
     context->sequence = setup_sequence_helper(type, seeds, seeds_size);
     assert_not_null(context->sequence);
 
-    context->sut = MutableOption_unwrap(kit_Sequence_Iterator_new(context->sequence));
+    context->sut = Option_unwrap(kit_Sequence_Iterator_fromBegin(context->sequence));
     assert_not_null(context->sut);
 
     return context;

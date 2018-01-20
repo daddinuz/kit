@@ -15,7 +15,6 @@ extern "C" {
 
 #include <traits-unit/traits-unit.h>
 
-FeatureDeclare(MapAdd);
 FeatureDeclare(MapPut);
 
 #ifdef __cplusplus
