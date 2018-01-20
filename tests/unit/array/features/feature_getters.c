@@ -22,35 +22,37 @@ FeatureDefine(ArrayRaw) {
 }
 
 FeatureDefine(ArrayGet) {
-    void *e;
     size_t i;
+    Result result;
     struct kit_Array *sut = traits_context;
 
     for (i = 0; i < SEEDS_SIZE; i++) {
-        e = NULL;
-        assert_equal(KIT_RESULT_OK, kit_Array_get(sut, &e, i));
-        assert_string_equal(SEEDS[i], (char *) e);
+        result = kit_Array_get(sut, i);
+        assert_true(Result_isOk(result));
+        assert_string_equal(SEEDS[i], (char *) Result_unwrap(result));
     }
 
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Array_get(sut, &e, i));
-    assert_null(e);
+    result = kit_Array_get(sut, i);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }
 
 FeatureDefine(ArrayBack) {
-    void *e = NULL;
+    Result result;
     struct kit_Array *sut = traits_context;
 
-    assert_equal(KIT_RESULT_OK, kit_Array_back(sut, &e));
-    assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) e);
+    result = kit_Array_back(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) Result_unwrap(result));
 }
 
 FeatureDefine(ArrayFront) {
-    void *e = NULL;
+    Result result;
     struct kit_Array *sut = traits_context;
 
-    assert_equal(KIT_RESULT_OK, kit_Array_front(sut, &e));
-    assert_string_equal(SEEDS[0], (char *) e);
+    result = kit_Array_front(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[0], (char *) Result_unwrap(result));
 }
 
 FeatureDefine(ArrayCapacity) {

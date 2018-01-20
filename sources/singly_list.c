@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 25, 2017 
+ * Date:   January 18, 2018
  */
 
 #include <assert.h>
@@ -11,33 +11,23 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/singly_list.h>
 
-/*
- * Private
- */
 struct kit_SinglyList_Node {
     void *element;
     struct kit_SinglyList_Node *next;
 };
 
-static MutableOption
-kit_SinglyList_Node_new(void *e);
+static OptionOf(struct kit_SinglyList_Node *)
+kit_SinglyList_Node_new(void *element)
+__attribute__((__warn_unused_result__));
+
+static ResultOf(struct kit_SinglyList_Node *, OutOfRangeError)
+kit_SinglyList_Node_fetch(const struct kit_SinglyList *list, size_t index)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static void *
 kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
-struct kit_SinglyList_Node_Pair {
-    struct kit_SinglyList_Node *prev;
-    struct kit_SinglyList_Node *base;
-};
-
-static enum kit_Result
-kit_SinglyList_Node_Pair_fetch(struct kit_SinglyList *list, struct kit_SinglyList_Node_Pair *out, size_t index)
-__attribute__((__nonnull__));
-
-/*
- * Public
- */
 struct kit_SinglyList {
     int operationId;
     size_t size;
@@ -45,24 +35,173 @@ struct kit_SinglyList {
     struct kit_SinglyList_Node *back;
 };
 
-MutableOption kit_SinglyList_new(void) {
+OptionOf(struct kit_SinglyList *)
+kit_SinglyList_new(void) {
     struct kit_SinglyList *self;
     return kit_Allocator_calloc(1, sizeof(*self));
 }
 
-void kit_SinglyList_clear(struct kit_SinglyList *self) {
+OneOf(Ok, OutOfRangeError, OutOfMemoryError)
+kit_SinglyList_insert(struct kit_SinglyList *const self, const size_t index, void *element) {
     assert(self);
-    struct kit_SinglyList_Node_Pair pair = {.prev=NULL, .base=self->front};
+    Option newNodeOption;
+    struct kit_SinglyList_Node *newNode = NULL;
 
-    while (pair.base) {
-        pair.prev = pair.base;
-        pair.base = pair.base->next;
-        kit_SinglyList_Node_delete(pair.prev);
+    if (index > self->size) {
+        return OutOfRangeError;
     }
-    self->size = 0;
-    self->back = NULL;
-    self->front = NULL;
+
+    newNodeOption = kit_SinglyList_Node_new(element);
+    if (Option_isNone(newNodeOption)) {
+        return OutOfMemoryError;
+    }
+    newNode = Option_unwrap(newNodeOption);
+
+    if (index == 0) {                           /* insert front */
+        if (self->front) {                      /* non-empty list */
+            struct kit_SinglyList_Node *oldFront = self->front;
+            self->front = newNode;
+            self->front->next = oldFront;
+        } else {                                /* empty list */
+            self->front = self->back = newNode;
+        }
+    } else if (index == self->size) {           /* insert back */
+        self->back->next = newNode;
+        self->back = newNode;
+    } else {                                    /* insert middle */
+        /* OutOfRangeError check at the beginning */
+        struct kit_SinglyList_Node *leftNode = Result_unwrap(kit_SinglyList_Node_fetch(self, index - 1));
+        struct kit_SinglyList_Node *middleNode = leftNode->next;
+        newNode->next = middleNode;
+        leftNode->next = newNode;
+    }
+
+    self->size += 1;
     self->operationId += 1;
+    return Ok;
+}
+
+OneOf(Ok, OutOfMemoryError)
+kit_SinglyList_pushBack(struct kit_SinglyList *const self, void *const element) {
+    assert(self);
+    return kit_SinglyList_insert(self, self->size, element);
+}
+
+OneOf(Ok, OutOfMemoryError)
+kit_SinglyList_pushFront(struct kit_SinglyList *const self, void *const element) {
+    assert(self);
+    return kit_SinglyList_insert(self, 0, element);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_remove(struct kit_SinglyList *const self, const size_t index) {
+    assert(self);
+    struct kit_SinglyList_Node *leftNode, *middleNode;
+
+    if (index >= self->size) {
+        return Result_error(OutOfRangeError);
+    }
+
+    if (index > 0) {
+        Result result = kit_SinglyList_Node_fetch(self, index - 1);
+
+        leftNode = Result_unwrap(result);
+        middleNode = leftNode->next;
+
+        leftNode->next = middleNode->next;
+    } else {
+        leftNode = NULL;
+        middleNode = self->front;
+
+        self->front = middleNode->next;
+    }
+
+    if (NULL == middleNode->next) {
+        self->back = leftNode;
+    }
+
+    self->size -= 1;
+    self->operationId += 1;
+    return Result_ok(kit_SinglyList_Node_delete(middleNode));
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_popBack(struct kit_SinglyList *const self) {
+    assert(self);
+    const size_t size = self->size;
+    return size > 0 ? kit_SinglyList_remove(self, size - 1) : Result_error(OutOfRangeError);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_popFront(struct kit_SinglyList *const self) {
+    assert(self);
+    return kit_SinglyList_remove(self, 0);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_put(struct kit_SinglyList *const self, const size_t index, void *const element) {
+    assert(self);
+    Result result = kit_SinglyList_Node_fetch(self, index);
+
+    if (Result_isOk(result)) {
+        struct kit_SinglyList_Node *node = Result_unwrap(result);
+        void *replacedElement = node->element;
+        node->element = element;
+        return Result_ok(replacedElement);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
+    }
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_get(const struct kit_SinglyList *const self, const size_t index) {
+    assert(self);
+    Result result = kit_SinglyList_Node_fetch(self, index);
+
+    if (Result_isOk(result)) {
+        struct kit_SinglyList_Node *node = Result_unwrap(result);
+        return Result_ok(node->element);
+    } else {
+        assert(OutOfRangeError == Result_inspect(result));
+        return Result_error(OutOfRangeError);
+    }
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_back(const struct kit_SinglyList *const self) {
+    assert(self);
+    const size_t size = self->size;
+    return size > 0 ? kit_SinglyList_get(self, size - 1) : Result_error(OutOfRangeError);
+}
+
+ResultOf(void *, OutOfRangeError)
+kit_SinglyList_front(const struct kit_SinglyList *const self) {
+    assert(self);
+    return kit_SinglyList_get(self, 0);
+}
+
+void
+kit_SinglyList_clear(struct kit_SinglyList *const self) {
+    assert(self);
+
+    for (size_t i = self->size; i > 0; i--) {
+        Result_unwrap(kit_SinglyList_popFront(self));
+    }
+
+    self->operationId += 1;
+}
+
+size_t
+kit_SinglyList_size(const struct kit_SinglyList *const self) {
+    assert(self);
+    return self->size;
+}
+
+bool
+kit_SinglyList_isEmpty(const struct kit_SinglyList *const self) {
+    assert(self);
+    return 0 == self->size;
 }
 
 void kit_SinglyList_delete(struct kit_SinglyList *self) {
@@ -72,156 +211,6 @@ void kit_SinglyList_delete(struct kit_SinglyList *self) {
     }
 }
 
-enum kit_Result kit_SinglyList_insert(struct kit_SinglyList *self, void *e, const size_t index) {
-    assert(self);
-    MutableOption optionNode;
-    struct kit_SinglyList_Node *newNode;
-    enum kit_Result result = KIT_RESULT_OK;
-
-    if (index == 0) {                           /* insert front */
-        optionNode = kit_SinglyList_Node_new(e);
-        if (MutableOption_isSome(optionNode)) {
-            newNode = MutableOption_unwrap(optionNode);
-            if (self->front) {                  /* non-empty list */
-                struct kit_SinglyList_Node *oldFront = self->front;
-                self->front = newNode;
-                self->front->next = oldFront;
-            } else {                            /* empty list */
-                self->front = self->back = newNode;
-            }
-        } else {
-            result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
-        }
-    } else if (index == self->size) {           /* insert back */
-        optionNode = kit_SinglyList_Node_new(e);
-        if (MutableOption_isSome(optionNode)) {
-            newNode = MutableOption_unwrap(optionNode);
-            if (self->back) {                   /* non-empty list */
-                self->back->next = newNode;
-                self->back = newNode;
-            } else {                            /* empty list */
-                self->front = self->back = newNode;
-            }
-        } else {
-            result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
-        }
-    } else {                                    /* insert middle */
-        struct kit_SinglyList_Node_Pair pair = {.prev=NULL, .base=NULL};
-        result = kit_SinglyList_Node_Pair_fetch(self, &pair, index);  /* may return: KIT_RESULT_OUT_OF_RANGE */
-        if (KIT_RESULT_OK == result) {
-            optionNode = kit_SinglyList_Node_new(e);
-            if (MutableOption_isSome(optionNode)) {
-                newNode = MutableOption_unwrap(optionNode);
-                newNode->next = pair.base;
-                pair.prev->next = newNode;
-            } else {
-                result = KIT_RESULT_OUT_OF_MEMORY_ERROR;
-            }
-        }
-    }
-
-    if (KIT_RESULT_OK == result) {
-        self->size += 1;
-        self->operationId += 1;
-    };
-
-    return result;
-}
-
-enum kit_Result kit_SinglyList_pushBack(struct kit_SinglyList *self, void *e) {
-    assert(self);
-    return kit_SinglyList_insert(self, e, self->size);
-}
-
-enum kit_Result kit_SinglyList_pushFront(struct kit_SinglyList *self, void *e) {
-    assert(self);
-    return kit_SinglyList_insert(self, e, 0);
-}
-
-enum kit_Result kit_SinglyList_popBack(struct kit_SinglyList *self, void **out) {
-    assert(self);
-    assert(out);
-    const size_t size = self->size;
-    return size > 0 ? kit_SinglyList_remove(self, out, size - 1) : KIT_RESULT_OUT_OF_RANGE_ERROR;
-}
-
-enum kit_Result kit_SinglyList_popFront(struct kit_SinglyList *self, void **out) {
-    assert(self);
-    assert(out);
-    return kit_SinglyList_remove(self, out, 0);
-}
-
-enum kit_Result kit_SinglyList_remove(struct kit_SinglyList *self, void **out, const size_t index) {
-    assert(self);
-    assert(out);
-    struct kit_SinglyList_Node_Pair pair = {.prev=NULL, .base=NULL};
-    enum kit_Result result = kit_SinglyList_Node_Pair_fetch(self, &pair, index);
-
-    if (KIT_RESULT_OK == result) {
-        if (pair.prev) {
-            pair.prev->next = pair.base->next;
-        } else {
-            self->front = pair.base->next;
-        }
-        if (NULL == pair.base->next) {
-            self->back = pair.prev;
-        }
-        self->size -= 1;
-        self->operationId += 1;
-        *out = kit_SinglyList_Node_delete(pair.base);
-    }
-
-    return result;
-}
-
-enum kit_Result kit_SinglyList_set(struct kit_SinglyList *self, void *e, const size_t index) {
-    assert(self);
-    struct kit_SinglyList_Node_Pair pair = {.prev=NULL, .base=NULL};
-    const enum kit_Result result = kit_SinglyList_Node_Pair_fetch(self, &pair, index);
-
-    if (KIT_RESULT_OK == result) {
-        pair.base->element = e;
-    }
-
-    return result;
-}
-
-enum kit_Result kit_SinglyList_get(struct kit_SinglyList *self, void **out, const size_t index) {
-    assert(self);
-    assert(out);
-    struct kit_SinglyList_Node_Pair pair = {.prev=NULL, .base=NULL};
-    const enum kit_Result result = kit_SinglyList_Node_Pair_fetch(self, &pair, index);
-
-    if (KIT_RESULT_OK == result) {
-        *out = pair.base->element;
-    }
-
-    return result;
-}
-
-enum kit_Result kit_SinglyList_back(struct kit_SinglyList *self, void **out) {
-    assert(self);
-    assert(out);
-    const size_t size = self->size;
-    return size > 0 ? kit_SinglyList_get(self, out, size - 1) : KIT_RESULT_OUT_OF_RANGE_ERROR;
-}
-
-enum kit_Result kit_SinglyList_front(struct kit_SinglyList *self, void **out) {
-    assert(self);
-    assert(out);
-    return kit_SinglyList_get(self, out, 0);
-}
-
-size_t kit_SinglyList_size(struct kit_SinglyList *self) {
-    assert(self);
-    return self->size;
-}
-
-bool kit_SinglyList_isEmpty(struct kit_SinglyList *self) {
-    assert(self);
-    return 0 == self->size;
-}
-
 struct kit_SinglyList_Iterator {
     int operationId;
     struct kit_SinglyList *container;
@@ -229,13 +218,14 @@ struct kit_SinglyList_Iterator {
     struct kit_SinglyList_Node *next;
 };
 
-MutableOption kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container) {
+OptionOf(struct kit_SinglyList_Iterator *)
+kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *const container) {
     assert(container);
     struct kit_SinglyList_Iterator *self;
-    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         self->container = container;
         kit_SinglyList_Iterator_rewindToBegin(self);
     }
@@ -243,7 +233,8 @@ MutableOption kit_SinglyList_Iterator_fromBegin(struct kit_SinglyList *container
     return selfOption;
 }
 
-void kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self) {
+void
+kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *const self) {
     assert(self);
     assert(self->container);
     struct kit_SinglyList *container = self->container;
@@ -253,88 +244,85 @@ void kit_SinglyList_Iterator_rewindToBegin(struct kit_SinglyList_Iterator *self)
     self->next = container->front;
 }
 
-void kit_SinglyList_Iterator_delete(struct kit_SinglyList_Iterator *self) {
-    kit_Allocator_free(self);
-}
-
-enum kit_Result kit_SinglyList_Iterator_next(struct kit_SinglyList_Iterator *self, void **out) {
+ResultOf(void *, OutOfRangeError, ConcurrentModificationError)
+kit_SinglyList_Iterator_next(struct kit_SinglyList_Iterator *const self) {
     assert(self);
-    assert(out);
-    enum kit_Result result;
 
     if (kit_SinglyList_Iterator_isModified(self)) {
-        result = KIT_RESULT_CONCURRENT_MODIFICATION_ERROR;
+        return Result_error(ConcurrentModificationError);
     } else if (self->next) {
-        *out = self->next->element;
+        void *nextElement = self->next->element;
         self->last = self->next;
         self->next = self->next->next;
-        result = KIT_RESULT_OK;
+        return Result_ok(nextElement);
     } else {
-        result = KIT_RESULT_OUT_OF_RANGE_ERROR;
+        return Result_error(OutOfRangeError);
     }
-
-    return result;
 }
 
-enum kit_Result kit_SinglyList_Iterator_setLast(struct kit_SinglyList_Iterator *self, void *e) {
+ResultOf(void *, IllegalStateError, ConcurrentModificationError)
+kit_SinglyList_Iterator_setLast(struct kit_SinglyList_Iterator *const self, void *const element) {
     assert(self);
-    enum kit_Result result = KIT_RESULT_OK;
 
     if (kit_SinglyList_Iterator_isModified(self)) {
-        result = KIT_RESULT_CONCURRENT_MODIFICATION_ERROR;
+        return Result_error(ConcurrentModificationError);
     } else if (self->last) {
-        self->last->element = e;
+        void *replacedElement = self->last->element;
+        self->last->element = element;
+        return Result_ok(replacedElement);
     } else {
-        result = KIT_RESULT_ILLEGAL_STATE_ERROR;
+        return Result_error(IllegalStateError);
     }
-
-    return result;
 }
 
-bool kit_SinglyList_Iterator_isModified(struct kit_SinglyList_Iterator *self) {
+bool
+kit_SinglyList_Iterator_isModified(const struct kit_SinglyList_Iterator *const self) {
     assert(self);
     struct kit_SinglyList *container = self->container;
     return NULL == container || self->operationId != container->operationId;
 }
 
-/*
- * Private implementations
- */
-MutableOption kit_SinglyList_Node_new(void *e) {
-    struct kit_SinglyList_Node *self;
-    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self));
+void kit_SinglyList_Iterator_delete(struct kit_SinglyList_Iterator *self) {
+    if (self) {
+        kit_Allocator_free(self);
+    }
+}
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
-        self->element = e;
+/*
+ * Internals
+ */
+OptionOf(struct kit_SinglyList_Node *)
+kit_SinglyList_Node_new(void *element) {
+    struct kit_SinglyList_Node *self;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self));
+
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        self->element = element;
     }
 
     return selfOption;
 }
 
-void *kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self) {
+ResultOf(struct kit_SinglyList_Node *, OutOfRangeError)
+kit_SinglyList_Node_fetch(const struct kit_SinglyList *const list, const size_t index) {
+    assert(list);
+
+    if (index < list->size) {
+        struct kit_SinglyList_Node *node = list->front;
+        for (size_t i = 0; i < index; i += 1) {
+            node = node->next;
+        }
+        return Result_ok(node);
+    } else {
+        return Result_error(OutOfRangeError);
+    }
+}
+
+void *
+kit_SinglyList_Node_delete(struct kit_SinglyList_Node *self) {
     assert(self);
     void *e = self->element;
     kit_Allocator_free(self);
     return e;
-}
-
-enum kit_Result
-kit_SinglyList_Node_Pair_fetch(struct kit_SinglyList *list, struct kit_SinglyList_Node_Pair *out, const size_t index) {
-    assert(list);
-    assert(out);
-    enum kit_Result result = KIT_RESULT_OK;
-
-    if (index < list->size) {
-        out->prev = NULL;
-        out->base = list->front;
-        for (size_t i = 0; i < index; i += 1) {
-            out->prev = out->base;
-            out->base = out->base->next;
-        }
-    } else {
-        result = KIT_RESULT_OUT_OF_RANGE_ERROR;
-    }
-
-    return result;
 }

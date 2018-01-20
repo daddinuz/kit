@@ -31,14 +31,16 @@ kit_Atom kit_HttpRequest_getUrl(const struct kit_HttpRequest *self) {
     return self->url;
 }
 
-ImmutableOption kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self) {
+Option kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self) {
     assert(self);
-    return ImmutableOption_new(self->headers);
+    // FIXME
+    return Option_new((void *) self->headers);
 }
 
-ImmutableOption kit_HttpRequest_getBody(const struct kit_HttpRequest *self) {
+Option kit_HttpRequest_getBody(const struct kit_HttpRequest *self) {
     assert(self);
-    return ImmutableOption_new(self->body);
+    // FIXME
+    return Option_new((void *) self->body);
 }
 
 size_t kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self) {
@@ -73,27 +75,27 @@ struct kit_HttpRequestBuilder {
     struct kit_HttpRequest *request;
 };
 
-MutableOption kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url) {
+Option kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url) {
     assert(url);
     bool teardownRequired = false;
     struct kit_HttpRequest *request = NULL;
     struct kit_HttpRequestBuilder *self = NULL;
-    MutableOption selfOption, requestOption;
+    Option selfOption, requestOption;
 
     do {
         selfOption = kit_Allocator_malloc(sizeof(*self));
-        if (MutableOption_isNone(selfOption)) {
+        if (Option_isNone(selfOption)) {
             teardownRequired = true;
             break;
         }
-        self = MutableOption_unwrap(selfOption);
+        self = Option_unwrap(selfOption);
 
         requestOption = kit_Allocator_malloc(sizeof(*request));
-        if (MutableOption_isNone(requestOption)) {
+        if (Option_isNone(requestOption)) {
             teardownRequired = true;
             break;
         }
-        request = MutableOption_unwrap(requestOption);
+        request = Option_unwrap(requestOption);
 
         request->method = method;
         request->url = url;
@@ -109,7 +111,7 @@ MutableOption kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom ur
     if (teardownRequired) {
         kit_Allocator_free(request);
         kit_Allocator_free(self);
-        selfOption = MutableOption_None;
+        selfOption = None;
     }
 
     return selfOption;
@@ -120,7 +122,7 @@ kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, kit_Strin
     assert(self);
     assert(ref);
     assert(*ref);
-    self->request->headers = ImmutableOption_unwrap(kit_String_shrink(ref));
+    self->request->headers = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }
@@ -130,7 +132,7 @@ kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, kit_String *
     assert(self);
     assert(ref);
     assert(*ref);
-    self->request->body = ImmutableOption_unwrap(kit_String_shrink(ref));
+    self->request->body = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }

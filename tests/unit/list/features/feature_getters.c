@@ -12,34 +12,70 @@
 #include <kit/collections/list.h>
 
 FeatureDefine(ListGet) {
-    size_t i;
-    void *e;
+    Result result;
     struct kit_List *sut = traits_context;
-    for (i = 0; i < SEEDS_SIZE; i++) {
-        e = NULL;
-        assert_equal(KIT_RESULT_OK, kit_List_get(sut, &e, i));
-        assert_string_equal(SEEDS[i], (char *) e);
+
+    assert_not_null(sut);
+    assert_false(kit_List_isEmpty(sut));
+    assert_equal(SEEDS_SIZE, kit_List_size(sut));
+
+    for (size_t i = 0; i < SEEDS_SIZE; i++) {
+        result = kit_List_get(sut, i);
+        assert_true(Result_isOk(result));
+        assert_string_equal(SEEDS[i], Result_unwrap(result));
     }
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_List_get(sut, &e, i));
-    assert_null(e);
+
+    result = kit_List_get(sut, SEEDS_SIZE);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
+
+    kit_List_clear(sut);
+    assert_true(kit_List_isEmpty(sut));
+    assert_equal(0, kit_List_size(sut));
+
+    result = kit_List_get(sut, 0);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }
 
 FeatureDefine(ListBack) {
-    void *e = NULL;
+    Result result;
     struct kit_List *sut = traits_context;
-    assert_equal(KIT_RESULT_OK, kit_List_back(sut, &e));
-    assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) e);
+
+    assert_not_null(sut);
+    assert_false(kit_List_isEmpty(sut));
+    assert_equal(SEEDS_SIZE, kit_List_size(sut));
+
+    result = kit_List_back(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[SEEDS_SIZE - 1], Result_unwrap(result));
+
+    kit_List_clear(sut);
+    assert_true(kit_List_isEmpty(sut));
+    assert_equal(0, kit_List_size(sut));
+
+    result = kit_List_back(sut);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }
 
 FeatureDefine(ListFront) {
-    void *e = NULL;
+    Result result;
     struct kit_List *sut = traits_context;
-    assert_equal(KIT_RESULT_OK, kit_List_front(sut, &e));
-    assert_string_equal(SEEDS[0], (char *) e);
-}
 
-FeatureDefine(ListSize) {
-    struct kit_List *sut = traits_context;
+    assert_not_null(sut);
+    assert_false(kit_List_isEmpty(sut));
     assert_equal(SEEDS_SIZE, kit_List_size(sut));
+
+    result = kit_List_front(sut);
+    assert_true(Result_isOk(result));
+    assert_string_equal(SEEDS[0], Result_unwrap(result));
+
+    kit_List_clear(sut);
+    assert_true(kit_List_isEmpty(sut));
+    assert_equal(0, kit_List_size(sut));
+
+    result = kit_List_front(sut);
+    assert_true(Result_isError(result));
+    assert_equal(OutOfRangeError, Result_inspect(result));
 }

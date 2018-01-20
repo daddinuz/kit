@@ -33,11 +33,12 @@ extern kit_Atom
 kit_HttpResponse_getUrl(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(kit_String)
+extern
+OptionOf(kit_String)
 kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(kit_String)
+extern OptionOf(kit_String)
 kit_HttpResponse_getBody(const struct kit_HttpResponse *self)
 __attribute__((__nonnull__));
 
@@ -53,7 +54,7 @@ kit_HttpResponse_delete(const struct kit_HttpResponse *self);
  */
 struct kit_HttpResponseBuilder;
 
-extern MutableOptional(struct kit_HttpResponseBuilder *)
+extern OptionOf(struct kit_HttpResponseBuilder *)
 kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request)
 __attribute__((__nonnull__));
 

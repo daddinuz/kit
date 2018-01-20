@@ -15,14 +15,34 @@ extern "C" {
 
 #include <stddef.h>
 #include <option/option.h>
+#include <kit/compiler_steroids.h>
 
-extern MutableOptional(void *) __kit_Allocator_malloc(const char *file, int line, size_t size);
-extern MutableOptional(void *) __kit_Allocator_calloc(const char *file, int line, size_t numberOfMembers, size_t memberSize);
-extern MutableOptional(void *) __kit_Allocator_ralloc(const char *file, int line, void *ptr, size_t newSize);
-extern MutableOptional(void *) __kit_Allocator_copy(const char *file, int line, void *dst, const void *src, size_t size);
-extern MutableOptional(void *) __kit_Allocator_move(const char *file, int line, void *dst, const void *src, size_t size);
-extern MutableOptional(void *) __kit_Allocator_set(const char *file, int line, void *ptr, int value, size_t size);
-extern void __kit_Allocator_free(const char *file, int line, void *ptr);
+extern OptionOf(void *)
+__kit_Allocator_malloc(const char *file, int line, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__(1)));
+
+extern OptionOf(void *)
+__kit_Allocator_calloc(const char *file, int line, size_t numberOfMembers, size_t memberSize)
+__attribute__((__warn_unused_result__, __nonnull__(1)));
+
+extern OptionOf(void *)
+__kit_Allocator_ralloc(const char *file, int line, void *ptr, size_t newSize)
+__attribute__((__warn_unused_result__, __nonnull__(1)));
+
+extern OptionOf(void *)
+__kit_Allocator_copy(const char *file, int line, void *dst, const void *src, size_t size)
+__attribute__((__nonnull__(1)));
+
+extern OptionOf(void *)
+__kit_Allocator_move(const char *file, int line, void *dst, const void *src, size_t size)
+__attribute__((__nonnull__(1)));
+
+extern OptionOf(void *)
+__kit_Allocator_set(const char *file, int line, void *ptr, int value, size_t size)
+__attribute__((__nonnull__(1)));
+
+extern void __kit_Allocator_free(const char *file, int line, void *ptr)
+__attribute__((__nonnull__(1)));
 
 #define kit_Allocator_malloc(size)                          __kit_Allocator_malloc(__FILE__, __LINE__, (size))
 #define kit_Allocator_calloc(numberOfMembers, memberSize)   __kit_Allocator_calloc(__FILE__, __LINE__, (numberOfMembers), (memberSize))

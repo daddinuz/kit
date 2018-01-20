@@ -15,7 +15,7 @@ extern "C" {
 
 #include <traits-unit/traits-unit.h>
 
-FeatureDeclare(SequenceSet);
+FeatureDeclare(SequencePut);
 
 #ifdef __cplusplus
 }

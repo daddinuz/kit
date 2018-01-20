@@ -29,14 +29,16 @@ kit_Atom kit_HttpResponse_getUrl(const struct kit_HttpResponse *self) {
     return self->url;
 }
 
-ImmutableOption kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self) {
+Option kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self) {
     assert(self);
-    return ImmutableOption_new(self->headers);
+    // FIXME
+    return Option_new((void *) self->headers);
 }
 
-ImmutableOption kit_HttpResponse_getBody(const struct kit_HttpResponse *self) {
+Option kit_HttpResponse_getBody(const struct kit_HttpResponse *self) {
     assert(self);
-    return ImmutableOption_new(self->body);
+    // FIXME
+    return Option_new((void *) self->body);
 }
 
 enum kit_HttpStatus kit_HttpResponse_getStatus(const struct kit_HttpResponse *self) {
@@ -57,27 +59,27 @@ struct kit_HttpResponseBuilder {
     struct kit_HttpResponse *response;
 };
 
-MutableOption kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request) {
+Option kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request) {
     assert(request);
     bool teardownRequired = false;
     struct kit_HttpResponse *response = NULL;
     struct kit_HttpResponseBuilder *self = NULL;
-    MutableOption selfOption, responseOption;
+    Option selfOption, responseOption;
 
     do {
         selfOption = kit_Allocator_malloc(sizeof(*self));
-        if (MutableOption_isNone(selfOption)) {
+        if (Option_isNone(selfOption)) {
             teardownRequired = true;
             break;
         }
-        self = MutableOption_unwrap(selfOption);
+        self = Option_unwrap(selfOption);
 
         responseOption = kit_Allocator_malloc(sizeof(*response));
-        if (MutableOption_isNone(responseOption)) {
+        if (Option_isNone(responseOption)) {
             teardownRequired = true;
             break;
         }
-        response = MutableOption_unwrap(responseOption);
+        response = Option_unwrap(responseOption);
 
         response->request = request;
         response->url = kit_HttpRequest_getUrl(request);
@@ -90,7 +92,7 @@ MutableOption kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request)
     if (teardownRequired) {
         kit_Allocator_free(response);
         kit_Allocator_free(self);
-        selfOption = MutableOption_None;
+        selfOption = None;
     }
 
     return selfOption;
@@ -116,7 +118,7 @@ kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, kit_Str
     assert(self);
     assert(ref);
     assert(*ref);
-    self->response->headers = ImmutableOption_unwrap(kit_String_shrink(ref));
+    self->response->headers = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }
@@ -126,7 +128,7 @@ kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, kit_String
     assert(self);
     assert(ref);
     assert(*ref);
-    self->response->body = ImmutableOption_unwrap(kit_String_shrink(ref));
+    self->response->body = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
     return self;
 }

@@ -14,13 +14,11 @@
  * 
  */
 int main() {
-    struct kit_Array *array = MutableOption_unwrap(kit_Array_from("Hello", " ", "World", "!"));
-    const size_t capacity = kit_Array_capacity(array);
+    struct kit_Array *array = Option_unwrap(kit_Array_from("Hello", " ", "World", "!"));
 
-    for (size_t index = 0; index < capacity; index++) {
-        void *element = NULL;
-        kit_Array_get(array, &element, index);
-        printf("[%zu]: %s\n", index, (char *) element);
+    for (size_t index = 0, _CAPACITY = kit_Array_capacity(array); index < _CAPACITY; index++) {
+        const char *element = Result_unwrap(kit_Array_get(array, index));
+        printf("[%zu]: %s\n", index, element);
     }
 
     kit_Array_delete(kit_move((void **) &array));

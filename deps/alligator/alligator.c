@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   December 02, 2017
+ * Date:   January 10, 2018
  */
 
 #include "alligator.h"
@@ -21,28 +21,28 @@
 #include <stdlib.h>
 #include <memory.h>
 
-MutableOption alligator_malloc(const size_t size) {
-    return MutableOption_new(malloc(size));
+Option alligator_malloc(const size_t size) {
+    return Option_new(malloc(size));
 }
 
-MutableOption alligator_calloc(const size_t numberOfMembers, const size_t memberSize) {
-    return MutableOption_new(calloc(numberOfMembers, memberSize));
+Option alligator_calloc(const size_t numberOfMembers, const size_t memberSize) {
+    return Option_new(calloc(numberOfMembers, memberSize));
 }
 
-MutableOption alligator_ralloc(void *ptr, const size_t newSize) {
-    return MutableOption_new(realloc(ptr, newSize));
+Option alligator_ralloc(void *ptr, const size_t newSize) {
+    return Option_new(realloc(ptr, newSize));
 }
 
-MutableOption alligator_copy(void *dst, const void *src, size_t size) {
-    return MutableOption_new(memcpy(dst, src, size));
+Option alligator_copy(void *dst, const void *src, size_t size) {
+    return Option_new(memcpy(dst, src, size));
 }
 
-MutableOption alligator_move(void *dst, const void *src, size_t size) {
-    return MutableOption_new(memmove(dst, src, size));
+Option alligator_move(void *dst, const void *src, size_t size) {
+    return Option_new(memmove(dst, src, size));
 }
 
-MutableOption alligator_set(void *ptr, int value, size_t size) {
-    return MutableOption_new(memset(ptr, value, size));
+Option alligator_set(void *ptr, int value, size_t size) {
+    return Option_new(memset(ptr, value, size));
 }
 
 void alligator_free(void *ptr) {

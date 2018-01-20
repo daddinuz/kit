@@ -34,11 +34,11 @@ extern kit_Atom
 kit_HttpRequest_getUrl(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(kit_String)
+extern OptionOf(kit_String)
 kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
-extern ImmutableOptional(kit_String)
+extern OptionOf(kit_String)
 kit_HttpRequest_getBody(const struct kit_HttpRequest *self)
 __attribute__((__nonnull__));
 
@@ -61,7 +61,7 @@ __attribute__((__nonnull__));
 // *************************************
 
 // takes ownership
-extern ImmutableOptional(struct kit_HttpResponse *)
+extern OptionOf(struct kit_HttpResponse *)
 kit_HttpRequest_fire(const struct kit_HttpRequest **ref)
 __attribute__((__nonnull__));
 
@@ -75,7 +75,7 @@ kit_HttpRequest_delete(const struct kit_HttpRequest *self);
  */
 struct kit_HttpRequestBuilder;
 
-extern MutableOptional(struct kit_HttpRequestBuilder *)
+extern OptionOf(struct kit_HttpRequestBuilder *)
 kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url)
 __attribute__((__nonnull__));
 

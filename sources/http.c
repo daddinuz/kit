@@ -17,14 +17,14 @@ kit_HttpRequest_initialize(void);
 static size_t
 kit_HttpRequest_writeFn(void *content, size_t memberSize, size_t membersCount, void *userData);
 
-ImmutableOption kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
+Option kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
     assert(ref);
     assert(*ref);
 
     if (!kit_HttpRequest_initialize()) {
         // TODO error handling
         // Out of memory
-        return ImmutableOption_None;
+        return None;
     }
 
     bool teardownRequired = true;
@@ -34,36 +34,35 @@ ImmutableOption kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
     struct curl_slist *curlHeaders = NULL;
     CURL *curlHandler = NULL;
 
-    MutableOption mutableOption;
-    ImmutableOption immutableOption;
+    Option option;
 
     do {
-        mutableOption = kit_HttpResponseBuilder_new(request);
-        if (MutableOption_isNone(mutableOption)) {
+        option = kit_HttpResponseBuilder_new(request);
+        if (Option_isNone(option)) {
             // TODO error handling
             // Out of memory
             break;
         }
-        responseBuilder = MutableOption_unwrap(mutableOption);
+        responseBuilder = Option_unwrap(option);
 
-        immutableOption = kit_String_new(0);
-        if (ImmutableOption_isNone(immutableOption)) {
+        option = kit_String_new(0);
+        if (Option_isNone(option)) {
             // TODO error handling
             // Out of memory
             break;
         }
-        responseBody = ImmutableOption_unwrap(immutableOption);
+        responseBody = Option_unwrap(option);
 
-        immutableOption = kit_String_new(0);
-        if (ImmutableOption_isNone(immutableOption)) {
+        option = kit_String_new(0);
+        if (Option_isNone(option)) {
             // TODO error handling
             // Out of memory
             break;
         }
-        responseHeaders = ImmutableOption_unwrap(immutableOption);
+        responseHeaders = Option_unwrap(option);
 
-        if (ImmutableOption_isSome(kit_HttpRequest_getHeaders(request))) {
-            curlHeaders = curl_slist_append(curlHeaders, ImmutableOption_unwrap(kit_HttpRequest_getHeaders(request)));
+        if (Option_isSome(kit_HttpRequest_getHeaders(request))) {
+            curlHeaders = curl_slist_append(curlHeaders, Option_unwrap(kit_HttpRequest_getHeaders(request)));
             if (NULL == curlHeaders) {
                 // TODO error handling
                 // Out of memory
@@ -86,8 +85,8 @@ ImmutableOption kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
         curl_easy_setopt(curlHandler, CURLOPT_HTTPHEADER, curlHeaders);
 
         // Set request body
-        if (ImmutableOption_isSome(kit_HttpRequest_getBody(request))) {
-            kit_String body = ImmutableOption_unwrap(kit_HttpRequest_getBody(request));
+        if (Option_isSome(kit_HttpRequest_getBody(request))) {
+            kit_String body = Option_unwrap(kit_HttpRequest_getBody(request));
             curl_easy_setopt(curlHandler, CURLOPT_POSTFIELDS, body);
             curl_easy_setopt(curlHandler, CURLOPT_POSTFIELDSIZE, kit_String_size(body));
         }
@@ -123,16 +122,16 @@ ImmutableOption kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
             if (kit_HttpRequest_getFollowLocation(request)) {
                 char *tmp = NULL;
                 curl_easy_getinfo(curlHandler, CURLINFO_EFFECTIVE_URL, &tmp);
-                immutableOption = kit_Atom_fromLiteral(tmp);
+                option = kit_Atom_fromLiteral(tmp);
             } else {
-                immutableOption = kit_Atom_fromLiteral(kit_HttpRequest_getUrl(request));
+                option = kit_Atom_fromLiteral(kit_HttpRequest_getUrl(request));
             }
-            if (ImmutableOption_isNone(immutableOption)) {
+            if (Option_isNone(option)) {
                 // TODO error handling
                 // Out of memory
                 break;
             }
-            kit_HttpResponseBuilder_setUrl(responseBuilder, ImmutableOption_unwrap(immutableOption));
+            kit_HttpResponseBuilder_setUrl(responseBuilder, Option_unwrap(option));
 
             // set response status
             enum kit_HttpStatus responseStatus;
@@ -158,10 +157,11 @@ ImmutableOption kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
         kit_HttpResponseBuilder_delete(responseBuilder);
         kit_String_delete(responseBody);
         kit_String_delete(responseHeaders);
-        return ImmutableOption_None;
+        return None;
     } else {
         *ref = NULL;
-        return ImmutableOption_new(kit_HttpResponseBuilder_build(&responseBuilder));
+        // FIXME
+        return Option_new((void *) kit_HttpResponseBuilder_build(&responseBuilder));
     }
 }
 
@@ -180,10 +180,10 @@ bool kit_HttpRequest_initialize(void) {
 size_t kit_HttpRequest_writeFn(void *content, size_t memberSize, size_t membersCount, void *userData) {
     kit_String *buffer = userData;
     const size_t contentSize = memberSize * membersCount;
-    ImmutableOption option = kit_String_appendBytes(buffer, content, contentSize);
+    Option option = kit_String_appendBytes(buffer, content, contentSize);
 
-    if (ImmutableOption_isSome(option)) {
-        *buffer = ImmutableOption_unwrap(option);
+    if (Option_isSome(option)) {
+        *buffer = Option_unwrap(option);
         return contentSize;
     } else {
         return CURL_MAX_WRITE_SIZE;
