@@ -9,7 +9,7 @@
 #include <seeds.h>
 #include <traits/traits.h>
 #include <fixtures/fixture_stack.h>
-#include <kit/collections/stack.h.old>
+#include <kit/collections/stack.h>
 
 /*
  * kit_StackType
@@ -93,16 +93,16 @@ struct kit_Stack *setup_helper(enum kit_StackType type, const char *const seeds[
 
     switch (type) {
         case KIT_STACK_TYPE_DOUBLY_LIST:
-            sut = MutableOption_unwrap(kit_Stack_fromDoublyList());
+            sut = Option_unwrap(kit_Stack_fromDoublyList());
             break;
         case KIT_STACK_TYPE_SINGLY_LIST:
-            sut = MutableOption_unwrap(kit_Stack_fromSinglyList());
+            sut = Option_unwrap(kit_Stack_fromSinglyList());
             break;
         case KIT_STACK_TYPE_XOR_LIST:
-            sut = MutableOption_unwrap(kit_Stack_fromXorList());
+            sut = Option_unwrap(kit_Stack_fromXorList());
             break;
         case KIT_STACK_TYPE_VECTOR:
-            sut = MutableOption_unwrap(kit_Stack_fromVector(0));
+            sut = Option_unwrap(kit_Stack_fromVector(0));
             break;
         default:
             traits_assert(false);
@@ -112,7 +112,7 @@ struct kit_Stack *setup_helper(enum kit_StackType type, const char *const seeds[
 
     if (seeds) {
         for (size_t i = 0; i < seeds_size; i++) {
-            assert_equal(KIT_RESULT_OK, kit_Stack_push(sut, (void *) seeds[i]));
+            assert_equal(Ok, kit_Stack_push(sut, (void *) seeds[i]));
         }
     }
 

@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 26, 2017 
+ * Date:   January 20, 2018
  */
 
 #include <assert.h>
@@ -17,117 +17,142 @@
 
 typedef void *kit_Stack_Super;
 
-typedef void (*kit_Stack_Super_deleteFn)(kit_Stack_Super);
-typedef enum kit_Result (*kit_Stack_Super_pushFn)(kit_Stack_Super, void *);
-typedef enum kit_Result (*kit_Stack_Super_popFn)(kit_Stack_Super, void **);
-typedef enum kit_Result (*kit_Stack_Super_backFn)(kit_Stack_Super, void **);
+typedef Error (*kit_Stack_Super_pushFn)(kit_Stack_Super, void *);
+typedef Result (*kit_Stack_Super_popFn)(kit_Stack_Super);
+typedef Result (*kit_Stack_Super_backFn)(kit_Stack_Super);
 typedef size_t (*kit_Stack_Super_sizeFn)(kit_Stack_Super);
 typedef bool (*kit_Stack_Super_isEmptyFn)(kit_Stack_Super);
+typedef void (*kit_Stack_Super_deleteFn)(kit_Stack_Super);
 
 struct kit_Stack {
     kit_Stack_Super super;
-    kit_Stack_Super_deleteFn fnDelete;
     kit_Stack_Super_pushFn fnPush;
     kit_Stack_Super_popFn fnPop;
     kit_Stack_Super_backFn fnBack;
     kit_Stack_Super_sizeFn fnSize;
     kit_Stack_Super_isEmptyFn fnIsEmpty;
+    kit_Stack_Super_deleteFn fnDelete;
 };
 
-MutableOption kit_Stack_fromDoublyList(void) {
+Option kit_Stack_fromDoublyList(void) {
     struct kit_Stack *self;
-    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         superOption = kit_DoublyList_new();
-        if (MutableOption_isSome(superOption)) {
-            self->super = MutableOption_unwrap(superOption);
-            self->fnDelete = (kit_Stack_Super_deleteFn) kit_DoublyList_delete;
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->fnPush = (kit_Stack_Super_pushFn) kit_DoublyList_pushBack;
             self->fnPop = (kit_Stack_Super_popFn) kit_DoublyList_popBack;
             self->fnBack = (kit_Stack_Super_backFn) kit_DoublyList_back;
             self->fnSize = (kit_Stack_Super_sizeFn) kit_DoublyList_size;
             self->fnIsEmpty = (kit_Stack_Super_isEmptyFn) kit_DoublyList_isEmpty;
+            self->fnDelete = (kit_Stack_Super_deleteFn) kit_DoublyList_delete;
         } else {
             kit_Allocator_free(self);
-            selfOption = MutableOption_None;
+            selfOption = None;
         }
     }
 
     return selfOption;
 }
 
-MutableOption kit_Stack_fromSinglyList(void) {
+Option kit_Stack_fromSinglyList(void) {
     struct kit_Stack *self;
-    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         superOption = kit_SinglyList_new();
-        if (MutableOption_isSome(superOption)) {
-            self->super = MutableOption_unwrap(superOption);
-            self->fnDelete = (kit_Stack_Super_deleteFn) kit_SinglyList_delete;
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->fnPush = (kit_Stack_Super_pushFn) kit_SinglyList_pushFront;
             self->fnPop = (kit_Stack_Super_popFn) kit_SinglyList_popFront;
             self->fnBack = (kit_Stack_Super_backFn) kit_SinglyList_front;
             self->fnSize = (kit_Stack_Super_sizeFn) kit_SinglyList_size;
             self->fnIsEmpty = (kit_Stack_Super_isEmptyFn) kit_SinglyList_isEmpty;
+            self->fnDelete = (kit_Stack_Super_deleteFn) kit_SinglyList_delete;
         } else {
             kit_Allocator_free(self);
-            selfOption = MutableOption_None;
+            selfOption = None;
         }
     }
 
     return selfOption;
 }
 
-MutableOption kit_Stack_fromXorList(void) {
+Option kit_Stack_fromXorList(void) {
     struct kit_Stack *self;
-    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
         superOption = kit_XorList_new();
-        if (MutableOption_isSome(superOption)) {
-            self->super = MutableOption_unwrap(superOption);
-            self->fnDelete = (kit_Stack_Super_deleteFn) kit_XorList_delete;
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->fnPush = (kit_Stack_Super_pushFn) kit_XorList_pushBack;
             self->fnPop = (kit_Stack_Super_popFn) kit_XorList_popBack;
             self->fnBack = (kit_Stack_Super_backFn) kit_XorList_back;
             self->fnSize = (kit_Stack_Super_sizeFn) kit_XorList_size;
             self->fnIsEmpty = (kit_Stack_Super_isEmptyFn) kit_XorList_isEmpty;
+            self->fnDelete = (kit_Stack_Super_deleteFn) kit_XorList_delete;
         } else {
             kit_Allocator_free(self);
-            selfOption = MutableOption_None;
+            selfOption = None;
         }
     }
 
     return selfOption;
 }
 
-MutableOption kit_Stack_fromVector(size_t capacityHint) {
+Option kit_Stack_fromVector(size_t capacityHint) {
     struct kit_Stack *self;
-    MutableOption selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
+    Option selfOption = kit_Allocator_calloc(1, sizeof(*self)), superOption;
 
-    if (MutableOption_isSome(selfOption)) {
-        self = MutableOption_unwrap(selfOption);
-        superOption = kit_Vector_from(capacityHint);
-        if (MutableOption_isSome(superOption)) {
-            self->super = MutableOption_unwrap(superOption);
-            self->fnDelete = (kit_Stack_Super_deleteFn) kit_Vector_delete;
+    if (Option_isSome(selfOption)) {
+        self = Option_unwrap(selfOption);
+        superOption = kit_Vector_withCapacity(capacityHint);
+        if (Option_isSome(superOption)) {
+            self->super = Option_unwrap(superOption);
             self->fnPush = (kit_Stack_Super_pushFn) kit_Vector_pushBack;
             self->fnPop = (kit_Stack_Super_popFn) kit_Vector_popBack;
             self->fnBack = (kit_Stack_Super_backFn) kit_Vector_back;
             self->fnSize = (kit_Stack_Super_sizeFn) kit_Vector_size;
             self->fnIsEmpty = (kit_Stack_Super_isEmptyFn) kit_Vector_isEmpty;
+            self->fnDelete = (kit_Stack_Super_deleteFn) kit_Vector_delete;
         } else {
             kit_Allocator_free(self);
-            selfOption = MutableOption_None;
+            selfOption = None;
         }
     }
 
     return selfOption;
+}
+
+Error kit_Stack_push(struct kit_Stack *const self, void *const element) {
+    assert(self);
+    return self->fnPush(self->super, element);
+}
+
+Result kit_Stack_pop(struct kit_Stack *const self) {
+    assert(self);
+    return self->fnPop(self->super);
+}
+
+Result kit_Stack_back(const struct kit_Stack *const self) {
+    assert(self);
+    return self->fnBack(self->super);
+}
+
+size_t kit_Stack_size(const struct kit_Stack *const self) {
+    assert(self);
+    return self->fnSize(self->super);
+}
+
+bool kit_Stack_isEmpty(const struct kit_Stack *const self) {
+    assert(self);
+    return self->fnIsEmpty(self->super);
 }
 
 void kit_Stack_delete(struct kit_Stack *self) {
@@ -135,31 +160,4 @@ void kit_Stack_delete(struct kit_Stack *self) {
         self->fnDelete(self->super);
         kit_Allocator_free(self);
     }
-}
-
-enum kit_Result kit_Stack_push(struct kit_Stack *self, void *e) {
-    assert(self);
-    return self->fnPush(self->super, e);
-}
-
-enum kit_Result kit_Stack_pop(struct kit_Stack *self, void **out) {
-    assert(self);
-    assert(out);
-    return self->fnPop(self->super, out);
-}
-
-enum kit_Result kit_Stack_back(struct kit_Stack *self, void **out) {
-    assert(self);
-    assert(out);
-    return self->fnBack(self->super, out);
-}
-
-size_t kit_Stack_size(struct kit_Stack *self) {
-    assert(self);
-    return self->fnSize(self->super);
-}
-
-bool kit_Stack_isEmpty(struct kit_Stack *self) {
-    assert(self);
-    return self->fnIsEmpty(self->super);
 }
