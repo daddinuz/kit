@@ -3,16 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   November 21, 2017 
- */
-
-/*
- * Atoms are pointers to a unique, immutable, sequence of zero or more arbitrary bytes.
- * There is only a single occurrence of any atom, which is why it’s called an atom.
- * Two atoms are identical if they point to the same location.
- * One of the advantages of atoms is that comparing two byte sequences for equality is performed by simply comparing pointers.
- * Another advantage is that using atoms saves space because there’s only one occurrence of each sequence.
- * Atoms are often used as keys in data structures that are indexed by sequences of arbitrary bytes instead of by integers.
+ * Date:   January 18, 2018
  */
 
 #ifndef KIT_ATOM_INCLUDED
@@ -28,79 +19,68 @@ extern "C" {
 #include <kit/compiler_steroids.h>
 
 /**
- * kit_Atom interface.
+ * Atoms are pointers to a unique, immutable, sequence of zero or more arbitrary bytes.
+ * There is only a single occurrence of any atom, which is why it’s called an atom.
+ * Two atoms are identical if they point to the same location.
+ * One of the advantages of atoms is that comparing two byte sequences for equality is performed by simply comparing pointers.
+ * Another advantage is that using atoms saves space because there’s only one occurrence of each sequence.
+ * Atoms are often used as keys in data structures that are indexed by sequences of arbitrary bytes instead of by integers.
  */
 typedef const char *kit_Atom;
 
 /**
- * Gets the kit_Atom instance or creates if not exists from a pointer
- * to a sequence of bytes and the number of bytes in that sequence.
+ * Gets the kit_Atom instance or creates a new one if not exists from a sequence of bytes.
  *
- * If the atom already exists, increments the hits of the atom,
- * otherwise adds a new atom to the table of atoms, and returns the new atom instance.
- *
- * An atom is always terminated with a null character, which kit_Atom_new adds when necessary.
- *
- * Checked runtime errors:
- *      - @param s must not be NULL.
- *
- * @param s The sequence of bytes.
+ * @param bytes The sequence of bytes [<b>must not be NULL</b>].
  * @param length The length of the sequence.
- * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
+ * @return A new instance of kit_Atom or None.
  */
-extern ImmutableOptional(kit_Atom)
-kit_Atom_put(const char *s, size_t length)
-__attribute__((__nonnull__));
+extern OptionOf(kit_Atom)
+kit_Atom_put(const void *bytes, size_t length)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Behaves like kit_Atom_put but takes a string literal and converts it to an atom.
  *
- * Checked runtime errors:
- *      - @param s must not be NULL.
- *
- * @param s The string literal to be converted.
- * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
+ * @param literal The string literal [<b>must not be NULL</b>].
+ * @return A new instance of kit_Atom or None.
  */
-extern ImmutableOptional(kit_Atom)
-kit_Atom_fromLiteral(const char *s)
-__attribute__((__nonnull__));
+extern OptionOf(kit_Atom)
+kit_Atom_fromLiteral(const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 /**
  * Behaves like kit_Atom_put but takes an integer number and converts it to an atom.
  *
- * Checked runtime errors:
- *      - @param s must not be NULL.
- *
- * @param n The integer number to be converted.
- * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
+ * @param n The number to be converted.
+ * @return A new instance of kit_Atom or None.
  */
-extern ImmutableOptional(kit_Atom)
-kit_Atom_fromInteger(long long n);
+extern OptionOf(kit_Atom)
+kit_Atom_fromInteger(long long n)
+__attribute__((__warn_unused_result__));
 
 /**
  * Behaves like kit_Atom_put but takes an floating number and converts it to an atom.
  *
- * Checked runtime errors:
- *      - @param s must not be NULL.
- *
- * @param n The floating number to be converted.
- * @return An MutableOption containing a kit_Atom instance or MutableOption_None in case of out of memory.
+ * @param n The number to be converted.
+ * @return A new instance of kit_Atom or None.
  */
-extern ImmutableOptional(kit_Atom)
-kit_Atom_fromFloating(long double n);
+extern OptionOf(kit_Atom)
+kit_Atom_fromFloating(long double n)
+__attribute__((__warn_unused_result__));
 
 /**
  * Gets the length of the atom.
  *
- * Checked runtime errors:
- *      - @param atom must not be NULL and must be a valid atom instance (not just a common string!)
+ * @attention
+ *  This function requires a kit_Atom instance (not just any string!).
  *
- * @param atom The atom instance.
+ * @param atom The kit_Atom instance [<b>must not be NULL</b>].
  * @return The length of the atom.
  */
 extern size_t
 kit_Atom_length(kit_Atom atom)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 #ifdef __cplusplus
 }

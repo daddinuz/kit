@@ -12,40 +12,28 @@
 #include <kit/collections/queue.h>
 
 FeatureDefine(QueuePop) {
-    void *e;
     struct kit_Queue *sut = traits_context;
 
-    for (size_t i = 0; i < SEEDS_SIZE; i++) {
-        assert_equal(SEEDS_SIZE - i, kit_Queue_size(sut));
-        assert_false(kit_Queue_isEmpty(sut));
+    assert_not_null(sut);
+    assert_false(kit_Queue_isEmpty(sut));
+    assert_equal(SEEDS_SIZE, kit_Queue_size(sut));
 
-        e = NULL;
-        assert_equal(KIT_RESULT_OK, kit_Queue_pop(sut, &e));
-        assert_string_equal(SEEDS[i], (char *) e);
+    for (size_t i = 0; i < SEEDS_SIZE; i++) {
+        assert_false(kit_Queue_isEmpty(sut));
+        assert_equal(SEEDS_SIZE - i, kit_Queue_size(sut));
+
+        assert_string_equal(SEEDS[i], Result_unwrap(kit_Queue_pop(sut)));
 
         if (i < SEEDS_SIZE - 1) {
-            e = NULL;
-            assert_equal(KIT_RESULT_OK, kit_Queue_back(sut, &e));
-            assert_string_equal(SEEDS[SEEDS_SIZE - 1], (char *) e);
-
-            e = NULL;
-            assert_equal(KIT_RESULT_OK, kit_Queue_front(sut, &e));
-            assert_string_equal(SEEDS[i + 1], (char *) e);
+            assert_equal(SEEDS[SEEDS_SIZE - 1], Result_unwrap(kit_Queue_back(sut)));
+            assert_equal(SEEDS[i + 1], Result_unwrap(kit_Queue_front(sut)));
         }
     }
 
-    assert_equal(0, kit_Queue_size(sut));
     assert_true(kit_Queue_isEmpty(sut));
+    assert_equal(0, kit_Queue_size(sut));
 
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Queue_pop(sut, &e));
-    assert_null(e);
-
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Queue_back(sut, &e));
-    assert_null(e);
-
-    e = NULL;
-    assert_equal(KIT_RESULT_OUT_OF_RANGE_ERROR, kit_Queue_front(sut, &e));
-    assert_null(e);
+    assert_equal(OutOfRangeError, Result_inspect(kit_Queue_pop(sut)));
+    assert_equal(OutOfRangeError, Result_inspect(kit_Queue_back(sut)));
+    assert_equal(OutOfRangeError, Result_inspect(kit_Queue_front(sut)));
 }

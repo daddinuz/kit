@@ -3,7 +3,7 @@
  *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   January 04, 2018
+ * Date:   January 16, 2018
  */
 
 #ifndef KIT_VECTOR_CONFIG_INCLUDED
@@ -13,8 +13,8 @@
 extern "C" {
 #endif
 
-#define KIT_VECTOR_DEFAULT_CAPACITY     16
-#define KIT_VECTOR_MINIMUM_RESERVATION  8
+#define KIT_VECTOR_DEFAULT_CAPACITY     16UL    /* must be greater than 0UL  */
+#define KIT_VECTOR_LOAD_FACTOR          1.65F   /* must be greater than 1.0F */
 
 #ifdef __cplusplus
 }

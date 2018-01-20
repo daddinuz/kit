@@ -10,7 +10,7 @@
 #include <features/feature_expandable.h>
 #include <kit/collections/string.h>
 
-#define I(x)    ImmutableOption_unwrap((x))
+#define u(x)    Option_unwrap((x))
 
 FeatureDefine(StringReserve) {
     (void) traits_context;
@@ -21,20 +21,20 @@ FeatureDefine(StringReserve) {
         const char LITERAL[] = "";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_reserve(
+        Option option = kit_String_reserve(
                 &sut, KIT_STRING_DEFAULT_CAPACITY - 1
         );
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -47,20 +47,20 @@ FeatureDefine(StringReserve) {
         const char LITERAL[] = "";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_reserve(
+        Option option = kit_String_reserve(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION - 1
         );
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -73,20 +73,20 @@ FeatureDefine(StringReserve) {
         const char LITERAL[] = "";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_reserve(
+        Option option = kit_String_reserve(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1
         );
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -99,20 +99,20 @@ FeatureDefine(StringReserve) {
         const char LITERAL[] = "Hello World!\n";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_reserve(
+        Option option = kit_String_reserve(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION - 1
         );
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -125,20 +125,20 @@ FeatureDefine(StringReserve) {
         const char LITERAL[] = "Hello World!\n";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_reserve(
+        Option option = kit_String_reserve(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1
         );
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -157,18 +157,18 @@ FeatureDefine(StringShrink) {
         const char LITERAL[] = "";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_shrink(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        Option option = kit_String_shrink(&sut);
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_true(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -181,18 +181,18 @@ FeatureDefine(StringShrink) {
         const char LITERAL[] = "Hello Wold!\n";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_shrink(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        Option option = kit_String_shrink(&sut);
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -205,30 +205,30 @@ FeatureDefine(StringShrink) {
         const char LITERAL[] = "Hello Wold!\n";
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        ImmutableOption option = kit_String_reserve(
+        Option option = kit_String_reserve(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1
         );
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1);
 
         option = kit_String_shrink(&sut);
-        assert_true(ImmutableOption_isSome(option));
+        assert_true(Option_isSome(option));
         assert_null(sut);
 
-        sut = ImmutableOption_unwrap(option);
+        sut = Option_unwrap(option);
         assert_string_equal(sut, LITERAL);
         assert_false(kit_String_isEmpty(sut));
         assert_equal(kit_String_size(sut), LITERAL_SIZE);

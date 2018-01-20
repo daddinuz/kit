@@ -10,7 +10,7 @@
 #include "features/feature_essentials.h"
 #include "features/feature_expandable.h"
 #include "features/feature_comparable.h"
-#include "features/feature_mutable.h"
+#include "features/feature_modifiable.h"
 
 /*
  * Describe our test case

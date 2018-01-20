@@ -11,49 +11,38 @@
 #include <features/feature_growable.h>
 #include <kit/collections/sequence.h>
 
-FeatureDefine(SequenceCapacity) {
+FeatureDefine(SequenceExpand) {
     struct kit_Sequence *sut = traits_context;
 
-    for (size_t i = 0; i < SEEDS_SIZE; i++) {
-        assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
-        kit_Sequence_pushBack(sut, (void *) SEEDS[i]);
-    }
-    assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
+    assert_not_null(sut);
+    assert_true(kit_Sequence_isEmpty(sut));
+    assert_equal(0, kit_Sequence_size(sut));
 
     for (size_t i = 0; i < SEEDS_SIZE; i++) {
-        void *e = NULL;
+        assert_equal(Ok, kit_Sequence_expand(sut, i + 1));
         assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
-        kit_Sequence_popBack(sut, &e);
-    }
-    assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
-}
-
-FeatureDefine(SequenceReserve) {
-    struct kit_Sequence *sut = traits_context;
-
-    for (size_t i = 0; i < SEEDS_SIZE; i++) {
-        kit_Sequence_reserve(sut, i + 1);
-        assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
-        kit_Sequence_pushBack(sut, (void *) SEEDS[i]);
-        kit_Sequence_reserve(sut, i);
+        assert_equal(Ok, kit_Sequence_pushBack(sut, (void *) SEEDS[i]));
+        assert_equal(Ok, kit_Sequence_expand(sut, i));
         assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
     }
-
-    kit_Sequence_reserve(sut, SEEDS_SIZE);
-    assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
-    kit_Sequence_reserve(sut, SEEDS_SIZE - 1);
-    assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
 }
 
 FeatureDefine(SequenceShrink) {
+    Result result;
     struct kit_Sequence *sut = traits_context;
 
+    assert_not_null(sut);
+    assert_false(kit_Sequence_isEmpty(sut));
+    assert_equal(SEEDS_SIZE, kit_Sequence_size(sut));
+
     for (size_t i = 0; i < SEEDS_SIZE; i++) {
-        void *e = NULL;
-        kit_Sequence_popBack(sut, &e);
-        kit_Sequence_shrink(sut);
+        result = kit_Sequence_popBack(sut);
+        assert_true(Result_isOk(result));
+        assert_equal(Ok, Result_inspect(result));
+        assert_equal(Ok, kit_Sequence_shrink(sut));
         assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
     }
-    kit_Sequence_shrink(sut);
+
+    assert_equal(Ok, kit_Sequence_shrink(sut));
     assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
 }

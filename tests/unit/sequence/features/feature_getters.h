@@ -18,7 +18,6 @@ extern "C" {
 FeatureDeclare(SequenceGet);
 FeatureDeclare(SequenceBack);
 FeatureDeclare(SequenceFront);
-FeatureDeclare(SequenceSize);
 
 #ifdef __cplusplus
 }

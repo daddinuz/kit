@@ -10,7 +10,7 @@
 #include <features/feature_essentials.h>
 #include <kit/collections/string.h>
 
-#define I(x)    ImmutableOption_unwrap((x))
+#define u(x)    Option_unwrap((x))
 
 FeatureDefine(StringNew) {
     (void) traits_context;
@@ -18,7 +18,7 @@ FeatureDefine(StringNew) {
     kit_String sut = NULL;
 
     {
-        sut = I(kit_String_new(0));
+        sut = u(kit_String_new(0));
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);
@@ -29,7 +29,7 @@ FeatureDefine(StringNew) {
     kit_String_delete(sut);
 
     {
-        sut = I(kit_String_new(KIT_STRING_DEFAULT_CAPACITY - 1));
+        sut = u(kit_String_new(KIT_STRING_DEFAULT_CAPACITY - 1));
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);
@@ -40,7 +40,7 @@ FeatureDefine(StringNew) {
     kit_String_delete(sut);
 
     {
-        sut = I(kit_String_new(KIT_STRING_DEFAULT_CAPACITY));
+        sut = u(kit_String_new(KIT_STRING_DEFAULT_CAPACITY));
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);
@@ -51,7 +51,7 @@ FeatureDefine(StringNew) {
     kit_String_delete(sut);
 
     {
-        sut = I(kit_String_new(KIT_STRING_DEFAULT_CAPACITY + 1));
+        sut = u(kit_String_new(KIT_STRING_DEFAULT_CAPACITY + 1));
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);
@@ -74,7 +74,7 @@ FeatureDefine(StringQuoted) {
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_quoted(BYTES, BYTES_SIZE));
+        sut = u(kit_String_quoted(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -92,7 +92,7 @@ FeatureDefine(StringQuoted) {
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_quoted(BYTES, BYTES_SIZE));
+        sut = u(kit_String_quoted(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -110,7 +110,7 @@ FeatureDefine(StringQuoted) {
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_quoted(BYTES, BYTES_SIZE));
+        sut = u(kit_String_quoted(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -128,7 +128,7 @@ FeatureDefine(StringQuoted) {
         assert_greater(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = EXPECTED_SIZE;
 
-        sut = I(kit_String_quoted(BYTES, BYTES_SIZE));
+        sut = u(kit_String_quoted(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -149,7 +149,7 @@ FeatureDefine(StringFromBytes) {
         const size_t BYTES_SIZE = sizeof(BYTES) - 1;
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_equal(kit_String_size(sut), BYTES_SIZE);
         assert_true(kit_String_isEmpty(sut));
@@ -165,7 +165,7 @@ FeatureDefine(StringFromBytes) {
         assert_less(BYTES_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_equal(kit_String_size(sut), BYTES_SIZE);
         assert_false(kit_String_isEmpty(sut));
@@ -181,7 +181,7 @@ FeatureDefine(StringFromBytes) {
         assert_greater(BYTES_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = BYTES_SIZE;
 
-        sut = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_not_null(sut);
         assert_equal(kit_String_size(sut), BYTES_SIZE);
         assert_false(kit_String_isEmpty(sut));
@@ -206,7 +206,7 @@ FeatureDefine(StringFromFormat) {
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromFormat(FORMAT));
+        sut = u(kit_String_fromFormat(FORMAT));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -227,7 +227,7 @@ FeatureDefine(StringFromFormat) {
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromFormat(FORMAT));
+        sut = u(kit_String_fromFormat(FORMAT));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -248,7 +248,7 @@ FeatureDefine(StringFromFormat) {
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromFormat(FORMAT));
+        sut = u(kit_String_fromFormat(FORMAT));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -269,7 +269,7 @@ FeatureDefine(StringFromFormat) {
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromFormat(FORMAT));
+        sut = u(kit_String_fromFormat(FORMAT));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -290,7 +290,7 @@ FeatureDefine(StringFromFormat) {
         assert_greater(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = EXPECTED_SIZE;
 
-        sut = I(kit_String_fromFormat(FORMAT));
+        sut = u(kit_String_fromFormat(FORMAT));
         assert_not_null(sut);
         assert_string_equal(sut, EXPECTED);
         assert_equal(kit_String_size(sut), EXPECTED_SIZE);
@@ -313,7 +313,7 @@ FeatureDefine(StringFromLiteral) {
         const size_t LITERAL_SIZE = sizeof(LITERAL) - 1;
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -330,7 +330,7 @@ FeatureDefine(StringFromLiteral) {
         assert_less(LITERAL_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -347,7 +347,7 @@ FeatureDefine(StringFromLiteral) {
         assert_less(LITERAL_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -364,7 +364,7 @@ FeatureDefine(StringFromLiteral) {
         assert_less(LITERAL_SIZE, KIT_STRING_DEFAULT_CAPACITY);
         const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -398,7 +398,7 @@ FeatureDefine(StringFromLiteral) {
         traits_assert(KIT_STRING_DEFAULT_CAPACITY < LITERAL_SIZE && LITERAL_SIZE < sizeof(LITERAL) - 1);
         const size_t EXPECTED_CAPACITY = LITERAL_SIZE;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -428,7 +428,7 @@ FeatureDefine(StringFromLiteral) {
         traits_assert(KIT_STRING_DEFAULT_CAPACITY < LITERAL_SIZE && LITERAL_SIZE == sizeof(LITERAL) - 1);
         const size_t EXPECTED_CAPACITY = LITERAL_SIZE;
 
-        sut = I(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_fromLiteral(LITERAL));
         assert_not_null(sut);
         assert_string_equal(sut, LITERAL);
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
@@ -445,8 +445,8 @@ FeatureDefine(StringDuplicate) {
     kit_String sut = NULL;
 
     {
-        kit_String string = I(kit_String_fromLiteral(""));
-        sut = I(kit_String_duplicate(string));
+        kit_String string = u(kit_String_fromLiteral(""));
+        sut = u(kit_String_duplicate(string));
 
         assert_not_equal(sut, string);
         assert_string_equal(sut, string);
@@ -460,8 +460,8 @@ FeatureDefine(StringDuplicate) {
     kit_String_delete(sut);
 
     {
-        kit_String string = I(kit_String_fromLiteral("Hello World!"));
-        sut = I(kit_String_duplicate(string));
+        kit_String string = u(kit_String_fromLiteral("Hello World!"));
+        sut = u(kit_String_duplicate(string));
 
         assert_not_equal(sut, string);
         assert_string_equal(sut, string);
@@ -475,8 +475,8 @@ FeatureDefine(StringDuplicate) {
     kit_String_delete(sut);
 
     {
-        kit_String string = I(kit_String_fromLiteral("Hello\0World!"));
-        sut = I(kit_String_duplicate(string));
+        kit_String string = u(kit_String_fromLiteral("Hello\0World!"));
+        sut = u(kit_String_duplicate(string));
 
         assert_not_equal(sut, string);
         assert_string_equal(sut, string);
@@ -490,8 +490,8 @@ FeatureDefine(StringDuplicate) {
     kit_String_delete(sut);
 
     {
-        kit_String string = I(kit_String_fromLiteral("\0Hello World!"));
-        sut = I(kit_String_duplicate(string));
+        kit_String string = u(kit_String_fromLiteral("\0Hello World!"));
+        sut = u(kit_String_duplicate(string));
 
         assert_not_equal(sut, string);
         assert_string_equal(sut, string);
@@ -525,8 +525,8 @@ FeatureDefine(StringDuplicate) {
                 "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum ";
         const size_t LITERAL_SIZE = strlen(LITERAL);
 
-        kit_String string = I(kit_String_fromLiteral(LITERAL));
-        sut = I(kit_String_duplicate(string));
+        kit_String string = u(kit_String_fromLiteral(LITERAL));
+        sut = u(kit_String_duplicate(string));
 
         assert_not_equal(sut, string);
         assert_string_equal(sut, string);
@@ -542,8 +542,8 @@ FeatureDefine(StringDuplicate) {
 
     {
         const char BYTES[] = "\a\b\t3rd3rf3f\r\n45h6ujh5ygt4\0\\\"!!@°#n9b6v6754w24qx\a55b8in\r2dd2\tdd2d2d2\075rv62df";
-        kit_String string = I(kit_String_fromBytes(BYTES, sizeof(BYTES) - 1));
-        sut = I(kit_String_duplicate(string));
+        kit_String string = u(kit_String_fromBytes(BYTES, sizeof(BYTES) - 1));
+        sut = u(kit_String_duplicate(string));
 
         assert_not_equal(sut, string);
         assert_string_equal(sut, string);
@@ -576,8 +576,8 @@ FeatureDefine(StringDuplicate) {
                 "Lorem \aIpsum \bLorem \tIpsum \nLorem \rIpsum \0Lorem \\Ipsum \"Lorem !Ipsum @Lorem \0Ipsum \aLorem ";
         const size_t BYTES_SIZE = sizeof(BYTES) - 1;
 
-        kit_String string = I(kit_String_fromBytes(BYTES, BYTES_SIZE));
-        sut = I(kit_String_duplicate(string));
+        kit_String string = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
+        sut = u(kit_String_duplicate(string));
 
         assert_not_equal(sut, string);
         assert_string_equal(sut, string);

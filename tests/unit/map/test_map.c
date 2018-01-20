@@ -17,7 +17,6 @@
 Describe("Map",
          Trait(
                  "HashMap",
-                 Run(MapAdd, EmptyMapHashMapFixture),
                  Run(MapPut, EmptyMapHashMapFixture),
                  Run(MapPop, SeededMapHashMapFixture),
                  Run(MapClear, SeededMapHashMapFixture)
