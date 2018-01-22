@@ -11,6 +11,8 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/doubly_list.h>
 
+#define _(x)            ((void) ((x) ? 1 : 0));
+
 struct kit_DoublyList_Node {
     void *element;
     struct kit_DoublyList_Node *prev;
@@ -183,7 +185,7 @@ kit_DoublyList_clear(struct kit_DoublyList *const self) {
     assert(self);
 
     for (size_t i = self->size; i > 0; i--) {
-        Result_unwrap(kit_DoublyList_popFront(self));
+        _(Result_unwrap(kit_DoublyList_popFront(self)));
     }
 
     self->operationId += 1;

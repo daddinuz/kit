@@ -1,6 +1,6 @@
 {
   "name": "alligator",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "repo": "daddinuz/alligator",
   "description": "Alligator is a wrapper over stdlib allocator that will enforce out of memory conditions checking making code safer.",
   "keywords": [
@@ -13,7 +13,7 @@
   "license": "MIT",
   "makefile": "alligator.cmake",
   "dependencies": {
-    "daddinuz/option": "0.11.1"
+    "daddinuz/option": "0.11.2"
   },
   "src": [
     "sources/alligator.c",

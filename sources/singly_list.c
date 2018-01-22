@@ -11,6 +11,8 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/singly_list.h>
 
+#define _(x)            ((void) ((x) ? 1 : 0));
+
 struct kit_SinglyList_Node {
     void *element;
     struct kit_SinglyList_Node *next;
@@ -186,7 +188,7 @@ kit_SinglyList_clear(struct kit_SinglyList *const self) {
     assert(self);
 
     for (size_t i = self->size; i > 0; i--) {
-        Result_unwrap(kit_SinglyList_popFront(self));
+        _(Result_unwrap(kit_SinglyList_popFront(self)));
     }
 
     self->operationId += 1;

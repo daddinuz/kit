@@ -10,6 +10,8 @@
 #include <kit/utils.h>
 #include <kit/collections/sequence.h>
 
+#define _(x)    ((void) ((x) ? 1 : 0));
+
 /*
  *  
  */
@@ -29,7 +31,7 @@ int main() {
         const char *element = Result_unwrap(result);
 
         printf("[%zu]: %s\n", index++, element);
-        Result_unwrap(kit_Sequence_Iterator_setLast(iterator, "x"));
+        _(Result_unwrap(kit_Sequence_Iterator_setLast(iterator, "x")));
     }
 
     puts("");
