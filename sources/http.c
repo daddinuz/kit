@@ -107,11 +107,7 @@ kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
         // Perform the request
         CURLcode curlError = curl_easy_perform(curlHandler);
         if (CURLE_OK != curlError) {
-            // TODO add details on result
-#ifndef NDEBUG
-            fprintf(stderr, "\n\nAt: %s:%d\nError: %s\n", __FILE__, __LINE__, curl_easy_strerror(curlError));
-#endif
-            result = Result_error(NetworkingError);
+            result = Result_errorWithDetails(NetworkingError, curl_easy_strerror(curlError));
             break;
         }
 
