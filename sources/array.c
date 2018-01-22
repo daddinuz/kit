@@ -10,6 +10,8 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/array.h>
 
+#define _(x)            ((void) ((x) ? 1 : 0));
+
 struct kit_Array {
     size_t capacity;
     void **raw;
@@ -46,7 +48,7 @@ __kit_Array_from(void *e0, ...) {
         size_t i = 0;
         self = Option_unwrap(option);
         for (void *e = e0; e != Ellipsis; e = va_arg(pack, void *)) {
-            Result_unwrap(kit_Array_put(self, i, e));
+            _(Result_unwrap(kit_Array_put(self, i, e)));
             i++;
         };
     }
@@ -72,7 +74,7 @@ kit_Array_fromPack(va_list pack) {
         size_t i = 0;
         self = Option_unwrap(option);
         for (void *e = va_arg(pack, void *); e != Ellipsis; e = va_arg(pack, void *)) {
-            Result_unwrap(kit_Array_put(self, i, e));
+            _(Result_unwrap(kit_Array_put(self, i, e)));
             i++;
         };
     }

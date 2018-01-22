@@ -11,6 +11,8 @@
 #include <kit/collections/map.h>
 #include <kit/collections/atom.h>
 
+#define _(x)            ((void) ((x) ? 1 : 0));
+
 static void
 report(struct kit_Map *map)
 __attribute__((__nonnull__));
@@ -24,13 +26,13 @@ int main() {
     kit_Atom authorization = Option_unwrap(kit_Atom_fromLiteral("Authorization"));
     struct kit_Map *map = Option_unwrap(kit_Map_fromHashMap(0, kit_compareFn, kit_hashFn));
 
-    Result_unwrap(kit_Map_put(map, accept, Option_unwrap(kit_Atom_fromLiteral("text/plain"))));
-    Result_unwrap(kit_Map_put(map, contentType, Option_unwrap(kit_Atom_fromLiteral("application/json"))));
-    Result_unwrap(kit_Map_put(map, authorization, Option_unwrap(kit_Atom_fromLiteral("Basic QWxhZGRpbc2FtZQ=="))));
+    _(Result_unwrap(kit_Map_put(map, accept, Option_unwrap(kit_Atom_fromLiteral("text/plain")))));
+    _(Result_unwrap(kit_Map_put(map, contentType, Option_unwrap(kit_Atom_fromLiteral("application/json")))));
+    _(Result_unwrap(kit_Map_put(map, authorization, Option_unwrap(kit_Atom_fromLiteral("Basic QWxhZGRpbc2FtZQ==")))));
 
     report(map);
 
-    Result_unwrap(kit_Map_put(map, accept, Option_unwrap(kit_Atom_fromLiteral("text/csv"))));
+    _(Result_unwrap(kit_Map_put(map, accept, Option_unwrap(kit_Atom_fromLiteral("text/csv")))));
 
     kit_Map_delete(kit_move((void **) &map));
     return 0;

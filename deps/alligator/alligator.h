@@ -13,16 +13,16 @@
 extern "C" {
 #endif
 
-#define ALLIGATOR_VERSION           "0.11.1"
+#define ALLIGATOR_VERSION           "0.11.2"
 #define ALLIGATOR_VERSION_MAJOR     0
 #define ALLIGATOR_VERSION_MINOR     11
-#define ALLIGATOR_VERSION_PATCH     1
+#define ALLIGATOR_VERSION_PATCH     2
 
 #include <stddef.h>
 #include <option/option.h>
 
-#if !(OPTION_VERSION_MAJOR == 0 && OPTION_VERSION_MINOR == 11 && OPTION_VERSION_PATCH == 1)
-#error "Alligator requires option version 0.11.1"
+#if !(OPTION_VERSION_MAJOR == 0 && OPTION_VERSION_MINOR == 11 && OPTION_VERSION_PATCH == 2)
+#error "Alligator requires option version 0.11.2"
 #endif
 
 extern OptionOf(void *) alligator_malloc(size_t size);

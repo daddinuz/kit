@@ -12,6 +12,8 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/xor_list.h>
 
+#define _(x)            ((void) ((x) ? 1 : 0));
+
 struct kit_XorList_Node {
     void *element;
     struct kit_XorList_Node *link;
@@ -209,7 +211,7 @@ kit_XorList_clear(struct kit_XorList *const self) {
     assert(self);
 
     for (size_t i = self->size; i > 0; i--) {
-        Result_unwrap(kit_XorList_popFront(self));
+        _(Result_unwrap(kit_XorList_popFront(self)));
     }
 
     self->operationId += 1;

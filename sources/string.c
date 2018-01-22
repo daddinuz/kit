@@ -14,6 +14,8 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/string.h>
 
+#define _(x)            ((void) ((x) ? 1 : 0));
+
 struct kit_String_Object {
     size_t size;
     size_t capacity;
@@ -85,7 +87,7 @@ kit_String_quoted(const void *const bytes, const size_t size) {
 
     string = Option_unwrap(stringOption);
     /* if we are here we have enough space to perform this operation so no checks are performed */
-    Option_unwrap(kit_String_setBytes(&string, "\"", 1));
+    _(Option_unwrap(kit_String_setBytes(&string, "\"", 1)));
 
     for (size_t i = 0; i < size && false == teardownRequired; i++) {
         string = Option_unwrap(stringOption);
@@ -212,7 +214,7 @@ kit_String_fromBytes(const void *const bytes, const size_t size) {
     if (Option_isSome(stringObjectOption)) {
         struct kit_String_Object *stringObject = Option_unwrap(stringObjectOption);
         char *raw = stringObject->raw;
-        Option_unwrap(kit_Allocator_copy(raw, bytes, size));
+        kit_Allocator_copy(raw, bytes, size);
         raw[size] = '\0';
         stringObject->size = size;
         return Option_new(raw);
@@ -323,7 +325,7 @@ kit_String_appendBytes(kit_String *const ref, const void *const bytes, const siz
         assert(NULL == stringObject);
         stringObject = Option_unwrap(stringObjectOption);
         char *stringObjectRaw = stringObject->raw;
-        Option_unwrap(kit_Allocator_copy(stringObjectRaw + stringObjectSize, bytes, size));
+        kit_Allocator_copy(stringObjectRaw + stringObjectSize, bytes, size);
         stringObjectRaw[stringObject->size = stringObjectSize + size] = '\0';
         *ref = NULL;
         return Option_new(stringObjectRaw);
@@ -419,7 +421,7 @@ kit_String_setBytes(kit_String *const ref, const void *const bytes, const size_t
         assert(NULL == stringObject);
         stringObject = Option_unwrap(stringObjectOption);
         char *stringObjectRaw = stringObject->raw;
-        Option_unwrap(kit_Allocator_copy(stringObjectRaw, bytes, size));
+        kit_Allocator_copy(stringObjectRaw, bytes, size);
         stringObjectRaw[stringObject->size = size] = '\0';
         *ref = NULL;
         return Option_new(stringObjectRaw);
@@ -649,7 +651,7 @@ __kit_String_assertValidInstance(const char *const file, const size_t line, kit_
     const struct kit_String_Object *stringObject = ((struct kit_String_Object *) string) - 1;
 
     if (stringObject->identityCode != KIT_STRING_IDENTITY_CODE) {
-        Option_expect(None, "Expected a valid string instance.\n%s:%zu", file, line);
+        _(Option_expect(None, "Expected a valid string instance.\n%s:%zu", file, line));
     }
 }
 
@@ -672,7 +674,7 @@ __kit_String_assertNotOverlapping(
      */
 
     if (!((a2 + s2) < a1 || (a1 + s1) < a2)) {
-        Option_expect(None, "Expected non-overlapping strings.\n%s:%zu", file, line);
+        _(Option_expect(None, "Expected non-overlapping strings.\n%s:%zu", file, line));
     }
 }
 
