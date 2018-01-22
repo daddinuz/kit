@@ -13,6 +13,8 @@
 extern "C" {
 #endif
 
+#include <kit/compiler_steroids.h>
+
 enum kit_HttpMethod {
     KIT_HTTP_METHOD_DELETE,
     KIT_HTTP_METHOD_GET,
@@ -43,7 +45,8 @@ enum kit_HttpMethod {
 };
 
 extern const char *
-kit_HttpMethod_explain(enum kit_HttpMethod method);
+kit_HttpMethod_explain(enum kit_HttpMethod method)
+__attribute__((__warn_unused_result__));
 
 #ifdef __cplusplus
 }

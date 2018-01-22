@@ -13,7 +13,6 @@
 extern "C" {
 #endif
 
-#include <kit/compiler_steroids.h>
 #include <kit/networking/http_status.h>
 #include <kit/networking/http_method.h>
 #include <kit/networking/http_request.h>

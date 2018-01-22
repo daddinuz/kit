@@ -15,6 +15,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <option/option.h>
+#include <kit/errors.h>
 #include <kit/compiler_steroids.h>
 #include <kit/collections/atom.h>
 #include <kit/collections/string.h>
@@ -28,42 +29,42 @@ struct kit_HttpRequest;
 
 extern enum kit_HttpMethod
 kit_HttpRequest_getMethod(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 extern kit_Atom
 kit_HttpRequest_getUrl(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 extern OptionOf(kit_String)
 kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 extern OptionOf(kit_String)
 kit_HttpRequest_getBody(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 extern size_t
 kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 extern bool
 kit_HttpRequest_getFollowLocation(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 extern bool
 kit_HttpRequest_getPeerVerification(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 extern bool
 kit_HttpRequest_getHostVerification(const struct kit_HttpRequest *self)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 // *************************************
 
 // takes ownership
-extern OptionOf(struct kit_HttpResponse *)
+extern ResultOf(const struct kit_HttpResponse *, OutOfMemoryError)
 kit_HttpRequest_fire(const struct kit_HttpRequest **ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 // *************************************
 
@@ -77,7 +78,7 @@ struct kit_HttpRequestBuilder;
 
 extern OptionOf(struct kit_HttpRequestBuilder *)
 kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 // *************************************
 
@@ -114,7 +115,7 @@ __attribute__((__nonnull__));
 // takes ownership
 extern const struct kit_HttpRequest *
 kit_HttpRequestBuilder_build(struct kit_HttpRequestBuilder **ref)
-__attribute__((__nonnull__));
+__attribute__((__warn_unused_result__, __nonnull__));
 
 // *************************************
 

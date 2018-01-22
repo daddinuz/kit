@@ -6,9 +6,11 @@
  * Date:   January 07, 2018 
  */
 
-#include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <curl/curl.h>
+#include <kit/errors.h>
 #include <kit/networking/http.h>
 
 static bool
@@ -17,16 +19,17 @@ kit_HttpRequest_initialize(void);
 static size_t
 kit_HttpRequest_writeFn(void *content, size_t memberSize, size_t membersCount, void *userData);
 
-Option kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
+ResultOf(const struct kit_HttpResponse *, OutOfMemoryError)
+kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
     assert(ref);
     assert(*ref);
 
     if (!kit_HttpRequest_initialize()) {
-        // TODO error handling
-        // Out of memory
-        return None;
+        return Result_error(OutOfMemoryError);
     }
 
+    Option option;
+    Result result = Result_ok(NULL);
     bool teardownRequired = true;
     const struct kit_HttpRequest *request = *ref;
     struct kit_HttpResponseBuilder *responseBuilder = NULL;
@@ -34,29 +37,24 @@ Option kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
     struct curl_slist *curlHeaders = NULL;
     CURL *curlHandler = NULL;
 
-    Option option;
-
     do {
         option = kit_HttpResponseBuilder_new(request);
         if (Option_isNone(option)) {
-            // TODO error handling
-            // Out of memory
+            result = Result_error(OutOfMemoryError);
             break;
         }
         responseBuilder = Option_unwrap(option);
 
         option = kit_String_new(0);
         if (Option_isNone(option)) {
-            // TODO error handling
-            // Out of memory
+            result = Result_error(OutOfMemoryError);
             break;
         }
         responseBody = Option_unwrap(option);
 
         option = kit_String_new(0);
         if (Option_isNone(option)) {
-            // TODO error handling
-            // Out of memory
+            result = Result_error(OutOfMemoryError);
             break;
         }
         responseHeaders = Option_unwrap(option);
@@ -64,16 +62,14 @@ Option kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
         if (Option_isSome(kit_HttpRequest_getHeaders(request))) {
             curlHeaders = curl_slist_append(curlHeaders, Option_unwrap(kit_HttpRequest_getHeaders(request)));
             if (NULL == curlHeaders) {
-                // TODO error handling
-                // Out of memory
+                result = Result_error(OutOfMemoryError);
                 break;
             }
         }
 
         curlHandler = curl_easy_init();
         if (NULL == curlHandler) {
-            // TODO error handling
-            // Out of memory
+            result = Result_error(OutOfMemoryError);
             break;
         }
 
@@ -111,8 +107,11 @@ Option kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
         // Perform the request
         CURLcode curlError = curl_easy_perform(curlHandler);
         if (CURLE_OK != curlError) {
-            // TODO error handling
-            // curl_easy_strerror(curlError);
+            // TODO add details on result
+#ifndef NDEBUG
+            fprintf(stderr, "\n\nAt: %s:%d\nError: %s\n", __FILE__, __LINE__, curl_easy_strerror(curlError));
+#endif
+            result = Result_error(NetworkingError);
             break;
         }
 
@@ -127,8 +126,7 @@ Option kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
                 option = kit_Atom_fromLiteral(kit_HttpRequest_getUrl(request));
             }
             if (Option_isNone(option)) {
-                // TODO error handling
-                // Out of memory
+                result = Result_error(OutOfMemoryError);
                 break;
             }
             kit_HttpResponseBuilder_setUrl(responseBuilder, Option_unwrap(option));
@@ -154,14 +152,15 @@ Option kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
     curl_slist_free_all(curlHeaders);
 
     if (teardownRequired) {
+        assert(OutOfMemoryError == Result_inspect(result) || NetworkingError == Result_inspect(result));
         kit_HttpResponseBuilder_delete(responseBuilder);
         kit_String_delete(responseBody);
         kit_String_delete(responseHeaders);
-        return None;
+        return result;
     } else {
+        assert(Result_isOk(result));
         *ref = NULL;
-        // FIXME
-        return Option_new((void *) kit_HttpResponseBuilder_build(&responseBuilder));
+        return Result_ok((void *) kit_HttpResponseBuilder_build(&responseBuilder));
     }
 }
 

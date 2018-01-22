@@ -19,6 +19,7 @@ extern const Error OutOfRangeError;
 extern const Error OutOfMemoryError;
 extern const Error IllegalStateError;
 extern const Error ConcurrentModificationError;
+extern const Error NetworkingError;
 
 #ifdef __cplusplus
 }

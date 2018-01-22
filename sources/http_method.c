@@ -38,7 +38,7 @@ static const char KIT_HTTP_METHOD_PURGE_EXPLANATION[] = "PURGE";
 static const char KIT_HTTP_METHOD_LINK_EXPLANATION[] = "LINK";
 static const char KIT_HTTP_METHOD_UNLINK_EXPLANATION[] = "UNLINK";
 
-const char *kit_HttpMethod_explain(enum kit_HttpMethod method) {
+const char *kit_HttpMethod_explain(const enum kit_HttpMethod method) {
     switch (method) {
         case KIT_HTTP_METHOD_DELETE:
             return KIT_HTTP_METHOD_DELETE_EXPLANATION;

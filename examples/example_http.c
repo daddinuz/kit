@@ -39,7 +39,7 @@ int main() {
     );
 
     struct kit_HttpRequestBuilder *requestBuilder = u(kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, url));
-    kit_HttpRequestBuilder_setTimeout(requestBuilder, 25);
+    kit_HttpRequestBuilder_setTimeout(requestBuilder, 1);
     kit_HttpRequestBuilder_setHeaders(requestBuilder, &requestHeaders); // takes ownership invalidating requestHeaders
     assert(NULL == requestHeaders);
 
@@ -47,8 +47,7 @@ int main() {
     assert(NULL == requestBuilder);
     printRequest(request);
 
-    const struct kit_HttpResponse *response = u(
-            kit_HttpRequest_fire(&request)); // takes ownership invalidating request.
+    const struct kit_HttpResponse *response = Result_unwrap(kit_HttpRequest_fire(&request)); // takes ownership invalidating request.
     assert(NULL == request);
     printResponse(response);
 

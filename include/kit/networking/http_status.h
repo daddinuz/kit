@@ -13,6 +13,8 @@
 extern "C" {
 #endif
 
+#include <kit/compiler_steroids.h>
+
 enum kit_HttpStatus {
     KIT_HTTP_STATUS_CONTINUE = 100,                         /* Continue                        */
     KIT_HTTP_STATUS_SWITCHING_PROTOCOLS = 101,              /* Switching Protocols             */
@@ -76,7 +78,8 @@ enum kit_HttpStatus {
 };
 
 extern const char *
-kit_HttpStatus_explain(enum kit_HttpStatus status);
+kit_HttpStatus_explain(enum kit_HttpStatus status)
+__attribute__((__warn_unused_result__));
 
 #ifdef __cplusplus
 }
