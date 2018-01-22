@@ -13,6 +13,8 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/atom.h>
 
+#define _(x)            ((void) ((x) ? 1 : 0));
+
 #define KIT_ATOM_NODE_TABLE_SIZE    (2039)
 
 struct kit_Atom_Node {
@@ -163,9 +165,7 @@ kit_Atom_assertValidInstance(kit_Atom atom) {
     (void) atom;
 #ifndef NDEBUG
     struct kit_Atom_Node *node = ((struct kit_Atom_Node *) atom) - 1;
-    void *_ = Option_expect(kit_Atom_table_fetch(node->atom, node->length, node->hash),
-                            "Expected a valid atom instance.");
-    (void) _;
+    _(Option_expect(kit_Atom_table_fetch(node->atom, node->length, node->hash), "Expected a valid atom instance."));
 #endif
 }
 
