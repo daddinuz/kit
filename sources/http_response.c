@@ -39,34 +39,38 @@ struct kit_HttpResponse {
     enum kit_HttpStatus status;
 };
 
-const struct kit_HttpRequest *kit_HttpResponse_getRequest(const struct kit_HttpResponse *self) {
+const struct kit_HttpRequest *
+kit_HttpResponse_getRequest(const struct kit_HttpResponse *self) {
     assert(self);
     return self->request;
 }
 
-kit_Atom kit_HttpResponse_getUrl(const struct kit_HttpResponse *self) {
+kit_Atom
+kit_HttpResponse_getUrl(const struct kit_HttpResponse *self) {
     assert(self);
     return self->url;
 }
 
-Option kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self) {
+OptionOf(kit_String)
+kit_HttpResponse_getHeaders(const struct kit_HttpResponse *self) {
     assert(self);
-    // FIXME
     return Option_new((void *) self->headers);
 }
 
-Option kit_HttpResponse_getBody(const struct kit_HttpResponse *self) {
+OptionOf(kit_String)
+kit_HttpResponse_getBody(const struct kit_HttpResponse *self) {
     assert(self);
-    // FIXME
     return Option_new((void *) self->body);
 }
 
-enum kit_HttpStatus kit_HttpResponse_getStatus(const struct kit_HttpResponse *self) {
+enum kit_HttpStatus
+kit_HttpResponse_getStatus(const struct kit_HttpResponse *self) {
     assert(self);
     return self->status;
 }
 
-void kit_HttpResponse_delete(const struct kit_HttpResponse *self) {
+void
+kit_HttpResponse_delete(const struct kit_HttpResponse *self) {
     if (self) {
         kit_HttpRequest_delete(self->request);
         kit_String_delete(self->body);
@@ -79,8 +83,11 @@ struct kit_HttpResponseBuilder {
     struct kit_HttpResponse *response;
 };
 
-Option kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request) {
-    assert(request);
+OptionOf(struct kit_HttpResponseBuilder *)
+kit_HttpResponseBuilder_new(const struct kit_HttpRequest **ref) {
+    assert(ref);
+    assert(*ref);
+
     bool teardownRequired = false;
     struct kit_HttpResponse *response = NULL;
     struct kit_HttpResponseBuilder *self = NULL;
@@ -101,12 +108,13 @@ Option kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request) {
         }
         response = Option_unwrap(responseOption);
 
-        response->request = request;
-        response->url = kit_HttpRequest_getUrl(request);
+        response->request = *ref;
+        response->url = kit_HttpRequest_getUrl(*ref);
         response->headers = NULL;
         response->body = NULL;
         response->status = KIT_HTTP_STATUS_OK;
         self->response = response;
+        *ref = NULL;
     } while (false);
 
     if (teardownRequired) {
@@ -118,39 +126,70 @@ Option kit_HttpResponseBuilder_new(const struct kit_HttpRequest *request) {
     return selfOption;
 }
 
-struct kit_HttpResponseBuilder *
-kit_HttpResponseBuilder_setStatus(struct kit_HttpResponseBuilder *self, enum kit_HttpStatus status) {
+const struct kit_HttpRequest *
+kit_HttpResponseBuilder_setRequest(struct kit_HttpResponseBuilder *self, const struct kit_HttpRequest **ref) {
     assert(self);
-    self->response->status = status;
-    return self;
+    assert(ref);
+    assert(*ref);
+    const struct kit_HttpRequest *previousRequest = self->response->request;
+    self->response->request = *ref;
+    *ref = NULL;
+    return previousRequest;
 }
 
-struct kit_HttpResponseBuilder *
+enum kit_HttpStatus
+kit_HttpResponseBuilder_setStatus(struct kit_HttpResponseBuilder *self, enum kit_HttpStatus status) {
+    assert(self);
+    const enum kit_HttpStatus previousStatus = self->response->status;
+    self->response->status = status;
+    return previousStatus;
+}
+
+kit_Atom
 kit_HttpResponseBuilder_setUrl(struct kit_HttpResponseBuilder *self, kit_Atom url) {
     assert(self);
     assert(url);
+    kit_Atom previousUrl = self->response->url;
     self->response->url = url;
-    return self;
+    return previousUrl;
 }
 
-struct kit_HttpResponseBuilder *
+OptionOf(kit_String)
 kit_HttpResponseBuilder_setHeaders(struct kit_HttpResponseBuilder *self, kit_String *ref) {
     assert(self);
     assert(ref);
     assert(*ref);
+    Option previousHeaders = Option_new((void *) self->response->headers);
     self->response->headers = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
-    return self;
+    return previousHeaders;
 }
 
-struct kit_HttpResponseBuilder *
+OptionOf(kit_String)
+kit_HttpResponseBuilder_clearHeaders(struct kit_HttpResponseBuilder *self) {
+    assert(self);
+    Option previousHeaders = Option_new((void *) self->response->headers);
+    self->response->headers = NULL;
+    return previousHeaders;
+}
+
+OptionOf(kit_String)
 kit_HttpResponseBuilder_setBody(struct kit_HttpResponseBuilder *self, kit_String *ref) {
     assert(self);
     assert(ref);
     assert(*ref);
+    Option previousBody = Option_new((void *) self->response->body);
     self->response->body = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
-    return self;
+    return previousBody;
+}
+
+OptionOf(kit_String)
+kit_HttpResponseBuilder_clearBody(struct kit_HttpResponseBuilder *self) {
+    assert(self);
+    Option previousBody = Option_new((void *) self->response->body);
+    self->response->body = NULL;
+    return previousBody;
 }
 
 const struct kit_HttpResponse *
@@ -163,7 +202,8 @@ kit_HttpResponseBuilder_build(struct kit_HttpResponseBuilder **ref) {
     return response;
 }
 
-void kit_HttpResponseBuilder_delete(struct kit_HttpResponseBuilder *self) {
+void
+kit_HttpResponseBuilder_delete(struct kit_HttpResponseBuilder *self) {
     if (self) {
         kit_Allocator_free(self);
     }

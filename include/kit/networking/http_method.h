@@ -64,6 +64,12 @@ enum kit_HttpMethod {
     KIT_HTTP_METHOD_UNLINK
 };
 
+/**
+ * Returns the string representation of the http method.
+ *
+ * @param method The http method.
+ * @return The string representation of the http method.
+ */
 extern const char *
 kit_HttpMethod_explain(enum kit_HttpMethod method)
 __attribute__((__warn_unused_result__));

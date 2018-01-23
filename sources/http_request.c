@@ -41,49 +41,56 @@ struct kit_HttpRequest {
     bool hostVerification;
 };
 
-enum kit_HttpMethod kit_HttpRequest_getMethod(const struct kit_HttpRequest *self) {
+enum kit_HttpMethod
+kit_HttpRequest_getMethod(const struct kit_HttpRequest *self) {
     assert(self);
     return self->method;
 }
 
-kit_Atom kit_HttpRequest_getUrl(const struct kit_HttpRequest *self) {
+kit_Atom
+kit_HttpRequest_getUrl(const struct kit_HttpRequest *self) {
     assert(self);
     return self->url;
 }
 
-Option kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self) {
+OptionOf(kit_String)
+kit_HttpRequest_getHeaders(const struct kit_HttpRequest *self) {
     assert(self);
-    // FIXME
     return Option_new((void *) self->headers);
 }
 
-Option kit_HttpRequest_getBody(const struct kit_HttpRequest *self) {
+OptionOf(kit_String)
+kit_HttpRequest_getBody(const struct kit_HttpRequest *self) {
     assert(self);
-    // FIXME
     return Option_new((void *) self->body);
 }
 
-size_t kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self) {
+size_t
+kit_HttpRequest_getTimeout(const struct kit_HttpRequest *self) {
     assert(self);
     return self->timeout;
 }
 
-bool kit_HttpRequest_getFollowLocation(const struct kit_HttpRequest *self) {
+bool
+kit_HttpRequest_getFollowLocation(const struct kit_HttpRequest *self) {
     assert(self);
     return self->followLocation;
 }
 
-bool kit_HttpRequest_getPeerVerification(const struct kit_HttpRequest *self) {
+bool
+kit_HttpRequest_getPeerVerification(const struct kit_HttpRequest *self) {
     assert(self);
     return self->peerVerification;
 }
 
-bool kit_HttpRequest_getHostVerification(const struct kit_HttpRequest *self) {
+bool
+kit_HttpRequest_getHostVerification(const struct kit_HttpRequest *self) {
     assert(self);
     return self->hostVerification;
 }
 
-void kit_HttpRequest_delete(const struct kit_HttpRequest *self) {
+void
+kit_HttpRequest_delete(const struct kit_HttpRequest *self) {
     if (self) {
         kit_String_delete(self->body);
         kit_String_delete(self->headers);
@@ -95,7 +102,8 @@ struct kit_HttpRequestBuilder {
     struct kit_HttpRequest *request;
 };
 
-Option kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url) {
+OptionOf(struct kit_HttpResponseBuilder *)
+kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url) {
     assert(url);
     bool teardownRequired = false;
     struct kit_HttpRequest *request = NULL;
@@ -137,52 +145,90 @@ Option kit_HttpRequestBuilder_new(enum kit_HttpMethod method, kit_Atom url) {
     return selfOption;
 }
 
-struct kit_HttpRequestBuilder *
+enum kit_HttpMethod
+kit_HttpRequestBuilder_setMethod(struct kit_HttpRequestBuilder *self, enum kit_HttpMethod method) {
+    assert(self);
+    const enum kit_HttpMethod previousMethod = self->request->method;
+    self->request->method = method;
+    return previousMethod;
+}
+
+kit_Atom
+kit_HttpRequestBuilder_setUrl(struct kit_HttpRequestBuilder *self, kit_Atom url) {
+    assert(self);
+    kit_Atom previousUrl = self->request->url;
+    self->request->url = url;
+    return previousUrl;
+}
+
+OptionOf(kit_String)
 kit_HttpRequestBuilder_setHeaders(struct kit_HttpRequestBuilder *self, kit_String *ref) {
     assert(self);
     assert(ref);
     assert(*ref);
+    Option previousHeaders = Option_new((void *) self->request->headers);
     self->request->headers = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
-    return self;
+    return previousHeaders;
 }
 
-struct kit_HttpRequestBuilder *
+OptionOf(kit_String)
+kit_HttpRequestBuilder_clearHeaders(struct kit_HttpRequestBuilder *self) {
+    assert(self);
+    Option previousHeaders = Option_new((void *) self->request->headers);
+    self->request->headers = NULL;
+    return previousHeaders;
+}
+
+OptionOf(kit_String)
 kit_HttpRequestBuilder_setBody(struct kit_HttpRequestBuilder *self, kit_String *ref) {
     assert(self);
     assert(ref);
     assert(*ref);
+    Option previousBody = Option_new((void *) self->request->body);
     self->request->body = Option_unwrap(kit_String_shrink(ref));
     *ref = NULL;
-    return self;
+    return previousBody;
 }
 
-struct kit_HttpRequestBuilder *
+OptionOf(kit_String)
+kit_HttpRequestBuilder_clearBody(struct kit_HttpRequestBuilder *self) {
+    assert(self);
+    Option previousBody = Option_new((void *) self->request->body);
+    self->request->body = NULL;
+    return previousBody;
+}
+
+size_t
 kit_HttpRequestBuilder_setTimeout(struct kit_HttpRequestBuilder *self, size_t timeout) {
     assert(self);
+    const size_t previousTimeout = self->request->timeout;
     self->request->timeout = timeout;
-    return self;
+    return previousTimeout;
 }
 
-struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setFollowLocation(struct kit_HttpRequestBuilder *self, bool followLocation) {
+bool
+kit_HttpRequestBuilder_setFollowLocation(struct kit_HttpRequestBuilder *self, bool enable) {
     assert(self);
-    self->request->followLocation = followLocation;
-    return self;
+    const bool previousFollowLocation = self->request->followLocation;
+    self->request->followLocation = enable;
+    return previousFollowLocation;
 }
 
-struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setPeerVerification(struct kit_HttpRequestBuilder *self, bool peerVerification) {
+bool
+kit_HttpRequestBuilder_setPeerVerification(struct kit_HttpRequestBuilder *self, bool enable) {
     assert(self);
-    self->request->peerVerification = peerVerification;
-    return self;
+    const bool previousPeerVerification = self->request->peerVerification;
+    self->request->peerVerification = enable;
+    return previousPeerVerification;
 }
 
-struct kit_HttpRequestBuilder *
-kit_HttpRequestBuilder_setHostVerification(struct kit_HttpRequestBuilder *self, bool hostVerification) {
+bool
+kit_HttpRequestBuilder_setHostVerification(struct kit_HttpRequestBuilder *self, bool enable) {
     assert(self);
-    self->request->hostVerification = hostVerification;
-    return self;
+    const bool previousHostVerification = self->request->hostVerification;
+    self->request->hostVerification = enable;
+    return previousHostVerification;
 }
 
 const struct kit_HttpRequest *
@@ -195,7 +241,8 @@ kit_HttpRequestBuilder_build(struct kit_HttpRequestBuilder **ref) {
     return request;
 }
 
-void kit_HttpRequestBuilder_delete(struct kit_HttpRequestBuilder *self) {
+void
+kit_HttpRequestBuilder_delete(struct kit_HttpRequestBuilder *self) {
     if (self) {
         kit_Allocator_free(self);
     }

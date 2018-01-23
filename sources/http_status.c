@@ -91,7 +91,8 @@ static const char KIT_HTTP_STATUS_LOOP_DETECTED_EXPLANATION[] = "Loop Detected";
 static const char KIT_HTTP_STATUS_NOT_EXTENDED_EXPLANATION[] = "Not Extended";
 static const char KIT_HTTP_STATUS_NETWORK_AUTHENTICATION_REQUIRED_EXPLANATION[] = "Authentication Required";
 
-const char *kit_HttpStatus_explain(enum kit_HttpStatus status) {
+const char *
+kit_HttpStatus_explain(enum kit_HttpStatus status) {
     switch (status) {
         case KIT_HTTP_STATUS_CONTINUE:
             return KIT_HTTP_STATUS_CONTINUE_EXPLANATION;

@@ -60,7 +60,9 @@ int main() {
 
     struct kit_HttpRequestBuilder *requestBuilder = u(kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, url));
     kit_HttpRequestBuilder_setTimeout(requestBuilder, 25);
-    kit_HttpRequestBuilder_setHeaders(requestBuilder, &requestHeaders); // takes ownership invalidating requestHeaders
+    Option _ = kit_HttpRequestBuilder_setHeaders(requestBuilder, &requestHeaders); // takes ownership invalidating requestHeaders
+    (void) _;
+    assert(Option_isNone(_));
     assert(NULL == requestHeaders);
 
     const struct kit_HttpRequest *request = kit_HttpRequestBuilder_build(&requestBuilder); // takes ownership deleting and invalidating requestBuilder.

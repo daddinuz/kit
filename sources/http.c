@@ -39,7 +39,7 @@ kit_HttpRequest_initialize(void);
 static size_t
 kit_HttpRequest_writeFn(void *content, size_t memberSize, size_t membersCount, void *userData);
 
-ResultOf(const struct kit_HttpResponse *, OutOfMemoryError)
+ResultOf(const struct kit_HttpResponse *, NetworkingError, OutOfMemoryError)
 kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
     assert(ref);
     assert(*ref);
@@ -58,11 +58,15 @@ kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
     CURL *curlHandler = NULL;
 
     do {
-        option = kit_HttpResponseBuilder_new(request);
+        option = kit_HttpResponseBuilder_new(&request);
+        assert(*ref);
         if (Option_isNone(option)) {
+            assert(request);
             result = Result_error(OutOfMemoryError);
             break;
         }
+        assert(NULL == request);
+        request = *ref;
         responseBuilder = Option_unwrap(option);
 
         option = kit_String_new(0);
@@ -95,7 +99,8 @@ kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
 
         // Set request url and method
         curl_easy_setopt(curlHandler, CURLOPT_URL, kit_HttpRequest_getUrl(request));
-        curl_easy_setopt(curlHandler, CURLOPT_CUSTOMREQUEST, kit_HttpMethod_explain(kit_HttpRequest_getMethod(request)));
+        curl_easy_setopt(curlHandler, CURLOPT_CUSTOMREQUEST,
+                         kit_HttpMethod_explain(kit_HttpRequest_getMethod(request)));
 
         // Set request headers
         curl_easy_setopt(curlHandler, CURLOPT_HTTPHEADER, curlHeaders);
@@ -127,7 +132,11 @@ kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
         // Perform the request
         CURLcode curlError = curl_easy_perform(curlHandler);
         if (CURLE_OK != curlError) {
-            result = Result_errorWithDetails(NetworkingError, curl_easy_strerror(curlError));
+            if (CURLE_OUT_OF_MEMORY == curlError) {
+                result = Result_error(OutOfMemoryError);
+            } else {
+                result = Result_errorWithDetails(NetworkingError, curl_easy_strerror(curlError));
+            }
             break;
         }
 
@@ -153,11 +162,13 @@ kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
             kit_HttpResponseBuilder_setStatus(responseBuilder, responseStatus);
 
             // set response headers
-            kit_HttpResponseBuilder_setHeaders(responseBuilder, &responseHeaders);
+            option = kit_HttpResponseBuilder_setHeaders(responseBuilder, &responseHeaders);
+            assert(Option_isNone(option));
             assert(NULL == responseHeaders);
 
             // set response body
-            kit_HttpResponseBuilder_setBody(responseBuilder, &responseBody);
+            option = kit_HttpResponseBuilder_setBody(responseBuilder, &responseBody);
+            assert(Option_isNone(option));
             assert(NULL == responseBody);
         }
 

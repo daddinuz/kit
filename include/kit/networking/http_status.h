@@ -94,9 +94,15 @@ enum kit_HttpStatus {
     KIT_HTTP_STATUS_INSUFFICIENT_STORAGE = 507,             /* Insufficient Storage            */
     KIT_HTTP_STATUS_LOOP_DETECTED = 508,                    /* Loop Detected                   */
     KIT_HTTP_STATUS_NOT_EXTENDED = 510,                     /* Not Extended                    */
-    KIT_HTTP_STATUS_NETWORK_AUTHENTICATION_REQUIRED = 511   /* Network Authentication Required */
+    KIT_HTTP_STATUS_NETWORK_AUTHENTICATION_REQUIRED = 511   /* Authentication Required         */
 };
 
+/**
+ * Returns the string representation of the http status code.
+ *
+ * @param status The http status code.
+ * @return The string representation of the http status code.
+ */
 extern const char *
 kit_HttpStatus_explain(enum kit_HttpStatus status)
 __attribute__((__warn_unused_result__));
