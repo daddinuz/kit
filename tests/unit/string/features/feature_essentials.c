@@ -1,9 +1,29 @@
 /*
- * C Source File
- *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   December 12, 2017 
+ *
+ * Copyright (c) 2018 Davide Di Carlo
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include <traits/traits.h>
@@ -85,8 +105,8 @@ FeatureDefine(StringQuoted) {
     kit_String_delete(sut);
 
     {
-        const char BYTES[] = "\a\b\n\r\t\\\"\0abc123!";
-        const char EXPECTED[] = "\"\\a\\b\\n\\r\\t\\\\\\\"\\x00abc123!\"";
+        const char BYTES[] = " \" \\ / \b \f \n \r \t \0 ";
+        const char EXPECTED[] = "\" \\\" \\\\ \\/ \\b \\f \\n \\r \\t \\u0000 \"";
         const size_t BYTES_SIZE = sizeof(BYTES) - 1;
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
@@ -103,8 +123,8 @@ FeatureDefine(StringQuoted) {
     kit_String_delete(sut);
 
     {
-        const char BYTES[] = "\0\a\b\n\r\t\\\"\0abc123!\0";
-        const char EXPECTED[] = "\"\\x00\\a\\b\\n\\r\\t\\\\\\\"\\x00abc123!\\x00\"";
+        const char BYTES[] = "a\"b\\c/d\be\ff\ng\rh\ti\0l\1m\2n\3o";
+        const char EXPECTED[] = "\"a\\\"b\\\\c\\/d\\be\\ff\\ng\\rh\\ti\\u0000l\\u0001m\\u0002n\\u0003o\"";
         const size_t BYTES_SIZE = sizeof(BYTES) - 1;
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
         assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
@@ -121,8 +141,26 @@ FeatureDefine(StringQuoted) {
     kit_String_delete(sut);
 
     {
-        const char BYTES[] = "\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0ABC\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0DEF\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0GHI\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0LMN\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0OPQ\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0RST\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0UVZ\0\\\"\a\b\n\r\t\t\r\n\b\a\"\\\0";
-        const char EXPECTED[] = "\"\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00ABC\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00DEF\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00GHI\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00LMN\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00OPQ\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00RST\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00UVZ\\x00\\\\\\\"\\a\\b\\n\\r\\t\\t\\r\\n\\b\\a\\\"\\\\\\x00\"";
+        const char BYTES[] = "1a\"2b\\3c/4d\b5e\f6f\n7g\r8h\t9i\0" "10l\1" "11m\2" "12n\3" "13o";
+        const char EXPECTED[] = "\"1a\\\"2b\\\\3c\\/4d\\b5e\\f6f\\n7g\\r8h\\t9i\\u000010l\\u000111m\\u000212n\\u000313o\"";
+        const size_t BYTES_SIZE = sizeof(BYTES) - 1;
+        const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
+        assert_less(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);
+        const size_t EXPECTED_CAPACITY = KIT_STRING_DEFAULT_CAPACITY;
+
+        sut = u(kit_String_quoted(BYTES, BYTES_SIZE));
+        assert_not_null(sut);
+        assert_string_equal(sut, EXPECTED);
+        assert_equal(kit_String_size(sut), EXPECTED_SIZE);
+        assert_false(kit_String_isEmpty(sut));
+        assert_greater_equal(kit_String_capacity(sut), EXPECTED_CAPACITY);
+    }
+
+    kit_String_delete(sut);
+
+    {
+        const char BYTES[] = "a\"b\\c/d\be\ff\ng\rh\ti\0l\1m\2n\3o" "a\"b\\c/d\be\ff\ng\rh\ti\0l\1m\2n\3o" "a\"b\\c/d\be\ff\ng\rh\ti\0l\1m\2n\3o" "a\"b\\c/d\be\ff\ng\rh\ti\0l\1m\2n\3o";
+        const char EXPECTED[] = "\"a\\\"b\\\\c\\/d\\be\\ff\\ng\\rh\\ti\\u0000l\\u0001m\\u0002n\\u0003o" "a\\\"b\\\\c\\/d\\be\\ff\\ng\\rh\\ti\\u0000l\\u0001m\\u0002n\\u0003o" "a\\\"b\\\\c\\/d\\be\\ff\\ng\\rh\\ti\\u0000l\\u0001m\\u0002n\\u0003o" "a\\\"b\\\\c\\/d\\be\\ff\\ng\\rh\\ti\\u0000l\\u0001m\\u0002n\\u0003o\"";
         const size_t BYTES_SIZE = sizeof(BYTES) - 1;
         const size_t EXPECTED_SIZE = sizeof(EXPECTED) - 1;
         assert_greater(EXPECTED_SIZE, KIT_STRING_DEFAULT_CAPACITY);

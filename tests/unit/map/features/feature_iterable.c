@@ -1,9 +1,29 @@
 /*
- * C Source File
- *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   January 04, 2018 
+ *
+ * Copyright (c) 2018 Davide Di Carlo
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include <seeds.h>
@@ -14,6 +34,8 @@
 
 #define EXPECTED_SIZE   (SEEDS_SIZE / 2)
 #define COUPLES         (EXPECTED_SIZE * 2)
+
+#define _(x)            ((void) ((x) ? 1 : 0));
 
 FeatureDefine(MapIteratorFromEmptyMap) {
     struct kit_Traits_MapIteratorContext *context = traits_context;;
@@ -163,7 +185,7 @@ FeatureDefine(MapIteratorDetectModifications) {
     key = Option_unwrap(kit_Atom_fromLiteral(SEEDS[0]));
     value = (char *) SEEDS[1];
 
-    Result_unwrap(kit_Map_put(map, key, value));
+    _(Result_unwrap(kit_Map_put(map, key, value)));
 
     assert_true(kit_Map_Iterator_isModified(sut));
 
@@ -183,7 +205,7 @@ FeatureDefine(MapIteratorDetectModifications) {
     assert_string_equal(key, kit_Pair_getKey(pair));
     assert_string_equal(value, kit_Pair_getValue(pair));
 
-    Result_unwrap(kit_Map_Iterator_setLast(sut, "x"));
+    _(Result_unwrap(kit_Map_Iterator_setLast(sut, "x")));
     assert_string_equal("x", Result_unwrap(kit_Map_get(map, key)));
 
     kit_Pair_delete(pair);

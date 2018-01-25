@@ -45,23 +45,29 @@ file(GLOB EXAMPLES_HEADERS ${EXAMPLES_PATH}/*.h)
 file(GLOB EXAMPLES_SOURCES ${EXAMPLES_PATH}/*.c)
 
 #####
-# Working directories
-###
-include_directories(include)
-include_directories(deps)
-
-#####
 # Dependencies
 ###
+find_package(CURL)
 include(${DEPENDENCIES_PATH}/traits-unit/traits-unit.cmake)
 include(${DEPENDENCIES_PATH}/alligator/alligator.cmake)
 include(${DEPENDENCIES_PATH}/option/option.cmake)
 
 #####
+# Working directories
+###
+include_directories(include)
+include_directories(deps)
+if (CURL_FOUND)
+    include_directories(${CURL_INCLUDE_DIR})
+else (CURL_FOUND)
+    message(FATAL_ERROR "Could not find libcurl and development files.")
+endif (CURL_FOUND)
+
+#####
 # Library
 ###
 add_library(${LIBRARY} ${LIBRARY_HEADERS} ${LIBRARY_SOURCES})
-target_link_libraries(${LIBRARY} PRIVATE alligator option)
+target_link_libraries(${LIBRARY} PRIVATE alligator curl option)
 
 #####
 # Seeds
