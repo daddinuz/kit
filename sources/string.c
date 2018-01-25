@@ -1,9 +1,29 @@
 /*
- * C Source File
- *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   January 18, 2018
+ *
+ * Copyright (c) 2018 Davide Di Carlo
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include <stdio.h>
@@ -13,6 +33,8 @@
 #include <assert.h>
 #include <kit/allocator/allocator.h>
 #include <kit/collections/string.h>
+
+#define _(x)            ((void) ((x) ? 1 : 0));
 
 struct kit_String_Object {
     size_t size;
@@ -85,71 +107,55 @@ kit_String_quoted(const void *const bytes, const size_t size) {
 
     string = Option_unwrap(stringOption);
     /* if we are here we have enough space to perform this operation so no checks are performed */
-    Option_unwrap(kit_String_setBytes(&string, "\"", 1));
+    _(Option_unwrap(kit_String_setBytes(&string, "\"", 1)));
 
     for (size_t i = 0; i < size && false == teardownRequired; i++) {
         string = Option_unwrap(stringOption);
         switch (*data) {
-            case '\a': {
-                stringOption = kit_String_appendBytes(&string, "\\a", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\b': {
-                stringOption = kit_String_appendBytes(&string, "\\b", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\n': {
-                stringOption = kit_String_appendBytes(&string, "\\n", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\r': {
-                stringOption = kit_String_appendBytes(&string, "\\r", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\t': {
-                stringOption = kit_String_appendBytes(&string, "\\t", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
+            case '"': {
+                stringOption = kit_String_appendBytes(&string, "\\\"", 2);
                 break;
             }
             case '\\': {
                 stringOption = kit_String_appendBytes(&string, "\\\\", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
                 break;
             }
-            case '"': {
-                stringOption = kit_String_appendBytes(&string, "\\\"", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
+            case '/': {
+                stringOption = kit_String_appendBytes(&string, "\\/", 2);
+                break;
+            }
+            case '\b': {
+                stringOption = kit_String_appendBytes(&string, "\\b", 2);
+                break;
+            }
+            case '\f': {
+                stringOption = kit_String_appendBytes(&string, "\\f", 2);
+                break;
+            }
+            case '\n': {
+                stringOption = kit_String_appendBytes(&string, "\\n", 2);
+                break;
+            }
+            case '\r': {
+                stringOption = kit_String_appendBytes(&string, "\\r", 2);
+                break;
+            }
+            case '\t': {
+                stringOption = kit_String_appendBytes(&string, "\\t", 2);
                 break;
             }
             default: {
                 if (isprint(*data)) {
                     stringOption = kit_String_appendFormat(&string, "%c", *data);
                 } else {
-                    stringOption = kit_String_appendFormat(&string, "\\x%02x", (unsigned char) *data);
-                }
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
+                    stringOption = kit_String_appendFormat(&string, "\\u%04hhx", *data);
                 }
                 break;
             }
+        }
+        if (Option_isNone(stringOption)) {
+            teardownRequired = true;
+            break;
         }
         data++;
     }
@@ -212,7 +218,7 @@ kit_String_fromBytes(const void *const bytes, const size_t size) {
     if (Option_isSome(stringObjectOption)) {
         struct kit_String_Object *stringObject = Option_unwrap(stringObjectOption);
         char *raw = stringObject->raw;
-        Option_unwrap(kit_Allocator_copy(raw, bytes, size));
+        kit_Allocator_copy(raw, bytes, size);
         raw[size] = '\0';
         stringObject->size = size;
         return Option_new(raw);
@@ -323,7 +329,7 @@ kit_String_appendBytes(kit_String *const ref, const void *const bytes, const siz
         assert(NULL == stringObject);
         stringObject = Option_unwrap(stringObjectOption);
         char *stringObjectRaw = stringObject->raw;
-        Option_unwrap(kit_Allocator_copy(stringObjectRaw + stringObjectSize, bytes, size));
+        kit_Allocator_copy(stringObjectRaw + stringObjectSize, bytes, size);
         stringObjectRaw[stringObject->size = stringObjectSize + size] = '\0';
         *ref = NULL;
         return Option_new(stringObjectRaw);
@@ -419,7 +425,7 @@ kit_String_setBytes(kit_String *const ref, const void *const bytes, const size_t
         assert(NULL == stringObject);
         stringObject = Option_unwrap(stringObjectOption);
         char *stringObjectRaw = stringObject->raw;
-        Option_unwrap(kit_Allocator_copy(stringObjectRaw, bytes, size));
+        kit_Allocator_copy(stringObjectRaw, bytes, size);
         stringObjectRaw[stringObject->size = size] = '\0';
         *ref = NULL;
         return Option_new(stringObjectRaw);
@@ -649,7 +655,7 @@ __kit_String_assertValidInstance(const char *const file, const size_t line, kit_
     const struct kit_String_Object *stringObject = ((struct kit_String_Object *) string) - 1;
 
     if (stringObject->identityCode != KIT_STRING_IDENTITY_CODE) {
-        Option_expect(None, "Expected a valid string instance.\n%s:%zu", file, line);
+        _(Option_expect(None, "Expected a valid string instance.\n%s:%zu", file, line));
     }
 }
 
@@ -672,7 +678,7 @@ __kit_String_assertNotOverlapping(
      */
 
     if (!((a2 + s2) < a1 || (a1 + s1) < a2)) {
-        Option_expect(None, "Expected non-overlapping strings.\n%s:%zu", file, line);
+        _(Option_expect(None, "Expected non-overlapping strings.\n%s:%zu", file, line));
     }
 }
 

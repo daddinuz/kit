@@ -1,9 +1,29 @@
 /*
- * C Source File
- *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   January 18, 2018
+ *
+ * Copyright (c) 2018 Davide Di Carlo
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include <stdio.h>
@@ -12,6 +32,8 @@
 #include <assert.h>
 #include <kit/allocator/allocator.h>
 #include <kit/collections/atom.h>
+
+#define _(x)            ((void) ((x) ? 1 : 0));
 
 #define KIT_ATOM_NODE_TABLE_SIZE    (2039)
 
@@ -163,7 +185,7 @@ kit_Atom_assertValidInstance(kit_Atom atom) {
     (void) atom;
 #ifndef NDEBUG
     struct kit_Atom_Node *node = ((struct kit_Atom_Node *) atom) - 1;
-    Option_expect(kit_Atom_table_fetch(node->atom, node->length, node->hash), "Expected a valid atom instance.");
+    _(Option_expect(kit_Atom_table_fetch(node->atom, node->length, node->hash), "Expected a valid atom instance."));
 #endif
 }
 

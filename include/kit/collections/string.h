@@ -1,9 +1,29 @@
 /*
- * C Header File
- *
  * Author: daddinuz
  * email:  daddinuz@gmail.com
- * Date:   January 18, 2018
+ *
+ * Copyright (c) 2018 Davide Di Carlo
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #ifndef KIT_STRING_INCLUDED
@@ -42,19 +62,8 @@ kit_String_new(size_t capacityHint)
 __attribute__((__warn_unused_result__));
 
 /**
- * Creates a new quoted instance of kit_String starting from bytes.
- * In case of OOM this function returns None.ù
- *
- * The following quoting rules are applied:
- *      - '\"'                    -> "\\\""
- *      - '\\'                    -> "\\\\"
- *      - '\a'                    -> "\\a"
- *      - '\b'                    -> "\\b"
- *      - '\n'                    -> "\\n"
- *      - '\r'                    -> "\\r"
- *      - '\t'                    -> "\\t"
- *      - any printable character -> unchanged
- *      - others                  -> "\\x<ascii-code>" eg: '\0' -> "\\x00"
+ * Creates a new JSON compliant quoted instance of kit_String starting from bytes.
+ * In case of OOM this function returns None.
  *
  * @param bytes The sequence of bytes [<b>must not be NULL</b>].
  * @param size The size of bytes.
@@ -310,19 +319,8 @@ kit_String_setLiteral(kit_String *ref, const char *literal)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
- * Modifies string quoting is content.
+ * Modifies string quoting (JSON compliant) is content.
  * In case of OOM this function returns None.
- *
- * The following quoting rules are applied:
- *      - '\"'                    -> "\\\""
- *      - '\\'                    -> "\\\\"
- *      - '\a'                    -> "\\a"
- *      - '\b'                    -> "\\b"
- *      - '\n'                    -> "\\n"
- *      - '\r'                    -> "\\r"
- *      - '\t'                    -> "\\t"
- *      - any printable character -> unchanged
- *      - others                  -> "\\x<ascii-code>" eg: '\0' -> "\\x00"
  *
  * Note: Takes ownership invalidating *ref in case of success.
  *
