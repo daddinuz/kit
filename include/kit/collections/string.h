@@ -62,19 +62,8 @@ kit_String_new(size_t capacityHint)
 __attribute__((__warn_unused_result__));
 
 /**
- * Creates a new quoted instance of kit_String starting from bytes.
- * In case of OOM this function returns None.ù
- *
- * The following quoting rules are applied:
- *      - '\"'                    -> "\\\""
- *      - '\\'                    -> "\\\\"
- *      - '\a'                    -> "\\a"
- *      - '\b'                    -> "\\b"
- *      - '\n'                    -> "\\n"
- *      - '\r'                    -> "\\r"
- *      - '\t'                    -> "\\t"
- *      - any printable character -> unchanged
- *      - others                  -> "\\x<ascii-code>" eg: '\0' -> "\\x00"
+ * Creates a new JSON compliant quoted instance of kit_String starting from bytes.
+ * In case of OOM this function returns None.
  *
  * @param bytes The sequence of bytes [<b>must not be NULL</b>].
  * @param size The size of bytes.
@@ -330,19 +319,8 @@ kit_String_setLiteral(kit_String *ref, const char *literal)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
- * Modifies string quoting is content.
+ * Modifies string quoting (JSON compliant) is content.
  * In case of OOM this function returns None.
- *
- * The following quoting rules are applied:
- *      - '\"'                    -> "\\\""
- *      - '\\'                    -> "\\\\"
- *      - '\a'                    -> "\\a"
- *      - '\b'                    -> "\\b"
- *      - '\n'                    -> "\\n"
- *      - '\r'                    -> "\\r"
- *      - '\t'                    -> "\\t"
- *      - any printable character -> unchanged
- *      - others                  -> "\\x<ascii-code>" eg: '\0' -> "\\x00"
  *
  * Note: Takes ownership invalidating *ref in case of success.
  *

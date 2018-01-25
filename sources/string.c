@@ -112,66 +112,50 @@ kit_String_quoted(const void *const bytes, const size_t size) {
     for (size_t i = 0; i < size && false == teardownRequired; i++) {
         string = Option_unwrap(stringOption);
         switch (*data) {
-            case '\a': {
-                stringOption = kit_String_appendBytes(&string, "\\a", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\b': {
-                stringOption = kit_String_appendBytes(&string, "\\b", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\n': {
-                stringOption = kit_String_appendBytes(&string, "\\n", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\r': {
-                stringOption = kit_String_appendBytes(&string, "\\r", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
-                break;
-            }
-            case '\t': {
-                stringOption = kit_String_appendBytes(&string, "\\t", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
+            case '"': {
+                stringOption = kit_String_appendBytes(&string, "\\\"", 2);
                 break;
             }
             case '\\': {
                 stringOption = kit_String_appendBytes(&string, "\\\\", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
                 break;
             }
-            case '"': {
-                stringOption = kit_String_appendBytes(&string, "\\\"", 2);
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
-                }
+            case '/': {
+                stringOption = kit_String_appendBytes(&string, "\\/", 2);
+                break;
+            }
+            case '\b': {
+                stringOption = kit_String_appendBytes(&string, "\\b", 2);
+                break;
+            }
+            case '\f': {
+                stringOption = kit_String_appendBytes(&string, "\\f", 2);
+                break;
+            }
+            case '\n': {
+                stringOption = kit_String_appendBytes(&string, "\\n", 2);
+                break;
+            }
+            case '\r': {
+                stringOption = kit_String_appendBytes(&string, "\\r", 2);
+                break;
+            }
+            case '\t': {
+                stringOption = kit_String_appendBytes(&string, "\\t", 2);
                 break;
             }
             default: {
                 if (isprint(*data)) {
                     stringOption = kit_String_appendFormat(&string, "%c", *data);
                 } else {
-                    stringOption = kit_String_appendFormat(&string, "\\x%02x", (unsigned char) *data);
-                }
-                if (Option_isNone(stringOption)) {
-                    teardownRequired = true;
+                    stringOption = kit_String_appendFormat(&string, "\\u%04hhx", *data);
                 }
                 break;
             }
+        }
+        if (Option_isNone(stringOption)) {
+            teardownRequired = true;
+            break;
         }
         data++;
     }
