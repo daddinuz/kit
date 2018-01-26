@@ -187,7 +187,6 @@ kit_String_quoted(const void *const bytes, const size_t size) {
 OptionOf(kit_String)
 kit_String_fromPack(const char *const format, va_list pack) {
     assert(format);
-    assert(pack);
 
     va_list packCopy;
 
@@ -287,7 +286,6 @@ kit_String_appendPack(kit_String *const ref, const char *const format, va_list p
     assert(ref);
     assert(*ref);
     assert(format);
-    assert(pack);
 
     va_list packCopy;
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;

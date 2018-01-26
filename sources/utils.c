@@ -42,8 +42,6 @@ const void *const Ellipsis = &_Ellipsis;
 
 size_t
 kit_packSize(va_list pack) {
-    assert(pack);
-
     size_t size = 0;
     while (Ellipsis != va_arg(pack, void *)) {
         size++;

@@ -81,8 +81,6 @@ __kit_Array_from(void *e0, ...) {
 
 OptionOf(struct kit_Array *)
 kit_Array_fromPack(va_list pack) {
-    assert(pack);
-
     Option option;
     va_list packCopy;
     struct kit_Array *self = NULL;
