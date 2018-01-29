@@ -33,22 +33,55 @@
 #define u(x) \
     Option_unwrap((x))
 
+#define _s(x) \
+        #x
+
+#define s(x) \
+        _s(x)
+
 /*
  *
  */
 int main() {
-    kit_String string = u(kit_String_fromFormat("%s %s!", "Hello", "World"));
-    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
+    kit_String string3 = u(kit_String_fromLiteral(" [> data field 3 <] "));
+    string3 = u(kit_String_prependBytes(&string3, "\0\a\t\r\b\n\b\r\t\a\0", 11));
+    string3 = u(kit_String_appendBytes(&string3, "\0\a\t\r\b\n\b\r\t\a\0", 11));
+    string3 = u(kit_String_quote(&string3));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string3), kit_String_size(string3), kit_String_capacity(string3), string3);
 
-    string = u(kit_String_appendFormat(&string, " %s %s!", "I'm evil!", "MuahUahUah"));
-    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
+    kit_String string2 = u(kit_String_fromLiteral(" [> data field 2 <] "));
+    string2 = u(kit_String_prependBytes(&string2, "\0\a\t\r\b\n\b\r\t\a\0", 11));
+    string2 = u(kit_String_appendBytes(&string2, "\0\a\t\r\b\n\b\r\t\a\0", 11));
+    string2 = u(kit_String_quote(&string2));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string2), kit_String_size(string2), kit_String_capacity(string2), string2);
 
-    string = u(kit_String_setBytes(&string, "abc\"\0\t\n\r\b\a123", 13));
-    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
+    kit_String string1 = u(kit_String_fromLiteral(" [> data field 1 <] "));
+    string1 = u(kit_String_prependBytes(&string1, "\0\a\t\r\b\n\b\r\t\a\0", 11));
+    string1 = u(kit_String_appendBytes(&string1, "\0\a\t\r\b\n\b\r\t\a\0", 11));
+    string1 = u(kit_String_quote(&string1));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string1), kit_String_size(string1), kit_String_capacity(string1), string1);
 
-    string = u(kit_String_quote(&string));
-    printf("(%3zu)[%3zu]`%s`\n", kit_String_size(string), kit_String_capacity(string), string);
+    kit_String string = u(kit_String_new(0));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string), kit_String_size(string), kit_String_capacity(string), string);
 
+    string = u(kit_String_prepend(&string, string3));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string), kit_String_size(string), kit_String_capacity(string), string);
+
+    string = u(kit_String_prependLiteral(&string, "\n"));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string), kit_String_size(string), kit_String_capacity(string), string);
+
+    string = u(kit_String_prependBytes(&string, string2, kit_String_size(string2)));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string), kit_String_size(string), kit_String_capacity(string), string);
+
+    string = u(kit_String_prependFormat(&string, "\n%s\n", string1));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string), kit_String_size(string), kit_String_capacity(string), string);
+
+    string = u(kit_String_appendLiteral(&string, "\n"));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(string), kit_String_size(string), kit_String_capacity(string), string);
+
+    kit_String_delete(kit_move((void **) &string3));
+    kit_String_delete(kit_move((void **) &string2));
+    kit_String_delete(kit_move((void **) &string1));
     kit_String_delete(kit_move((void **) &string));
     return 0;
 }

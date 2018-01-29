@@ -227,6 +227,98 @@ kit_String_appendLiteral(kit_String *ref, const char *literal)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
+ * Prepends content to string.
+ * In case of OOM this function returns None.
+ *
+ * Note: Takes ownership invalidating *ref in case of success.
+ *
+ * @attention
+ *  This function requires *ref to be a kit_String instance (not just any string!).
+ *  This function requires other to be a kit_String instance (not just any string!).
+ *  This function requires that the strings must not overlap.
+ *
+ * @param ref The reference to the string instance to be modified [<b>must not be NULL</b>].
+ * @param other The string to be prepended [<b>must not be NULL</b>].
+ * @return The modified string instance (invalidating *ref) in case of success or None (leaving *ref untouched).
+ */
+extern OptionOf(kit_String)
+kit_String_prepend(kit_String *ref, kit_String other)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Prepends content to string using printf-like format, behaves like kit_String_prependFormat but takes a va_list.
+ * In case of OOM this function returns None.
+ *
+ * Note: Takes ownership invalidating *ref in case of success.
+ *
+ * @attention
+ *  This function requires *ref to be a kit_String instance (not just any string!).
+ *
+ * @param ref The reference to the string instance to be modified [<b>must not be NULL</b>].
+ * @param format The printf-like format string [<b>must not be NULL</b>].
+ * @param pack The args for format [<b>must not be NULL</b>].
+ * @return The modified string instance (invalidating *ref) in case of success or None (leaving *ref untouched).
+ */
+extern OptionOf(kit_String)
+kit_String_prependPack(kit_String *ref, const char *format, va_list pack)
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 0)));
+
+/**
+ * Prepends bytes to string.
+ * In case of OOM this function returns None.
+ *
+ * Note: Takes ownership invalidating *ref in case of success.
+ *
+ * @attention
+ *  This function requires *ref to be a kit_String instance (not just any string!).
+ *  This function requires that the string and bytes must not overlap.
+ *
+ * @param ref The reference to the string instance to be modified [<b>must not be NULL</b>].
+ * @param bytes The bytes used as seed to construct the string [<b>must not be NULL</b>].
+ * @param size The size of bytes.
+ * @return The modified string instance (invalidating *ref) in case of success or None (leaving *ref untouched).
+ */
+extern OptionOf(kit_String)
+kit_String_prependBytes(kit_String *ref, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * Prepends content to string using printf-like format.
+ * In case of OOM this function returns None.
+ *
+ * Note: Takes ownership invalidating *ref in case of success.
+ *
+ * @attention
+ *  This function requires *ref to be a kit_String instance (not just any string!).
+ *
+ * @param ref The reference to the string instance to be modified [<b>must not be NULL</b>].
+ * @param format The printf-like format string [<b>must not be NULL</b>].
+ * @param ... The args for format
+ * @return The modified string instance (invalidating *ref) in case of success or None (leaving *ref untouched).
+ */
+extern OptionOf(kit_String)
+kit_String_prependFormat(kit_String *ref, const char *format, ...)
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 3)));
+
+/**
+ * Prepends literal to string.
+ * In case of OOM this function returns None.
+ *
+ * Note: Takes ownership invalidating *ref in case of success.
+ *
+ * @attention
+ *  This function requires *ref to be a kit_String instance (not just any string!).
+ *  This function requires that the strings must not overlap.
+ *
+ * @param ref The reference to the string instance to be modified [<b>must not be NULL</b>].
+ * @param literal The string literal to be prepended [<b>must not be NULL</b>].
+ * @return The modified string instance (invalidating *ref) in case of success or None (leaving *ref untouched).
+ */
+extern OptionOf(kit_String)
+kit_String_prependLiteral(kit_String *ref, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
  * Sets the content of string.
  * In case of OOM this function returns None.
  *
