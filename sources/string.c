@@ -99,61 +99,61 @@ kit_String_quoted(const void *const bytes, const size_t size) {
     const char *data = bytes;
     kit_String string = NULL;
     bool teardownRequired = false;
-    Option stringOption = kit_String_new(size + size / 3);
+    Option option = kit_String_new(size + size / 3);
 
-    if (Option_isNone(stringOption)) {
+    if (Option_isNone(option)) {
         return None;
     }
 
-    string = Option_unwrap(stringOption);
+    string = Option_unwrap(option);
     /* if we are here we have enough space to perform this operation so no checks are performed */
     _(Option_unwrap(kit_String_setBytes(&string, "\"", 1)));
 
     for (size_t i = 0; i < size && false == teardownRequired; i++) {
-        string = Option_unwrap(stringOption);
+        string = Option_unwrap(option);
         switch (*data) {
             case '"': {
-                stringOption = kit_String_appendBytes(&string, "\\\"", 2);
+                option = kit_String_appendBytes(&string, "\\\"", 2);
                 break;
             }
             case '\\': {
-                stringOption = kit_String_appendBytes(&string, "\\\\", 2);
+                option = kit_String_appendBytes(&string, "\\\\", 2);
                 break;
             }
             case '/': {
-                stringOption = kit_String_appendBytes(&string, "\\/", 2);
+                option = kit_String_appendBytes(&string, "\\/", 2);
                 break;
             }
             case '\b': {
-                stringOption = kit_String_appendBytes(&string, "\\b", 2);
+                option = kit_String_appendBytes(&string, "\\b", 2);
                 break;
             }
             case '\f': {
-                stringOption = kit_String_appendBytes(&string, "\\f", 2);
+                option = kit_String_appendBytes(&string, "\\f", 2);
                 break;
             }
             case '\n': {
-                stringOption = kit_String_appendBytes(&string, "\\n", 2);
+                option = kit_String_appendBytes(&string, "\\n", 2);
                 break;
             }
             case '\r': {
-                stringOption = kit_String_appendBytes(&string, "\\r", 2);
+                option = kit_String_appendBytes(&string, "\\r", 2);
                 break;
             }
             case '\t': {
-                stringOption = kit_String_appendBytes(&string, "\\t", 2);
+                option = kit_String_appendBytes(&string, "\\t", 2);
                 break;
             }
             default: {
                 if (isprint(*data)) {
-                    stringOption = kit_String_appendFormat(&string, "%c", *data);
+                    option = kit_String_appendFormat(&string, "%c", *data);
                 } else {
-                    stringOption = kit_String_appendFormat(&string, "\\u%04hhx", *data);
+                    option = kit_String_appendFormat(&string, "\\u%04hhx", *data);
                 }
                 break;
             }
         }
-        if (Option_isNone(stringOption)) {
+        if (Option_isNone(option)) {
             teardownRequired = true;
             break;
         }
@@ -162,23 +162,23 @@ kit_String_quoted(const void *const bytes, const size_t size) {
 
     if (false == teardownRequired) {
         assert(NULL == string);
-        assert(Option_isSome(stringOption));
-        string = Option_unwrap(stringOption);
-        stringOption = kit_String_appendBytes(&string, "\"", 1);
-        if (Option_isNone(stringOption)) {
+        assert(Option_isSome(option));
+        string = Option_unwrap(option);
+        option = kit_String_appendBytes(&string, "\"", 1);
+        if (Option_isNone(option)) {
             teardownRequired = true;
         }
     }
 
     if (teardownRequired) {
         assert(NULL != string);
-        assert(Option_isNone(stringOption));
+        assert(Option_isNone(option));
         kit_String_delete(string);
         string = NULL;
     } else {
         assert(NULL == string);
-        assert(Option_isSome(stringOption));
-        string = Option_unwrap(stringOption);
+        assert(Option_isSome(option));
+        string = Option_unwrap(option);
     }
 
     return Option_new((void *) string);
@@ -191,17 +191,17 @@ kit_String_fromPack(const char *const format, va_list pack) {
     va_list packCopy;
 
     va_copy(packCopy, pack);
-    const int FORMATTED_SIZE = vsnprintf(NULL, 0, format, packCopy);
+    const int formattedSize = vsnprintf(NULL, 0, format, packCopy);
     va_end(packCopy);
 
-    if (FORMATTED_SIZE >= 0) {
-        const size_t SIZE = (size_t) FORMATTED_SIZE;
-        Option option = kit_String_Object_new(SIZE);
+    if (formattedSize >= 0) {
+        const size_t size = (size_t) formattedSize;
+        Option option = kit_String_Object_new(size);
 
         if (Option_isSome(option)) {
             struct kit_String_Object *stringObject = Option_unwrap(option);
-            vsnprintf(stringObject->raw, SIZE + 1, format, pack);
-            stringObject->size = SIZE;
+            vsnprintf(stringObject->raw, size + 1, format, pack);
+            stringObject->size = size;
             return Option_new(stringObject->raw);
         }
     }
@@ -652,7 +652,7 @@ kit_String_size(kit_String self) {
     assert(self);
     kit_String_assertValidInstance(self);
 
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
+    const struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
     return stringObject->size;
 }
 
@@ -661,7 +661,7 @@ kit_String_capacity(kit_String self) {
     assert(self);
     kit_String_assertValidInstance(self);
 
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
+    const struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
     return stringObject->capacity;
 }
 
@@ -672,9 +672,8 @@ kit_String_isEqual(kit_String self, kit_String other) {
     kit_String_assertValidInstance(self);
     kit_String_assertValidInstance(other);
 
-    struct kit_String_Object *selfObject = ((struct kit_String_Object *) self) - 1;
-    struct kit_String_Object *otherObject = ((struct kit_String_Object *) other) - 1;
-    return (selfObject->size == otherObject->size) && (0 == memcmp(self, other, selfObject->size));
+    const size_t selfSize = kit_String_size(self);
+    return (selfSize == kit_String_size(other)) && (0 == memcmp(self, other, selfSize));
 }
 
 bool
@@ -682,8 +681,7 @@ kit_String_isEmpty(kit_String self) {
     assert(self);
     kit_String_assertValidInstance(self);
 
-    struct kit_String_Object *selfObject = ((struct kit_String_Object *) self) - 1;
-    return 0 == selfObject->size;
+    return 0 == kit_String_size(self);
 }
 
 void
