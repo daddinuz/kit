@@ -82,10 +82,10 @@ __attribute__((__nonnull__));
  */
 OptionOf(kit_String)
 kit_String_new(const size_t capacityHint) {
-    Option stringObjectOption = kit_String_Object_new(capacityHint);
+    Option option = kit_String_Object_new(capacityHint);
 
-    if (Option_isSome(stringObjectOption)) {
-        struct kit_String_Object *stringObject = Option_unwrap(stringObjectOption);
+    if (Option_isSome(option)) {
+        struct kit_String_Object *stringObject = Option_unwrap(option);
         return Option_new(stringObject->raw);
     }
 
@@ -196,10 +196,10 @@ kit_String_fromPack(const char *const format, va_list pack) {
 
     if (FORMATTED_SIZE >= 0) {
         const size_t SIZE = (size_t) FORMATTED_SIZE;
-        Option stringObjectOption = kit_String_Object_new(SIZE);
+        Option option = kit_String_Object_new(SIZE);
 
-        if (Option_isSome(stringObjectOption)) {
-            struct kit_String_Object *stringObject = Option_unwrap(stringObjectOption);
+        if (Option_isSome(option)) {
+            struct kit_String_Object *stringObject = Option_unwrap(option);
             vsnprintf(stringObject->raw, SIZE + 1, format, pack);
             stringObject->size = SIZE;
             return Option_new(stringObject->raw);
@@ -212,10 +212,10 @@ kit_String_fromPack(const char *const format, va_list pack) {
 OptionOf(kit_String)
 kit_String_fromBytes(const void *const bytes, const size_t size) {
     assert(bytes);
-    Option stringObjectOption = kit_String_Object_new(size);
+    Option option = kit_String_Object_new(size);
 
-    if (Option_isSome(stringObjectOption)) {
-        struct kit_String_Object *stringObject = Option_unwrap(stringObjectOption);
+    if (Option_isSome(option)) {
+        struct kit_String_Object *stringObject = Option_unwrap(option);
         char *raw = stringObject->raw;
         kit_Allocator_copy(raw, bytes, size);
         raw[size] = '\0';
@@ -231,12 +231,10 @@ kit_String_fromFormat(const char *const format, ...) {
     assert(format);
 
     va_list pack;
-
     va_start(pack, format);
-    Option result = kit_String_fromPack(format, pack);
+    Option option = kit_String_fromPack(format, pack);
     va_end(pack);
-
-    return result;
+    return option;
 }
 
 OptionOf(kit_String)
@@ -254,18 +252,112 @@ kit_String_duplicate(kit_String s) {
     return kit_String_fromBytes(s, kit_String_size(s));
 }
 
-OptionOf(kit_String)
-kit_String_clear(kit_String *const ref) {
+ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insert(kit_String *const ref, const size_t index, kit_String other) {
     assert(ref);
     assert(*ref);
+    assert(other);
+    kit_String_assertValidInstance(*ref);
+    kit_String_assertValidInstance(other);
+    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), other, kit_String_size(other));
+
+    return kit_String_insertBytes(ref, index, other, kit_String_size(other));
+}
+
+ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertPack(kit_String *ref, size_t index, const char *format, va_list pack) {
+    assert(ref);
+    assert(*ref);
+    assert(format);
     kit_String_assertValidInstance(*ref);
 
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    stringObject->raw[0] = '\0';
-    stringObject->size = 0;
+    if (index > kit_String_size(*ref)) {
+        return Result_error(OutOfRangeError);
+    }
 
-    *ref = NULL;
-    return Option_new(stringObject->raw);
+    va_list packCopy;
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+
+    va_copy(packCopy, pack);
+    const int formattedSize = vsnprintf(NULL, 0, format, packCopy);
+    va_end(packCopy);
+
+    if (formattedSize >= 0) {
+        const size_t currentSize = stringObject->size;
+        const size_t additionalSize = (size_t) formattedSize;
+        Option option = kit_String_Object_reserve(&stringObject, currentSize + additionalSize);
+
+        if (Option_isSome(option)) {
+            stringObject = Option_unwrap(option);
+            char *raw = stringObject->raw;
+            char previousChar = raw[index];
+            kit_Allocator_move(raw + index + additionalSize, raw + index, currentSize - index);
+            vsnprintf(raw + index, additionalSize + 1, format, pack);
+            raw[index + additionalSize] = previousChar;
+            raw[stringObject->size = currentSize + additionalSize] = '\0';
+            *ref = NULL;
+            return Result_ok(raw);
+        }
+    }
+
+    assert(NULL != stringObject);
+    return Result_error(OutOfMemoryError);
+}
+
+ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertBytes(kit_String *const ref, const size_t index, const void *const bytes, const size_t size) {
+    assert(ref);
+    assert(*ref);
+    assert(bytes);
+    kit_String_assertValidInstance(*ref);
+    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), bytes, size);
+
+    if (index > kit_String_size(*ref)) {
+        return Result_error(OutOfRangeError);
+    }
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+    const size_t currentSize = stringObject->size;
+    Option option = kit_String_Object_reserve(&stringObject, currentSize + size);
+
+    if (Option_isSome(option)) {
+        assert(NULL == stringObject);
+        stringObject = Option_unwrap(option);
+        char *raw = stringObject->raw;
+        kit_Allocator_move(raw + index + size, raw + index, currentSize - index);
+        kit_Allocator_copy(raw + index, bytes, size);
+        raw[stringObject->size = currentSize + size] = '\0';
+        *ref = NULL;
+        return Result_ok(raw);
+    }
+
+    assert(NULL != stringObject);
+    return Result_error(OutOfMemoryError);
+}
+
+ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertFormat(kit_String *const ref, const size_t index, const char *const format, ...) {
+    assert(ref);
+    assert(*ref);
+    assert(format);
+    kit_String_assertValidInstance(*ref);
+
+    va_list pack;
+    va_start(pack, format);
+    Result result = kit_String_insertPack(ref, index, format, pack);
+    va_end(pack);
+    return result;
+}
+
+ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertLiteral(kit_String *const ref, const size_t index, const char *const literal) {
+    assert(ref);
+    assert(*ref);
+    assert(literal);
+    kit_String_assertValidInstance(*ref);
+    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), literal, strlen(literal));
+
+    return kit_String_insertBytes(ref, index, literal, strlen(literal));
 }
 
 OptionOf(kit_String)
@@ -277,8 +369,8 @@ kit_String_append(kit_String *const ref, kit_String other) {
     kit_String_assertValidInstance(other);
     kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), other, kit_String_size(other));
 
-    const struct kit_String_Object *otherObject = ((struct kit_String_Object *) other) - 1;
-    return kit_String_appendBytes(ref, other, otherObject->size);
+    Result result = kit_String_insertBytes(ref, kit_String_size(*ref), other, kit_String_size(other));
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -286,29 +378,10 @@ kit_String_appendPack(kit_String *const ref, const char *const format, va_list p
     assert(ref);
     assert(*ref);
     assert(format);
+    kit_String_assertValidInstance(*ref);
 
-    va_list packCopy;
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-
-    va_copy(packCopy, pack);
-    const int FORMATTED_SIZE = vsnprintf(NULL, 0, format, packCopy);
-    va_end(packCopy);
-
-    if (FORMATTED_SIZE >= 0) {
-        const size_t CURRENT_SIZE = stringObject->size;
-        const size_t ADDITIONAL_SIZE = (size_t) FORMATTED_SIZE;
-        Option stringObjectOption = kit_String_Object_reserve(&stringObject, CURRENT_SIZE + ADDITIONAL_SIZE);
-
-        if (Option_isSome(stringObjectOption)) {
-            stringObject = Option_unwrap(stringObjectOption);
-            vsnprintf(stringObject->raw + CURRENT_SIZE, ADDITIONAL_SIZE + 1, format, pack);
-            stringObject->size += ADDITIONAL_SIZE;
-            *ref = NULL;
-            return Option_new(stringObject->raw);
-        }
-    }
-
-    return None;
+    Result result = kit_String_insertPack(ref, kit_String_size(*ref), format, pack);
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -319,22 +392,8 @@ kit_String_appendBytes(kit_String *const ref, const void *const bytes, const siz
     kit_String_assertValidInstance(*ref);
     kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), bytes, size);
 
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    const size_t stringObjectSize = stringObject->size;
-    Option stringObjectOption = kit_String_Object_reserve(&stringObject, stringObjectSize + size);
-
-    if (Option_isSome(stringObjectOption)) {
-        assert(NULL == stringObject);
-        stringObject = Option_unwrap(stringObjectOption);
-        char *stringObjectRaw = stringObject->raw;
-        kit_Allocator_copy(stringObjectRaw + stringObjectSize, bytes, size);
-        stringObjectRaw[stringObject->size = stringObjectSize + size] = '\0';
-        *ref = NULL;
-        return Option_new(stringObjectRaw);
-    }
-
-    assert(NULL != stringObject);
-    return None;
+    Result result = kit_String_insertBytes(ref, kit_String_size(*ref), bytes, size);
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -342,15 +401,13 @@ kit_String_appendFormat(kit_String *const ref, const char *const format, ...) {
     assert(ref);
     assert(*ref);
     assert(format);
+    kit_String_assertValidInstance(*ref);
 
     va_list pack;
-
     va_start(pack, format);
-    Option result = kit_String_appendPack(ref, format, pack);
+    Result result = kit_String_insertPack(ref, kit_String_size(*ref), format, pack);
     va_end(pack);
-
-    assert(Option_isSome(result) ? NULL == *ref : NULL != *ref);
-    return result;
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -359,11 +416,10 @@ kit_String_appendLiteral(kit_String *const ref, const char *const literal) {
     assert(*ref);
     assert(literal);
     kit_String_assertValidInstance(*ref);
+    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), literal, strlen(literal));
 
-    const size_t SIZE = strlen(literal);
-    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), literal, SIZE);
-
-    return kit_String_appendBytes(ref, literal, SIZE);
+    Result result = kit_String_insertLiteral(ref, kit_String_size(*ref), literal);
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -375,8 +431,8 @@ kit_String_prepend(kit_String *const ref, kit_String other) {
     kit_String_assertValidInstance(other);
     kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), other, kit_String_size(other));
 
-    const struct kit_String_Object *otherObject = ((struct kit_String_Object *) other) - 1;
-    return kit_String_prependBytes(ref, other, otherObject->size);
+    Result result = kit_String_insert(ref, 0, other);
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -384,33 +440,10 @@ kit_String_prependPack(kit_String *const ref, const char *const format, va_list 
     assert(ref);
     assert(*ref);
     assert(format);
+    kit_String_assertValidInstance(*ref);
 
-    va_list packCopy;
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-
-    va_copy(packCopy, pack);
-    const int FORMATTED_SIZE = vsnprintf(NULL, 0, format, packCopy);
-    va_end(packCopy);
-
-    if (FORMATTED_SIZE >= 0) {
-        const size_t CURRENT_SIZE = stringObject->size;
-        const size_t ADDITIONAL_SIZE = (size_t) FORMATTED_SIZE;
-        Option stringObjectOption = kit_String_Object_reserve(&stringObject, CURRENT_SIZE + ADDITIONAL_SIZE);
-
-        if (Option_isSome(stringObjectOption)) {
-            stringObject = Option_unwrap(stringObjectOption);
-            char *raw = stringObject->raw;
-            char previousChar = raw[0];
-            kit_Allocator_move(raw + ADDITIONAL_SIZE, raw, CURRENT_SIZE);
-            vsnprintf(raw, ADDITIONAL_SIZE + 1, format, pack);
-            raw[ADDITIONAL_SIZE] = previousChar;
-            raw[stringObject->size = CURRENT_SIZE + ADDITIONAL_SIZE] = '\0';
-            *ref = NULL;
-            return Option_new(raw);
-        }
-    }
-
-    return None;
+    Result result = kit_String_insertPack(ref, 0, format, pack);
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -421,23 +454,8 @@ kit_String_prependBytes(kit_String *const ref, const void *const bytes, const si
     kit_String_assertValidInstance(*ref);
     kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), bytes, size);
 
-    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    const size_t currentSize = stringObject->size;
-    Option stringObjectOption = kit_String_Object_reserve(&stringObject, currentSize + size);
-
-    if (Option_isSome(stringObjectOption)) {
-        assert(NULL == stringObject);
-        stringObject = Option_unwrap(stringObjectOption);
-        char *raw = stringObject->raw;
-        kit_Allocator_move(raw + size, raw, currentSize);
-        kit_Allocator_copy(raw, bytes, size);
-        raw[stringObject->size = currentSize + size] = '\0';
-        *ref = NULL;
-        return Option_new(raw);
-    }
-
-    assert(NULL != stringObject);
-    return None;
+    Result result = kit_String_insertBytes(ref, 0, bytes, size);
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -445,15 +463,13 @@ kit_String_prependFormat(kit_String *const ref, const char *const format, ...) {
     assert(ref);
     assert(*ref);
     assert(format);
+    kit_String_assertValidInstance(*ref);
 
     va_list pack;
-
     va_start(pack, format);
-    Option result = kit_String_prependPack(ref, format, pack);
+    Result result = kit_String_insertPack(ref, 0, format, pack);
     va_end(pack);
-
-    assert(Option_isSome(result) ? NULL == *ref : NULL != *ref);
-    return result;
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -462,11 +478,10 @@ kit_String_prependLiteral(kit_String *const ref, const char *const literal) {
     assert(*ref);
     assert(literal);
     kit_String_assertValidInstance(*ref);
+    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), literal, strlen(literal));
 
-    const size_t SIZE = strlen(literal);
-    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), literal, SIZE);
-
-    return kit_String_prependBytes(ref, literal, SIZE);
+    Result result = kit_String_insertLiteral(ref, 0, literal);
+    return Result_isOk(result) ? Option_new(Result_unwrap(result)) : None;
 }
 
 OptionOf(kit_String)
@@ -478,8 +493,7 @@ kit_String_set(kit_String *const ref, kit_String other) {
     kit_String_assertValidInstance(other);
     kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), other, kit_String_size(other));
 
-    const struct kit_String_Object *otherObject = ((struct kit_String_Object *) other) - 1;
-    return kit_String_setBytes(ref, other, otherObject->size);
+    return kit_String_setBytes(ref, other, kit_String_size(other));
 }
 
 OptionOf(kit_String)
@@ -487,22 +501,23 @@ kit_String_setPack(kit_String *const ref, const char *const format, va_list pack
     assert(ref);
     assert(*ref);
     assert(format);
+    kit_String_assertValidInstance(*ref);
 
     va_list packCopy;
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
 
     va_copy(packCopy, pack);
-    const int FORMATTED_SIZE = vsnprintf(NULL, 0, format, packCopy);
+    const int formattedSize = vsnprintf(NULL, 0, format, packCopy);
     va_end(packCopy);
 
-    if (FORMATTED_SIZE >= 0) {
-        const size_t NEW_SIZE = (size_t) FORMATTED_SIZE;
-        Option stringObjectOption = kit_String_Object_reserve(&stringObject, NEW_SIZE);
+    if (formattedSize >= 0) {
+        const size_t newSize = (size_t) formattedSize;
+        Option option = kit_String_Object_reserve(&stringObject, newSize);
 
-        if (Option_isSome(stringObjectOption)) {
-            stringObject = Option_unwrap(stringObjectOption);
-            vsnprintf(stringObject->raw, NEW_SIZE + 1, format, pack);
-            stringObject->size = NEW_SIZE;
+        if (Option_isSome(option)) {
+            stringObject = Option_unwrap(option);
+            vsnprintf(stringObject->raw, newSize + 1, format, pack);
+            stringObject->size = newSize;
             *ref = NULL;
             return Option_new(stringObject->raw);
         }
@@ -520,11 +535,11 @@ kit_String_setBytes(kit_String *const ref, const void *const bytes, const size_t
     kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), bytes, size);
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    Option stringObjectOption = kit_String_Object_reserve(&stringObject, size);
+    Option option = kit_String_Object_reserve(&stringObject, size);
 
-    if (Option_isSome(stringObjectOption)) {
+    if (Option_isSome(option)) {
         assert(NULL == stringObject);
-        stringObject = Option_unwrap(stringObjectOption);
+        stringObject = Option_unwrap(option);
         char *stringObjectRaw = stringObject->raw;
         kit_Allocator_copy(stringObjectRaw, bytes, size);
         stringObjectRaw[stringObject->size = size] = '\0';
@@ -541,15 +556,13 @@ kit_String_setFormat(kit_String *const ref, const char *const format, ...) {
     assert(ref);
     assert(*ref);
     assert(format);
+    kit_String_assertValidInstance(*ref);
 
     va_list pack;
-
     va_start(pack, format);
-    Option result = kit_String_setPack(ref, format, pack);
+    Option option = kit_String_setPack(ref, format, pack);
     va_end(pack);
-
-    assert(Option_isSome(result) ? NULL == *ref : NULL != *ref);
-    return result;
+    return option;
 }
 
 OptionOf(kit_String)
@@ -558,11 +571,9 @@ kit_String_setLiteral(kit_String *const ref, const char *const literal) {
     assert(*ref);
     assert(literal);
     kit_String_assertValidInstance(*ref);
+    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), literal, strlen(literal));
 
-    const size_t SIZE = strlen(literal);
-    kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), literal, SIZE);
-
-    return kit_String_setBytes(ref, literal, SIZE);
+    return kit_String_setBytes(ref, literal, strlen(literal));
 }
 
 OptionOf(kit_String)
@@ -583,17 +594,31 @@ kit_String_quote(kit_String *const ref) {
 }
 
 OptionOf(kit_String)
+kit_String_clear(kit_String *const ref) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+    stringObject->raw[0] = '\0';
+    stringObject->size = 0;
+
+    *ref = NULL;
+    return Option_new(stringObject->raw);
+}
+
+OptionOf(kit_String)
 kit_String_reserve(kit_String *const ref, const size_t capacity) {
     assert(ref);
     assert(*ref);
     kit_String_assertValidInstance(*ref);
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    Option stringObjectOption = kit_String_Object_reserve(&stringObject, capacity);
+    Option option = kit_String_Object_reserve(&stringObject, capacity);
 
-    if (Option_isSome(stringObjectOption)) {
+    if (Option_isSome(option)) {
         assert(NULL == stringObject);
-        stringObject = Option_unwrap(stringObjectOption);
+        stringObject = Option_unwrap(option);
         *ref = NULL;
         return Option_new(stringObject->raw);
     } else {
@@ -609,11 +634,11 @@ kit_String_shrink(kit_String *const ref) {
     kit_String_assertValidInstance(*ref);
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    Option stringObjectOption = kit_String_Object_shrink(&stringObject);
+    Option option = kit_String_Object_shrink(&stringObject);
 
-    if (Option_isSome(stringObjectOption)) {
+    if (Option_isSome(option)) {
         assert(NULL == stringObject);
-        stringObject = Option_unwrap(stringObjectOption);
+        stringObject = Option_unwrap(option);
         *ref = NULL;
         return Option_new(stringObject->raw);
     } else {
@@ -677,10 +702,10 @@ OptionOf(struct kit_String_Object *)
 kit_String_Object_new(const size_t capacityHint) {
     struct kit_String_Object *stringObject;
     const size_t capacity = capacityHint > KIT_STRING_DEFAULT_CAPACITY ? capacityHint : KIT_STRING_DEFAULT_CAPACITY;
-    Option stringObjectOption = kit_Allocator_malloc(sizeof(*stringObject) + capacity + 1);
+    Option option = kit_Allocator_malloc(sizeof(*stringObject) + capacity + 1);
 
-    if (Option_isSome(stringObjectOption)) {
-        stringObject = Option_unwrap(stringObjectOption);
+    if (Option_isSome(option)) {
+        stringObject = Option_unwrap(option);
         stringObject->size = 0;
         stringObject->capacity = capacity;
 #ifndef NDEBUG
@@ -689,7 +714,7 @@ kit_String_Object_new(const size_t capacityHint) {
         stringObject->raw[0] = stringObject->raw[capacity] = '\0';
     }
 
-    return stringObjectOption;
+    return option;
 }
 
 OptionOf(struct kit_String_Object *)
@@ -702,9 +727,9 @@ kit_String_Object_reserve(struct kit_String_Object **const ref, const size_t cap
     if (stringObject->capacity < capacity) {
         const size_t newCapacity = (capacity - stringObject->capacity > KIT_STRING_MINIMUM_RESERVATION) ?
                                    capacity : stringObject->capacity + KIT_STRING_MINIMUM_RESERVATION;
-        Option stringObjectOption = kit_Allocator_ralloc(stringObject, sizeof(*stringObject) + newCapacity + 1);
-        if (Option_isSome(stringObjectOption)) {
-            stringObject = Option_unwrap(stringObjectOption);
+        Option option = kit_Allocator_ralloc(stringObject, sizeof(*stringObject) + newCapacity + 1);
+        if (Option_isSome(option)) {
+            stringObject = Option_unwrap(option);
             stringObject->capacity = newCapacity;
             stringObject->raw[newCapacity] = '\0';
         } else {
@@ -726,9 +751,9 @@ kit_String_Object_shrink(struct kit_String_Object **const ref) {
     if (stringObject->capacity > KIT_STRING_DEFAULT_CAPACITY) {
         const size_t size = stringObject->size;
         const size_t newCapacity = size > KIT_STRING_DEFAULT_CAPACITY ? size : KIT_STRING_DEFAULT_CAPACITY;
-        Option stringObjectOption = kit_Allocator_ralloc(stringObject, sizeof(*stringObject) + newCapacity + 1);
-        if (Option_isSome(stringObjectOption)) {
-            stringObject = Option_unwrap(stringObjectOption);
+        Option option = kit_Allocator_ralloc(stringObject, sizeof(*stringObject) + newCapacity + 1);
+        if (Option_isSome(option)) {
+            stringObject = Option_unwrap(option);
             stringObject->capacity = newCapacity;
             stringObject->raw[newCapacity] = '\0';
         } else {

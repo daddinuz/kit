@@ -37,6 +37,7 @@ extern "C" {
 #include <stddef.h>
 #include <stdbool.h>
 #include <option/option.h>
+#include <kit/errors.h>
 #include <kit/compiler_steroids.h>
 #include <kit/collections/string_config.h>
 
@@ -135,6 +136,46 @@ kit_String_duplicate(kit_String s)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
+ * TODO docs
+ * TODO test
+ */
+extern ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insert(kit_String *ref, size_t index, kit_String other)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertPack(kit_String *ref, size_t index, const char *format, va_list pack)
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 3, 0)));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertBytes(kit_String *ref, size_t index, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertFormat(kit_String *ref, size_t index, const char *format, ...)
+__attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 3, 4)));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern ResultOf(kit_String, OutOfRangeError, OutOfMemoryError)
+kit_String_insertLiteral(kit_String *ref, size_t index, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
  * Appends content to string.
  * In case of OOM this function returns None.
  *
@@ -227,6 +268,8 @@ kit_String_appendLiteral(kit_String *ref, const char *literal)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
+ * TODO test
+ *
  * Prepends content to string.
  * In case of OOM this function returns None.
  *
@@ -246,6 +289,8 @@ kit_String_prepend(kit_String *ref, kit_String other)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
+ * TODO test
+ *
  * Prepends content to string using printf-like format, behaves like kit_String_prependFormat but takes a va_list.
  * In case of OOM this function returns None.
  *
@@ -264,6 +309,8 @@ kit_String_prependPack(kit_String *ref, const char *format, va_list pack)
 __attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 0)));
 
 /**
+ * TODO test
+ *
  * Prepends bytes to string.
  * In case of OOM this function returns None.
  *
@@ -283,6 +330,8 @@ kit_String_prependBytes(kit_String *ref, const void *bytes, size_t size)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
+ * TODO test
+ *
  * Prepends content to string using printf-like format.
  * In case of OOM this function returns None.
  *
@@ -301,6 +350,8 @@ kit_String_prependFormat(kit_String *ref, const char *format, ...)
 __attribute__((__warn_unused_result__, __nonnull__, __format__(printf, 2, 3)));
 
 /**
+ * TODO test
+ *
  * Prepends literal to string.
  * In case of OOM this function returns None.
  *
