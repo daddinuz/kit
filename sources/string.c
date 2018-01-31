@@ -51,7 +51,7 @@ kit_String_Object_new(size_t capacityHint)
 __attribute__((__warn_unused_result__));
 
 static OptionOf(struct kit_String_Object *)
-kit_String_Object_reserve(struct kit_String_Object **ref, size_t capacity)
+kit_String_Object_expand(struct kit_String_Object **const ref, size_t capacity)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 static OptionOf(struct kit_String_Object *)
@@ -81,8 +81,13 @@ __attribute__((__nonnull__));
  *
  */
 OptionOf(kit_String)
-kit_String_new(const size_t capacityHint) {
-    Option option = kit_String_Object_new(capacityHint);
+kit_String_new(void) {
+    return kit_String_withCapacity(0);
+}
+
+OptionOf(kit_String)
+kit_String_withCapacity(size_t capacity) {
+    Option option = kit_String_Object_new(capacity);
 
     if (Option_isSome(option)) {
         struct kit_String_Object *stringObject = Option_unwrap(option);
@@ -99,7 +104,7 @@ kit_String_quoted(const void *const bytes, const size_t size) {
     const char *data = bytes;
     kit_String string = NULL;
     bool teardownRequired = false;
-    Option option = kit_String_new(size + size / 3);
+    Option option = kit_String_withCapacity(size + size / 3);
 
     if (Option_isNone(option)) {
         return None;
@@ -285,7 +290,7 @@ kit_String_insertPack(kit_String *ref, size_t index, const char *format, va_list
     if (formattedSize >= 0) {
         const size_t currentSize = stringObject->size;
         const size_t additionalSize = (size_t) formattedSize;
-        Option option = kit_String_Object_reserve(&stringObject, currentSize + additionalSize);
+        Option option = kit_String_Object_expand(&stringObject, currentSize + additionalSize);
 
         if (Option_isSome(option)) {
             stringObject = Option_unwrap(option);
@@ -318,7 +323,7 @@ kit_String_insertBytes(kit_String *const ref, const size_t index, const void *co
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
     const size_t currentSize = stringObject->size;
-    Option option = kit_String_Object_reserve(&stringObject, currentSize + size);
+    Option option = kit_String_Object_expand(&stringObject, currentSize + size);
 
     if (Option_isSome(option)) {
         assert(NULL == stringObject);
@@ -512,7 +517,7 @@ kit_String_setPack(kit_String *const ref, const char *const format, va_list pack
 
     if (formattedSize >= 0) {
         const size_t newSize = (size_t) formattedSize;
-        Option option = kit_String_Object_reserve(&stringObject, newSize);
+        Option option = kit_String_Object_expand(&stringObject, newSize);
 
         if (Option_isSome(option)) {
             stringObject = Option_unwrap(option);
@@ -535,7 +540,7 @@ kit_String_setBytes(kit_String *const ref, const void *const bytes, const size_t
     kit_String_assertNotOverlapping(*ref, kit_String_size(*ref), bytes, size);
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    Option option = kit_String_Object_reserve(&stringObject, size);
+    Option option = kit_String_Object_expand(&stringObject, size);
 
     if (Option_isSome(option)) {
         assert(NULL == stringObject);
@@ -608,13 +613,13 @@ kit_String_clear(kit_String *const ref) {
 }
 
 OptionOf(kit_String)
-kit_String_reserve(kit_String *const ref, const size_t capacity) {
+kit_String_expand(kit_String *ref, size_t capacity) {
     assert(ref);
     assert(*ref);
     kit_String_assertValidInstance(*ref);
 
     struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
-    Option option = kit_String_Object_reserve(&stringObject, capacity);
+    Option option = kit_String_Object_expand(&stringObject, capacity);
 
     if (Option_isSome(option)) {
         assert(NULL == stringObject);
@@ -716,7 +721,7 @@ kit_String_Object_new(const size_t capacityHint) {
 }
 
 OptionOf(struct kit_String_Object *)
-kit_String_Object_reserve(struct kit_String_Object **const ref, const size_t capacity) {
+kit_String_Object_expand(struct kit_String_Object **const ref, const size_t capacity) {
     assert(ref);
     assert(*ref);
 

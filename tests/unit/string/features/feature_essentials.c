@@ -38,7 +38,7 @@ FeatureDefine(StringNew) {
     kit_String sut = NULL;
 
     {
-        sut = u(kit_String_new(0));
+        sut = u(kit_String_new());
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);
@@ -49,7 +49,7 @@ FeatureDefine(StringNew) {
     kit_String_delete(sut);
 
     {
-        sut = u(kit_String_new(KIT_STRING_DEFAULT_CAPACITY - 1));
+        sut = u(kit_String_withCapacity(KIT_STRING_DEFAULT_CAPACITY - 1));
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);
@@ -60,7 +60,7 @@ FeatureDefine(StringNew) {
     kit_String_delete(sut);
 
     {
-        sut = u(kit_String_new(KIT_STRING_DEFAULT_CAPACITY));
+        sut = u(kit_String_withCapacity(KIT_STRING_DEFAULT_CAPACITY));
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);
@@ -71,7 +71,7 @@ FeatureDefine(StringNew) {
     kit_String_delete(sut);
 
     {
-        sut = u(kit_String_new(KIT_STRING_DEFAULT_CAPACITY + 1));
+        sut = u(kit_String_withCapacity(KIT_STRING_DEFAULT_CAPACITY + 1));
         assert_not_null(sut);
         assert_string_equal("", sut);
         assert_equal(kit_String_size(sut), 0);

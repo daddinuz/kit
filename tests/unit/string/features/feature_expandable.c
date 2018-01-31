@@ -32,7 +32,7 @@
 
 #define u(x)    Option_unwrap((x))
 
-FeatureDefine(StringReserve) {
+FeatureDefine(StringExpand) {
     (void) traits_context;
 
     kit_String sut;
@@ -48,7 +48,7 @@ FeatureDefine(StringReserve) {
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        Option option = kit_String_reserve(
+        Option option = kit_String_expand(
                 &sut, KIT_STRING_DEFAULT_CAPACITY - 1
         );
         assert_true(Option_isSome(option));
@@ -74,7 +74,7 @@ FeatureDefine(StringReserve) {
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        Option option = kit_String_reserve(
+        Option option = kit_String_expand(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION - 1
         );
         assert_true(Option_isSome(option));
@@ -100,7 +100,7 @@ FeatureDefine(StringReserve) {
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        Option option = kit_String_reserve(
+        Option option = kit_String_expand(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1
         );
         assert_true(Option_isSome(option));
@@ -126,7 +126,7 @@ FeatureDefine(StringReserve) {
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        Option option = kit_String_reserve(
+        Option option = kit_String_expand(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION - 1
         );
         assert_true(Option_isSome(option));
@@ -152,7 +152,7 @@ FeatureDefine(StringReserve) {
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        Option option = kit_String_reserve(
+        Option option = kit_String_expand(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1
         );
         assert_true(Option_isSome(option));
@@ -232,7 +232,7 @@ FeatureDefine(StringShrink) {
         assert_equal(kit_String_size(sut), LITERAL_SIZE);
         assert_equal(kit_String_capacity(sut), KIT_STRING_DEFAULT_CAPACITY);
 
-        Option option = kit_String_reserve(
+        Option option = kit_String_expand(
                 &sut, KIT_STRING_DEFAULT_CAPACITY + KIT_STRING_MINIMUM_RESERVATION + 1
         );
         assert_true(Option_isSome(option));

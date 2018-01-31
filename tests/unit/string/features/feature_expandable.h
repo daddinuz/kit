@@ -35,7 +35,7 @@ extern "C" {
 
 #include <traits-unit/traits-unit.h>
 
-FeatureDeclare(StringReserve);
+FeatureDeclare(StringExpand);
 FeatureDeclare(StringShrink);
 
 #ifdef __cplusplus

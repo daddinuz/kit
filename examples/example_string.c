@@ -61,7 +61,7 @@ int main() {
     string1 = u(kit_String_quote(&string1));
     printf("%s: (%3zu)[%3zu]`%s`\n", s(string1), kit_String_size(string1), kit_String_capacity(string1), string1);
 
-    kit_String string = u(kit_String_new(0));
+    kit_String string = u(kit_String_new());
     printf("%s: (%3zu)[%3zu]`%s`\n", s(string), kit_String_size(string), kit_String_capacity(string), string);
 
     string = u(kit_String_prepend(&string, string3));

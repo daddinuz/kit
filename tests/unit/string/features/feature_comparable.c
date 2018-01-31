@@ -44,7 +44,7 @@ FeatureDefine(StringIsEqual) {
         sut = u(kit_String_fromBytes(BYTES, BYTES_SIZE));
         assert_true(kit_String_isEqual(sut, sut));
 
-        kit_String other = u(kit_String_new(0));
+        kit_String other = u(kit_String_new());
         assert_true(kit_String_isEqual(sut, sut));
         assert_true(kit_String_isEqual(other, other));
         assert_false(kit_String_isEqual(sut, other));

@@ -69,14 +69,14 @@ kit_HttpRequest_fire(const struct kit_HttpRequest **ref) {
         request = *ref;
         responseBuilder = Option_unwrap(option);
 
-        option = kit_String_new(0);
+        option = kit_String_new();
         if (Option_isNone(option)) {
             result = Result_error(OutOfMemoryError);
             break;
         }
         responseBody = Option_unwrap(option);
 
-        option = kit_String_new(0);
+        option = kit_String_new();
         if (Option_isNone(option)) {
             result = Result_error(OutOfMemoryError);
             break;

@@ -50,16 +50,24 @@ extern "C" {
 typedef const char *kit_String;
 
 /**
+ * TODO docs
+ * TODO test
+ */
+extern OptionOf(kit_String)
+kit_String_new(void)
+__attribute__((__warn_unused_result__));
+
+/**
  * Creates a new instance of kit_String with 0 size.
  * In case of OOM this function returns None.
  *
- * If capacityHint is 0 then a default capacity will be used.
+ * If capacity is 0 then a default capacity will be used.
  *
- * @param capacityHint An hint about the average capacity.
+ * @param capacity An hint about the average capacity.
  * @return A new instance of kit_String or None.
  */
 extern OptionOf(kit_String)
-kit_String_new(size_t capacityHint)
+kit_String_withCapacity(size_t capacity)
 __attribute__((__warn_unused_result__));
 
 /**
@@ -507,7 +515,7 @@ __attribute__((__warn_unused_result__, __nonnull__));
  * @return The modified string instance (invalidating *ref) in case of success or None (leaving *ref untouched).
  */
 extern OptionOf(kit_String)
-kit_String_reserve(kit_String *ref, size_t capacity)
+kit_String_expand(kit_String *ref, size_t capacity)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**

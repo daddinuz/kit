@@ -47,7 +47,7 @@ Describe("String",
          ),
          Trait(
                  "Expandable",
-                 Run(StringReserve),
+                 Run(StringExpand),
                  Run(StringShrink)
          ),
          Trait(
