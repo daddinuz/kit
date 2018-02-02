@@ -34,7 +34,8 @@
 #include <kit/allocator/allocator.h>
 #include <kit/collections/string.h>
 
-#define _(x)            ((void) ((x) ? 1 : 0));
+#define _(x) \
+    ((void) ((x) ? 1 : 0));
 
 struct kit_String_Object {
     size_t size;
@@ -51,7 +52,7 @@ kit_String_Object_new(size_t capacityHint)
 __attribute__((__warn_unused_result__));
 
 static OptionOf(struct kit_String_Object *)
-kit_String_Object_expand(struct kit_String_Object **const ref, size_t capacity)
+kit_String_Object_expand(struct kit_String_Object **ref, size_t capacity)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 static OptionOf(struct kit_String_Object *)
@@ -61,10 +62,6 @@ __attribute__((__warn_unused_result__, __nonnull__));
 static void
 kit_String_Object_delete(struct kit_String_Object *self);
 
-#ifdef NDEBUG
-#define kit_String_assertValidInstance(x)
-#define kit_String_assertNotOverlapping(p1, s1, p2, s2)
-#else
 static void
 __kit_String_assertValidInstance(const char *file, size_t line, kit_String string)
 __attribute__((__nonnull__));
@@ -73,9 +70,11 @@ static void
 __kit_String_assertNotOverlapping(const char *file, size_t line, const void *p1, size_t s1, const void *p2, size_t s2)
 __attribute__((__nonnull__));
 
-#define kit_String_assertValidInstance(x)               __kit_String_assertValidInstance(__FILE__, __LINE__, (x))
-#define kit_String_assertNotOverlapping(p1, s1, p2, s2) __kit_String_assertNotOverlapping(__FILE__, __LINE__, (p1), (s1), (p2), (s2))
-#endif
+#define kit_String_assertValidInstance(x) \
+    __kit_String_assertValidInstance(__FILE__, __LINE__, (x))
+
+#define kit_String_assertNotOverlapping(p1, s1, p2, s2) \
+    __kit_String_assertNotOverlapping(__FILE__, __LINE__, (p1), (s1), (p2), (s2))
 
 /*
  *
@@ -775,17 +774,20 @@ kit_String_Object_delete(struct kit_String_Object *self) {
     }
 }
 
-#ifndef NDEBUG
-
 void
 __kit_String_assertValidInstance(const char *const file, const size_t line, kit_String string) {
     assert(file);
     assert(string);
+#ifdef NDEBUG
+    (void) file;
+    (void) line;
+    (void) string;
+#else
     const struct kit_String_Object *stringObject = ((struct kit_String_Object *) string) - 1;
-
     if (stringObject->identityCode != KIT_STRING_IDENTITY_CODE) {
         _(Option_expect(None, "Expected a valid string instance.\n%s:%zu", file, line));
     }
+#endif
 }
 
 void
@@ -797,6 +799,14 @@ __kit_String_assertNotOverlapping(
     assert(file);
     assert(p1);
     assert(p2);
+#ifdef NDEBUG
+    (void) file;
+    (void) line;
+    (void) p1;
+    (void) s1;
+    (void) p2;
+    (void) s1;
+#else
     const uintptr_t a1 = (uintptr_t) p1;
     const uintptr_t a2 = (uintptr_t) p2;
 
@@ -809,6 +819,5 @@ __kit_String_assertNotOverlapping(
     if (!((a2 + s2) < a1 || (a1 + s1) < a2)) {
         _(Option_expect(None, "Expected non-overlapping strings.\n%s:%zu", file, line));
     }
-}
-
 #endif
+}
