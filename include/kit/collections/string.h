@@ -470,6 +470,118 @@ kit_String_setLiteral(kit_String *ref, const char *literal)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
+ * TODO docs
+ * TODO test
+ */
+extern ResultOf(kit_String, OutOfRangeError)
+kit_String_erase(kit_String *ref, size_t index, size_t count)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern ResultOf(kit_String, OutOfRangeError, IllegalArgumentsError)
+kit_String_eraseSlice(kit_String *ref, size_t start, size_t end)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_removeFirstMatchingBytes(kit_String *ref, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_removeFirstMatchingLiteral(kit_String *ref, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_removeLastMatchingBytes(kit_String *ref, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_removeLastMatchingLiteral(kit_String *ref, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_removeAllMatchingBytes(kit_String *ref, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_removeAllMatchingLiteral(kit_String *ref, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_trimLeft(kit_String *ref)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_trimRight(kit_String *ref)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_trim(kit_String *ref)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_trimLeftIf(kit_String *ref, bool ifFn(const char c))
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_trimRightIf(kit_String *ref, bool ifFn(const char c))
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern kit_String
+kit_String_trimIf(kit_String *ref, bool ifFn(const char c))
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
  * Modifies string quoting (JSON compliant) is content.
  * In case of OOM this function returns None.
  *
@@ -532,6 +644,102 @@ __attribute__((__warn_unused_result__, __nonnull__));
  */
 extern OptionOf(kit_String)
 kit_String_shrink(kit_String *ref)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findFirstFromIndex(kit_String self, size_t startIndex, kit_String substring)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findFirstLiteralFromIndex(kit_String self, size_t startIndex, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findFirstBytesFromIndex(kit_String self, size_t startIndex, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findLastFromIndex(kit_String self, size_t startIndex, kit_String substring)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findLastLiteralFromIndex(kit_String self, size_t startIndex, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findLastBytesFromIndex(kit_String self, size_t startIndex, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findFirst(kit_String self, kit_String substring)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findFirstLiteral(kit_String self, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findFirstBytes(kit_String self, const void *bytes, size_t size)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findLast(kit_String self, kit_String substring)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findLastLiteral(kit_String self, const char *literal)
+__attribute__((__warn_unused_result__, __nonnull__));
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern size_t
+kit_String_findLastBytes(kit_String self, const void *bytes, size_t size)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**

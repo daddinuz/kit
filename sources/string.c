@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdint.h>
-#include <memory.h>
+#include <string.h>
 #include <assert.h>
 #include <kit/allocator/allocator.h>
 #include <kit/collections/string.h>
@@ -46,6 +46,14 @@ struct kit_String_Object {
 #endif
     char raw[];
 };
+
+static bool
+kit_String_trimIfFn(const char c)
+__attribute__((__warn_unused_result__));
+
+static void *
+kit_String_memrchr(const void *s, int c, size_t n)
+__attribute__((__warn_unused_result__, __nonnull__));
 
 static OptionOf(struct kit_String_Object *)
 kit_String_Object_new(size_t capacityHint)
@@ -580,6 +588,239 @@ kit_String_setLiteral(kit_String *const ref, const char *const literal) {
     return kit_String_setBytes(ref, literal, strlen(literal));
 }
 
+ResultOf(kit_String, OutOfRangeError)
+kit_String_erase(kit_String *const ref, const size_t index, const size_t count) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    if (count > 0) {
+        // this must never return IllegalArgumentsError because start is always less or equal than end
+        Result result = kit_String_eraseSlice(ref, index, index + count - 1);
+        assert(Result_isOk(result) || OutOfRangeError == Result_inspect(result));
+        return result;
+    }
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+
+    if (index >= stringObject->size) {
+        return Result_error(OutOfRangeError);
+    }
+
+    *ref = NULL;
+    return Result_ok(stringObject->raw);
+}
+
+ResultOf(kit_String, OutOfRangeError, IllegalArgumentsError)
+kit_String_eraseSlice(kit_String *const ref, const size_t start, const size_t end) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) *ref) - 1;
+
+    if (start > end) {
+        return Result_error(IllegalArgumentsError);
+    }
+
+    if (end >= stringObject->size) {
+        return Result_error(OutOfRangeError);
+    }
+
+    const size_t actualEnd = end + 1;
+    char *raw = stringObject->raw;
+    const size_t size = (stringObject->size -= actualEnd - start);
+    kit_Allocator_move(raw + start, raw + actualEnd, size);
+    raw[size] = '\0';
+
+    *ref = NULL;
+    return Result_ok(raw);
+}
+
+kit_String
+kit_String_removeFirstMatchingBytes(kit_String *const ref, const void *const bytes, const size_t size) {
+    assert(ref);
+    assert(*ref);
+    assert(bytes);
+    kit_String_assertValidInstance(*ref);
+
+    const size_t index = kit_String_findFirstBytes(*ref, bytes, size);
+
+    if (index == SIZE_MAX) {
+        kit_String string = *ref;
+        *ref = NULL;
+        return string;
+    }
+
+    return Result_unwrap(kit_String_erase(ref, index, size));
+}
+
+kit_String
+kit_String_removeFirstMatchingLiteral(kit_String *const ref, const char *const literal) {
+    assert(ref);
+    assert(*ref);
+    assert(literal);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_removeFirstMatchingBytes(ref, literal, strlen(literal));
+}
+
+kit_String
+kit_String_removeLastMatchingBytes(kit_String *const ref, const void *const bytes, const size_t size) {
+    assert(ref);
+    assert(*ref);
+    assert(bytes);
+    kit_String_assertValidInstance(*ref);
+
+    const size_t index = kit_String_findLastBytes(*ref, bytes, size);
+
+    if (index == SIZE_MAX) {
+        kit_String string = *ref;
+        *ref = NULL;
+        return string;
+    }
+
+    return Result_unwrap(kit_String_erase(ref, index, size));
+}
+
+kit_String
+kit_String_removeLastMatchingLiteral(kit_String *const ref, const char *const literal) {
+    assert(ref);
+    assert(*ref);
+    assert(literal);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_removeLastMatchingBytes(ref, literal, strlen(literal));
+}
+
+kit_String
+kit_String_removeAllMatchingBytes(kit_String *const ref, const void *const bytes, const size_t size) {
+    assert(ref);
+    assert(*ref);
+    assert(bytes);
+    kit_String_assertValidInstance(*ref);
+
+    kit_String self = *ref;
+    for (size_t index = kit_String_findFirstBytesFromIndex(self, 0, bytes, size);
+         index < kit_String_size(self);
+         index = kit_String_findFirstBytesFromIndex(self, index, bytes, size)) {
+        self = Result_unwrap(kit_String_erase(&self, index, size));
+    }
+
+    *ref = NULL;
+    return self;
+}
+
+kit_String
+kit_String_removeAllMatchingLiteral(kit_String *const ref, const char *const literal) {
+    assert(ref);
+    assert(*ref);
+    assert(literal);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_removeAllMatchingBytes(ref, literal, strlen(literal));
+}
+
+kit_String
+kit_String_trimLeft(kit_String *const ref) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_trimLeftIf(ref, kit_String_trimIfFn);
+}
+
+kit_String
+kit_String_trimRight(kit_String *const ref) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_trimRightIf(ref, kit_String_trimIfFn);
+}
+
+kit_String
+kit_String_trim(kit_String *const ref) {
+    assert(ref);
+    assert(*ref);
+    kit_String_assertValidInstance(*ref);
+
+    return kit_String_trimIf(ref, kit_String_trimIfFn);
+}
+
+kit_String
+kit_String_trimLeftIf(kit_String *const ref, bool (*const ifFn)(const char)) {
+    assert(ref);
+    assert(*ref);
+    assert(ifFn);
+    kit_String_assertValidInstance(*ref);
+
+    kit_String string = *ref;
+
+    if (kit_String_isEmpty(string)) {
+        *ref = NULL;
+        return string;
+    } else {
+        const struct kit_String_Object *stringObject = ((struct kit_String_Object *) string) - 1;
+        const size_t size = stringObject->size;
+        const char *raw = stringObject->raw;
+        size_t count;
+        char c;
+
+        for (count = 0; count < size; count++) {
+            c = raw[0];
+            if (!ifFn(c)) {
+                break;
+            }
+            raw++;
+        }
+
+        return Result_unwrap(kit_String_erase(ref, 0, count));
+    }
+}
+
+kit_String
+kit_String_trimRightIf(kit_String *const ref, bool (*const ifFn)(const char)) {
+    assert(ref);
+    assert(*ref);
+    assert(ifFn);
+    kit_String_assertValidInstance(*ref);
+
+    kit_String string = *ref;
+
+    if (kit_String_isEmpty(string)) {
+        *ref = NULL;
+        return string;
+    } else {
+        const struct kit_String_Object *stringObject = ((struct kit_String_Object *) string) - 1;
+        const size_t size = stringObject->size;
+        const char *raw = stringObject->raw + size - 1;
+        size_t count;
+        char c;
+
+        for (count = 0; count < size; count++) {
+            c = raw[0];
+            if (!ifFn(c)) {
+                break;
+            }
+            raw--;
+        }
+
+        return Result_unwrap(kit_String_erase(ref, count > 0 ? size - count : 0, count));
+    }
+}
+
+kit_String
+kit_String_trimIf(kit_String *const ref, bool (*const ifFn)(const char)) {
+    assert(ref);
+    assert(*ref);
+    assert(ifFn);
+    kit_String_assertValidInstance(*ref);
+
+    kit_String string = kit_String_trimLeftIf(ref, ifFn);
+    return kit_String_trimRightIf(&string, ifFn);
+}
+
 OptionOf(kit_String)
 kit_String_quote(kit_String *const ref) {
     assert(ref);
@@ -652,6 +893,165 @@ kit_String_shrink(kit_String *const ref) {
 }
 
 size_t
+kit_String_findFirstFromIndex(kit_String self, const size_t startIndex, kit_String substring) {
+    assert(self);
+    assert(substring);
+    kit_String_assertValidInstance(self);
+    kit_String_assertValidInstance(substring);
+
+    return kit_String_findFirstBytesFromIndex(self, startIndex, substring, kit_String_size(substring));
+}
+
+size_t
+kit_String_findFirstLiteralFromIndex(kit_String self, const size_t startIndex, const char *const literal) {
+    assert(self);
+    assert(literal);
+    kit_String_assertValidInstance(self);
+
+    return kit_String_findFirstBytesFromIndex(self, startIndex, literal, strlen(literal));
+}
+
+size_t
+kit_String_findFirstBytesFromIndex(
+        kit_String self, const size_t startIndex, const void *const bytes, const size_t size
+) {
+    assert(self);
+    assert(bytes);
+    kit_String_assertValidInstance(self);
+
+    const size_t selfSize = kit_String_size(self);
+
+    if (0 < size && size <= selfSize && startIndex < selfSize) {
+        size_t matchIndex = startIndex;
+        char *matchString = NULL;
+        const char *byteString = bytes;
+
+        while ((matchString = memchr(self + matchIndex, byteString[0], selfSize - matchIndex))) {
+            matchIndex = matchString - self;
+            if (((matchIndex + size) <= selfSize) && (memcmp(self + matchIndex, byteString, size) == 0)) {
+                return matchIndex;
+            } else {
+                matchIndex++;
+            }
+        }
+    }
+
+    return SIZE_MAX;
+}
+
+size_t
+kit_String_findLastFromIndex(kit_String self, const size_t startIndex, kit_String substring) {
+    assert(self);
+    assert(substring);
+    kit_String_assertValidInstance(self);
+    kit_String_assertValidInstance(substring);
+
+    return kit_String_findLastBytesFromIndex(self, startIndex, substring, kit_String_size(substring));
+}
+
+size_t
+kit_String_findLastLiteralFromIndex(kit_String self, const size_t startIndex, const char *const literal) {
+    assert(self);
+    assert(literal);
+    kit_String_assertValidInstance(self);
+
+    return kit_String_findLastBytesFromIndex(self, startIndex, literal, strlen(literal));
+}
+
+size_t
+kit_String_findLastBytesFromIndex(
+        kit_String self, const size_t startIndex, const void *const bytes, const size_t size
+) {
+    assert(self);
+    assert(bytes);
+    kit_String_assertValidInstance(self);
+
+    const size_t selfSize = kit_String_size(self);
+
+    if (0 < size && size <= selfSize && startIndex < selfSize) {
+        size_t matchIndex = startIndex;
+        char *matchString = NULL;
+        const char *byteString = bytes;
+
+        while ((matchString = kit_String_memrchr(self, byteString[0], matchIndex))) {
+            matchIndex = matchString - self;
+            if (((matchIndex + size) <= selfSize) && (memcmp(self + matchIndex, byteString, size) == 0)) {
+                return matchIndex;
+            } else {
+                matchIndex--;
+            }
+        }
+    }
+
+    return SIZE_MAX;
+}
+
+size_t
+kit_String_findFirst(kit_String self, kit_String substring) {
+    assert(self);
+    assert(substring);
+    kit_String_assertValidInstance(self);
+    kit_String_assertValidInstance(substring);
+
+    return kit_String_findFirstBytesFromIndex(self, 0, substring, kit_String_size(substring));
+}
+
+size_t
+kit_String_findFirstLiteral(kit_String self, const char *const literal) {
+    assert(self);
+    assert(literal);
+    kit_String_assertValidInstance(self);
+
+    return kit_String_findFirstBytesFromIndex(self, 0, literal, strlen(literal));
+}
+
+size_t
+kit_String_findFirstBytes(kit_String self, const void *const bytes, const size_t size) {
+    assert(self);
+    assert(bytes);
+    kit_String_assertValidInstance(self);
+
+    return kit_String_findFirstBytesFromIndex(self, 0, bytes, size);
+}
+
+size_t
+kit_String_findLast(kit_String self, kit_String substring) {
+    assert(self);
+    assert(substring);
+    kit_String_assertValidInstance(self);
+    kit_String_assertValidInstance(substring);
+
+    const size_t selfSize = kit_String_size(self);
+    return kit_String_findLastBytesFromIndex(
+            self, selfSize > 0 ? selfSize - 1 : 0, substring, kit_String_size(substring)
+    );
+}
+
+size_t
+kit_String_findLastLiteral(kit_String self, const char *const literal) {
+    assert(self);
+    assert(literal);
+    kit_String_assertValidInstance(self);
+
+    const size_t selfSize = kit_String_size(self);
+    return kit_String_findLastBytesFromIndex(
+            self, selfSize > 0 ? selfSize - 1 : 0, literal, strlen(literal)
+    );
+}
+
+size_t
+kit_String_findLastBytes(kit_String self, const void *const bytes, const size_t size) {
+    assert(self);
+    assert(bytes);
+    kit_String_assertValidInstance(self);
+
+    const size_t selfSize = kit_String_size(self);
+    return kit_String_findLastBytesFromIndex(
+            self, selfSize > 0 ? selfSize - 1 : 0, bytes, size
+    );
+}
+
+size_t
 kit_String_size(kit_String self) {
     assert(self);
     kit_String_assertValidInstance(self);
@@ -700,6 +1100,29 @@ kit_String_delete(kit_String self) {
 /*
  * Internals
  */
+bool
+kit_String_trimIfFn(const char c) {
+    return isspace(c) || isblank(c) || !isprint(c);
+}
+
+void *
+kit_String_memrchr(const void *s, int c, size_t n) {
+    assert(s);
+
+    if (n != 0) {
+        const unsigned char ch = (unsigned char) c;
+        const unsigned char *cp = ((unsigned char *) s) + n;
+
+        do {
+            if (*(--cp) == ch) {
+                return ((void *) cp);
+            }
+        } while (--n != 0);
+    }
+
+    return NULL;
+}
+
 OptionOf(struct kit_String_Object *)
 kit_String_Object_new(const size_t capacityHint) {
     struct kit_String_Object *stringObject;

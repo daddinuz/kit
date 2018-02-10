@@ -27,7 +27,6 @@
  */
 
 #include <stdio.h>
-#include <kit/utils.h>
 #include <kit/collections/string.h>
 
 #define u(x) \
@@ -43,6 +42,15 @@
  *
  */
 int main() {
+    kit_String s = Option_unwrap(kit_String_fromLiteral("\n\tJust want to say a word! Hello world!\n\n"));
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(s), kit_String_size(s), kit_String_capacity(s), s);
+
+    s = kit_String_trim(&s);
+    s = kit_String_removeAllMatchingLiteral(&s, "wor");
+    printf("%s: (%3zu)[%3zu]`%s`\n", s(s), kit_String_size(s), kit_String_capacity(s), s);
+
+    kit_String_delete(s);
+    /*
     kit_String string3 = u(kit_String_fromLiteral(" [> data field 3 <] "));
     string3 = u(kit_String_prependBytes(&string3, "\0\a\t\r\b\n\b\r\t\a\0", 11));
     string3 = u(kit_String_appendBytes(&string3, "\0\a\t\r\b\n\b\r\t\a\0", 11));
@@ -83,5 +91,6 @@ int main() {
     kit_String_delete(kit_move((void **) &string2));
     kit_String_delete(kit_move((void **) &string1));
     kit_String_delete(kit_move((void **) &string));
+    */
     return 0;
 }

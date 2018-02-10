@@ -38,6 +38,7 @@ extern "C" {
 extern const Error OutOfRangeError;
 extern const Error OutOfMemoryError;
 extern const Error IllegalStateError;
+extern const Error IllegalArgumentsError;
 extern const Error ConcurrentModificationError;
 extern const Error NetworkingError;
 

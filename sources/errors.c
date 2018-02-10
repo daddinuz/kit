@@ -31,5 +31,6 @@
 const Error OutOfRangeError = Error_new("Out of range");
 const Error OutOfMemoryError = Error_new("Out of memory");
 const Error IllegalStateError = Error_new("Illegal state");
+const Error IllegalArgumentsError = Error_new("Illegal arguments");
 const Error ConcurrentModificationError = Error_new("Concurrent modification");
 const Error NetworkingError = Error_new("Networking error");
