@@ -1089,6 +1089,28 @@ kit_String_isEmpty(kit_String self) {
 }
 
 void
+kit_String_lower(kit_String self) {
+    assert(self);
+    kit_String_assertValidInstance(self);
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
+    for (size_t i = 0; i < stringObject->size; i++) {
+        stringObject->raw[i] = (char) tolower(stringObject->raw[i]);
+    }
+}
+
+void
+kit_String_upper(kit_String self) {
+    assert(self);
+    kit_String_assertValidInstance(self);
+
+    struct kit_String_Object *stringObject = ((struct kit_String_Object *) self) - 1;
+    for (size_t i = 0; i < stringObject->size; i++) {
+        stringObject->raw[i] = (char) toupper(stringObject->raw[i]);
+    }
+}
+
+void
 kit_String_delete(kit_String self) {
     if (self) {
         kit_String_assertValidInstance(self);

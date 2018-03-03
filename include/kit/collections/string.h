@@ -784,6 +784,20 @@ kit_String_isEmpty(kit_String self)
 __attribute__((__warn_unused_result__, __nonnull__));
 
 /**
+ * TODO docs
+ * TODO test
+ */
+extern void
+kit_String_lower(kit_String self);
+
+/**
+ * TODO docs
+ * TODO test
+ */
+extern void
+kit_String_upper(kit_String self);
+
+/**
  * Deletes an instance of kit_String.
  * If self is NULL no action will be performed.
  *
