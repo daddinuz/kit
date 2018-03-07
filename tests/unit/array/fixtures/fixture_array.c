@@ -50,7 +50,7 @@ SetupDefine(SeededArraySetup) {
  * Teardowns implementations
  */
 TeardownDefine(ArrayTeardown) {
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
     assert_not_null(sut);
     kit_Array_delete(sut);
 }

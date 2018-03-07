@@ -33,7 +33,7 @@
 
 FeatureDefine(ListGet) {
     Result result;
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_List_isEmpty(sut));
@@ -60,7 +60,7 @@ FeatureDefine(ListGet) {
 
 FeatureDefine(ListBack) {
     Result result;
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_List_isEmpty(sut));
@@ -81,7 +81,7 @@ FeatureDefine(ListBack) {
 
 FeatureDefine(ListFront) {
     Result result;
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_List_isEmpty(sut));

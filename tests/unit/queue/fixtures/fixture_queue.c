@@ -85,7 +85,7 @@ SetupDefine(SeededQueueVectorSetup) {
  * Teardowns implementations
  */
 TeardownDefine(QueueTeardown) {
-    struct kit_Queue *sut = traits_context;
+    struct kit_Queue *sut = traits_unit_get_context();
     assert_not_null(sut);
     kit_Queue_delete(sut);
 }

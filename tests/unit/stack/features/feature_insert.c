@@ -32,7 +32,7 @@
 #include <kit/collections/stack.h>
 
 FeatureDefine(StackPush) {
-    struct kit_Stack *sut = traits_context;
+    struct kit_Stack *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_Stack_isEmpty(sut));

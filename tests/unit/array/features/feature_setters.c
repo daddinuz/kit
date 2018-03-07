@@ -34,7 +34,7 @@
 FeatureDefine(ArraySet) {
     size_t i, j;
     Result result;
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
 
     for (i = 0, j = SEEDS_SIZE - 1; i < SEEDS_SIZE; i++, j--) {
         result = kit_Array_put(sut, i, (void *) SEEDS[j]);
@@ -60,7 +60,7 @@ FeatureDefine(ArraySet) {
 
 FeatureDefine(ArrayClear) {
     Result result;
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
 
     kit_Array_clear(sut);
     for (size_t i = 0; i < SEEDS_SIZE; i++) {

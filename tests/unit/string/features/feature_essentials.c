@@ -33,8 +33,6 @@
 #define u(x)    Option_unwrap((x))
 
 FeatureDefine(StringNew) {
-    (void) traits_context;
-
     kit_String sut = NULL;
 
     {
@@ -83,8 +81,6 @@ FeatureDefine(StringNew) {
 }
 
 FeatureDefine(StringQuoted) {
-    (void) traits_context;
-
     kit_String sut = NULL;
 
     {
@@ -178,8 +174,6 @@ FeatureDefine(StringQuoted) {
 }
 
 FeatureDefine(StringFromBytes) {
-    (void) traits_context;
-
     kit_String sut = NULL;
 
     {
@@ -231,8 +225,6 @@ FeatureDefine(StringFromBytes) {
 }
 
 FeatureDefine(StringFromFormat) {
-    (void) traits_context;
-
     kit_String sut = NULL;
 
     {
@@ -342,8 +334,6 @@ FeatureDefine(StringFromFormat) {
 }
 
 FeatureDefine(StringFromLiteral) {
-    (void) traits_context;
-
     kit_String sut = NULL;
 
     {
@@ -478,8 +468,6 @@ FeatureDefine(StringFromLiteral) {
 }
 
 FeatureDefine(StringDuplicate) {
-    (void) traits_context;
-
     kit_String sut = NULL;
 
     {

@@ -16,7 +16,7 @@
     "daddinuz/alligator": "0.11.3"
   },
   "development": {
-    "daddinuz/traits": "2.1.0",
-    "daddinuz/traits-unit": "1.1.1"
+    "daddinuz/traits": "3.0.0",
+    "daddinuz/traits-unit": "2.0.0"
   }
 }

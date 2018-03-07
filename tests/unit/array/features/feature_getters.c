@@ -33,7 +33,7 @@
 
 FeatureDefine(ArrayRaw) {
     void **raw;
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
 
     raw = kit_Array_raw(sut);
     for (size_t i = 0; i < SEEDS_SIZE; i++) {
@@ -44,7 +44,7 @@ FeatureDefine(ArrayRaw) {
 FeatureDefine(ArrayGet) {
     size_t i;
     Result result;
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
 
     for (i = 0; i < SEEDS_SIZE; i++) {
         result = kit_Array_get(sut, i);
@@ -59,7 +59,7 @@ FeatureDefine(ArrayGet) {
 
 FeatureDefine(ArrayBack) {
     Result result;
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
 
     result = kit_Array_back(sut);
     assert_true(Result_isOk(result));
@@ -68,7 +68,7 @@ FeatureDefine(ArrayBack) {
 
 FeatureDefine(ArrayFront) {
     Result result;
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
 
     result = kit_Array_front(sut);
     assert_true(Result_isOk(result));
@@ -76,6 +76,6 @@ FeatureDefine(ArrayFront) {
 }
 
 FeatureDefine(ArrayCapacity) {
-    struct kit_Array *sut = traits_context;
+    struct kit_Array *sut = traits_unit_get_context();
     assert_equal(SEEDS_SIZE, kit_Array_capacity(sut));
 }

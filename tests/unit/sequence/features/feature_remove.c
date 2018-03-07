@@ -32,7 +32,7 @@
 #include <kit/collections/sequence.h>
 
 FeatureDefine(SequenceClear) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));
@@ -53,7 +53,7 @@ FeatureDefine(SequenceClear) {
 }
 
 FeatureDefine(SequenceRemove) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));
@@ -82,7 +82,7 @@ FeatureDefine(SequenceRemove) {
 }
 
 FeatureDefine(SequencePopBack) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));
@@ -109,7 +109,7 @@ FeatureDefine(SequencePopBack) {
 }
 
 FeatureDefine(SequencePopFront) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));

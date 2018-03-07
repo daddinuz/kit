@@ -85,7 +85,7 @@ SetupDefine(SeededStackVectorSetup) {
  * Teardowns implementations
  */
 TeardownDefine(StackTeardown) {
-    struct kit_Stack *sut = traits_context;
+    struct kit_Stack *sut = traits_unit_get_context();
     assert_not_null(sut);
     kit_Stack_delete(sut);
 }

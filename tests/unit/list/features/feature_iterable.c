@@ -32,7 +32,7 @@
 #include <fixtures/fixture_list_context.h>
 
 FeatureDefine(ListIteratorFromEmptyListBoundaries) {
-    struct kit_List *list = traits_context;
+    struct kit_List *list = traits_unit_get_context();
     assert_not_null(list);
 
     struct kit_List_Iterator *sut = Option_unwrap(kit_List_Iterator_fromBegin(list));
@@ -52,7 +52,7 @@ FeatureDefine(ListIteratorFromEmptyListBoundaries) {
 }
 
 FeatureDefine(ListIteratorFromSeededListBoundaries) {
-    struct kit_List *list = traits_context;
+    struct kit_List *list = traits_unit_get_context();
     assert_not_null(list);
 
     struct kit_List_Iterator *sut = Option_unwrap(kit_List_Iterator_fromBegin(list));
@@ -72,7 +72,7 @@ FeatureDefine(ListIteratorFromSeededListBoundaries) {
 }
 
 FeatureDefine(ListIteratorRewindFromEmptyList) {
-    struct kit_Traits_ListIteratorContext *context = traits_context;
+    struct kit_Traits_ListIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_List *list = context->list;
@@ -95,7 +95,7 @@ FeatureDefine(ListIteratorRewindFromEmptyList) {
 }
 
 FeatureDefine(ListIteratorRewindFromSeededList) {
-    struct kit_Traits_ListIteratorContext *context = traits_context;
+    struct kit_Traits_ListIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_List *list = context->list;
@@ -118,7 +118,7 @@ FeatureDefine(ListIteratorRewindFromSeededList) {
 }
 
 FeatureDefine(ListIteratorReachTheBoundariesOfList) {
-    struct kit_Traits_ListIteratorContext *context = traits_context;
+    struct kit_Traits_ListIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_List *list = context->list;
@@ -153,7 +153,7 @@ FeatureDefine(ListIteratorReachTheBoundariesOfList) {
 }
 
 FeatureDefine(ListIteratorUpdateRetrievedElements) {
-    struct kit_Traits_ListIteratorContext *context = traits_context;
+    struct kit_Traits_ListIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_List *list = context->list;
@@ -192,7 +192,7 @@ FeatureDefine(ListIteratorUpdateRetrievedElements) {
 }
 
 FeatureDefine(ListIteratorDetectModifications) {
-    struct kit_Traits_ListIteratorContext *context = traits_context;
+    struct kit_Traits_ListIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_List *list = context->list;

@@ -32,7 +32,7 @@
 #include <kit/collections/queue.h>
 
 FeatureDefine(QueuePush) {
-    struct kit_Queue *sut = traits_context;
+    struct kit_Queue *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_Queue_isEmpty(sut));

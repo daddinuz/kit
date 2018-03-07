@@ -72,13 +72,13 @@ SetupDefine(MapIteratorFromSeededMapHashMapSetup) {
  * Teardowns implementations
  */
 TeardownDefine(MapTeardown) {
-    struct kit_Map *sut = traits_context;
+    struct kit_Map *sut = traits_unit_get_context();
     assert_not_null(sut);
     kit_Map_delete(sut);
 }
 
 TeardownDefine(MapIteratorTeardown) {
-    struct kit_Traits_MapIteratorContext *context = traits_context;
+    struct kit_Traits_MapIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
     assert_not_null(context->map);
     assert_not_null(context->sut);

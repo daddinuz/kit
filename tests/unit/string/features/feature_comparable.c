@@ -33,8 +33,6 @@
 #define u(x)    Option_unwrap((x))
 
 FeatureDefine(StringIsEqual) {
-    (void) traits_context;
-
     kit_String sut;
 
     {

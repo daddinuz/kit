@@ -49,8 +49,6 @@ Describe("Response",
  * Features declarations
  */
 FeatureDefine(ResponseEssentials) {
-    (void) traits_context;
-
     const struct kit_HttpRequest *const REQUEST;
 
     {

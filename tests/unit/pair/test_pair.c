@@ -50,8 +50,6 @@ Describe("Pair",
  * Features declarations
  */
 FeatureDefine(PairEssentials) {
-    (void) traits_context;
-
     for (size_t i = 0; i < SEEDS_SIZE - 1; i += 2) {
         const char *EXPECTED_KEY = SEEDS[i];
         const char *EXPECTED_VALUE = SEEDS[i + 1];

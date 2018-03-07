@@ -32,7 +32,7 @@
 #include <kit/collections/sequence.h>
 
 FeatureDefine(SequenceExpand) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_Sequence_isEmpty(sut));
@@ -49,7 +49,7 @@ FeatureDefine(SequenceExpand) {
 
 FeatureDefine(SequenceShrink) {
     Result result;
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));

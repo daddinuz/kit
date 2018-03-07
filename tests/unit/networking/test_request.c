@@ -49,8 +49,6 @@ Describe("Request",
  * Features declarations
  */
 FeatureDefine(RequestEssentials) {
-    (void) traits_context;
-
     struct kit_HttpRequestBuilder *builder = Option_unwrap(
             kit_HttpRequestBuilder_new(KIT_HTTP_METHOD_GET, Option_unwrap(kit_Atom_fromLiteral("url")))
     );

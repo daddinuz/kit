@@ -32,7 +32,7 @@
 #include <fixtures/fixture_sequence_context.h>
 
 FeatureDefine(SequenceIteratorFromEmptySequenceBoundaries) {
-    struct kit_Sequence *sequence = traits_context;
+    struct kit_Sequence *sequence = traits_unit_get_context();
     assert_not_null(sequence);
 
     struct kit_Sequence_Iterator *sut = Option_unwrap(kit_Sequence_Iterator_fromBegin(sequence));
@@ -44,7 +44,7 @@ FeatureDefine(SequenceIteratorFromEmptySequenceBoundaries) {
 }
 
 FeatureDefine(SequenceIteratorFromSeededSequenceBoundaries) {
-    struct kit_Sequence *sequence = traits_context;
+    struct kit_Sequence *sequence = traits_unit_get_context();
     assert_not_null(sequence);
 
     struct kit_Sequence_Iterator *sut = Option_unwrap(kit_Sequence_Iterator_fromBegin(sequence));
@@ -56,7 +56,7 @@ FeatureDefine(SequenceIteratorFromSeededSequenceBoundaries) {
 }
 
 FeatureDefine(SequenceIteratorRewindFromEmptySequence) {
-    struct kit_Traits_SequenceIteratorContext *context = traits_context;
+    struct kit_Traits_SequenceIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_Sequence *sequence = context->sequence;
@@ -77,7 +77,7 @@ FeatureDefine(SequenceIteratorRewindFromEmptySequence) {
 }
 
 FeatureDefine(SequenceIteratorRewindFromSeededSequence) {
-    struct kit_Traits_SequenceIteratorContext *context = traits_context;
+    struct kit_Traits_SequenceIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_Sequence *sequence = context->sequence;
@@ -100,7 +100,7 @@ FeatureDefine(SequenceIteratorRewindFromSeededSequence) {
 }
 
 FeatureDefine(SequenceIteratorReachTheBoundariesOfSequence) {
-    struct kit_Traits_SequenceIteratorContext *context = traits_context;
+    struct kit_Traits_SequenceIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_Sequence *sequence = context->sequence;
@@ -125,7 +125,7 @@ FeatureDefine(SequenceIteratorReachTheBoundariesOfSequence) {
 }
 
 FeatureDefine(SequenceIteratorUpdateRetrievedElements) {
-    struct kit_Traits_SequenceIteratorContext *context = traits_context;
+    struct kit_Traits_SequenceIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_Sequence *sequence = context->sequence;
@@ -160,7 +160,7 @@ FeatureDefine(SequenceIteratorUpdateRetrievedElements) {
 }
 
 FeatureDefine(SequenceIteratorDetectModifications) {
-    struct kit_Traits_SequenceIteratorContext *context = traits_context;
+    struct kit_Traits_SequenceIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
 
     struct kit_Sequence *sequence = context->sequence;

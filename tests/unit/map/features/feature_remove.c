@@ -37,8 +37,7 @@
 
 FeatureDefine(MapPop) {
     Result result;
-    struct kit_Map *sut = traits_context;
-    assert_not_null(sut);
+    struct kit_Map *sut = traits_unit_get_context();
 
     assert_false(kit_Map_isEmpty(sut));
     assert_equal(EXPECTED_SIZE, kit_Map_size(sut));
@@ -75,7 +74,7 @@ FeatureDefine(MapPop) {
 
 FeatureDefine(MapClear) {
     Result result;
-    struct kit_Map *sut = traits_context;
+    struct kit_Map *sut = traits_unit_get_context();
 
     assert_false(kit_Map_isEmpty(sut));
     assert_equal(EXPECTED_SIZE, kit_Map_size(sut));

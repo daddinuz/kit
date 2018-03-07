@@ -33,8 +33,6 @@
 #define u(x)    Option_unwrap((x))
 
 FeatureDefine(StringReserve) {
-    (void) traits_context;
-
     kit_String sut;
 
     {
@@ -169,8 +167,6 @@ FeatureDefine(StringReserve) {
 }
 
 FeatureDefine(StringShrink) {
-    (void) traits_context;
-
     kit_String sut;
 
     {

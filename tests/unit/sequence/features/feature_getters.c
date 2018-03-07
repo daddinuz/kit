@@ -33,7 +33,7 @@
 
 FeatureDefine(SequenceGet) {
     Result result;
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));
@@ -60,7 +60,7 @@ FeatureDefine(SequenceGet) {
 
 FeatureDefine(SequenceBack) {
     Result result;
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));
@@ -81,7 +81,7 @@ FeatureDefine(SequenceBack) {
 
 FeatureDefine(SequenceFront) {
     Result result;
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Sequence_isEmpty(sut));

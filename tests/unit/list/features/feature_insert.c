@@ -32,7 +32,7 @@
 #include <kit/collections/list.h>
 
 FeatureDefine(ListInsert) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_List_isEmpty(sut));
@@ -71,7 +71,7 @@ FeatureDefine(ListInsert) {
 }
 
 FeatureDefine(ListPushBack) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_List_isEmpty(sut));
@@ -96,7 +96,7 @@ FeatureDefine(ListPushBack) {
 }
 
 FeatureDefine(ListPushFront) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_List_isEmpty(sut));
