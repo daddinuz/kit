@@ -31,8 +31,9 @@
 #include <features/feature_insert.h>
 #include <kit/collections/sequence.h>
 
+
 FeatureDefine(SequenceInsert) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_Sequence_isEmpty(sut));
@@ -46,7 +47,8 @@ FeatureDefine(SequenceInsert) {
     assert_false(kit_Sequence_isEmpty(sut));
     assert_equal(1, kit_Sequence_size(sut));
     assert_greater_equal(kit_Sequence_capacity(sut), kit_Sequence_size(sut));
-    assert_string_equal("a", Result_unwrap(kit_Sequence_front(sut)), "\n\n%s\n\n", (const char *) Result_unwrap(kit_Sequence_front(sut)));
+    assert_string_equal("a", Result_unwrap(kit_Sequence_front(sut)), "\n\n%s\n\n",
+                        (const char *) Result_unwrap(kit_Sequence_front(sut)));
     assert_string_equal("a", Result_unwrap(kit_Sequence_get(sut, 0)));
     assert_string_equal("a", Result_unwrap(kit_Sequence_back(sut)));
 
@@ -71,7 +73,7 @@ FeatureDefine(SequenceInsert) {
 }
 
 FeatureDefine(SequencePushBack) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_Sequence_isEmpty(sut));
@@ -96,7 +98,7 @@ FeatureDefine(SequencePushBack) {
 }
 
 FeatureDefine(SequencePushFront) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_Sequence_isEmpty(sut));

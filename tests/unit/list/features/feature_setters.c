@@ -31,9 +31,10 @@
 #include <features/feature_setters.h>
 #include <kit/collections/list.h>
 
+
 FeatureDefine(ListPut) {
     size_t i, j;
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     for (i = 0, j = SEEDS_SIZE - 1; i < SEEDS_SIZE; i++, j--) {
         void *replacedElement = (void *) SEEDS[i];

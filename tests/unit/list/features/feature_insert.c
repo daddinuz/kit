@@ -31,8 +31,9 @@
 #include <features/feature_insert.h>
 #include <kit/collections/list.h>
 
+
 FeatureDefine(ListInsert) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_List_isEmpty(sut));
@@ -46,7 +47,8 @@ FeatureDefine(ListInsert) {
     assert_false(kit_List_isEmpty(sut));
     assert_equal(1, kit_List_size(sut));
     assert_greater_equal(kit_List_capacity(sut), kit_List_size(sut));
-    assert_string_equal("a", Result_unwrap(kit_List_front(sut)), "\n\n%s\n\n", (const char *) Result_unwrap(kit_List_front(sut)));
+    assert_string_equal("a", Result_unwrap(kit_List_front(sut)), "\n\n%s\n\n",
+                        (const char *) Result_unwrap(kit_List_front(sut)));
     assert_string_equal("a", Result_unwrap(kit_List_get(sut, 0)));
     assert_string_equal("a", Result_unwrap(kit_List_back(sut)));
 
@@ -71,7 +73,7 @@ FeatureDefine(ListInsert) {
 }
 
 FeatureDefine(ListPushBack) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_List_isEmpty(sut));
@@ -96,7 +98,7 @@ FeatureDefine(ListPushBack) {
 }
 
 FeatureDefine(ListPushFront) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_List_isEmpty(sut));

@@ -31,6 +31,7 @@
 #include <fixtures/fixture_sequence.h>
 #include <fixtures/fixture_sequence_context.h>
 
+
 /*
  * kit_SequenceType
  */
@@ -121,13 +122,13 @@ SetupDefine(SequenceIteratorFromSeededSequenceVectorSetup) {
  * Teardowns implementations
  */
 TeardownDefine(SequenceTeardown) {
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
     assert_not_null(sut);
     kit_Sequence_delete(sut);
 }
 
 TeardownDefine(SequenceIteratorTeardown) {
-    struct kit_Traits_SequenceIteratorContext *context = traits_context;
+    struct kit_Traits_SequenceIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
     assert_not_null(context->sequence);
     assert_not_null(context->sut);

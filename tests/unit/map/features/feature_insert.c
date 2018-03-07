@@ -32,12 +32,13 @@
 #include <kit/collections/map.h>
 #include <kit/collections/atom.h>
 
+
 #define EXPECTED_SIZE   (SEEDS_SIZE / 2)
 #define COUPLES         (EXPECTED_SIZE * 2)
 
 FeatureDefine(MapPut) {
     Result result;
-    struct kit_Map *sut = traits_context;
+    struct kit_Map *sut = traits_unit_get_context();
     assert_not_null(sut);
 
     assert_true(kit_Map_isEmpty(sut));

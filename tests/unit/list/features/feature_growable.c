@@ -31,8 +31,9 @@
 #include <features/feature_growable.h>
 #include <kit/collections/list.h>
 
+
 FeatureDefine(ListExpand) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_true(kit_List_isEmpty(sut));
@@ -49,7 +50,7 @@ FeatureDefine(ListExpand) {
 
 FeatureDefine(ListShrink) {
     Result result;
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_List_isEmpty(sut));

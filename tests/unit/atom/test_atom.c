@@ -51,7 +51,6 @@ Describe("Atom",
  * Features declarations
  */
 FeatureDefine(AtomEssentials) {
-    (void) traits_context;
 
     {
         const char *EXPECTED_TEXT = "Hello World!";
@@ -111,4 +110,5 @@ FeatureDefine(AtomEssentials) {
             }
         }
     }
+
 }

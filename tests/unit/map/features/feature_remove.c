@@ -32,13 +32,13 @@
 #include <kit/collections/map.h>
 #include <kit/collections/atom.h>
 
+
 #define EXPECTED_SIZE   (SEEDS_SIZE / 2)
 #define COUPLES         (EXPECTED_SIZE * 2)
 
 FeatureDefine(MapPop) {
     Result result;
-    struct kit_Map *sut = traits_context;
-    assert_not_null(sut);
+    struct kit_Map *sut = traits_unit_get_context();
 
     assert_false(kit_Map_isEmpty(sut));
     assert_equal(EXPECTED_SIZE, kit_Map_size(sut));
@@ -64,7 +64,8 @@ FeatureDefine(MapPop) {
 
         if (s == 0) {
             assert_true(kit_Map_isEmpty(sut));
-        } else {
+        }
+        else {
             assert_false(kit_Map_isEmpty(sut));
         }
         assert_equal(s, kit_Map_size(sut));
@@ -75,7 +76,7 @@ FeatureDefine(MapPop) {
 
 FeatureDefine(MapClear) {
     Result result;
-    struct kit_Map *sut = traits_context;
+    struct kit_Map *sut = traits_unit_get_context();
 
     assert_false(kit_Map_isEmpty(sut));
     assert_equal(EXPECTED_SIZE, kit_Map_size(sut));

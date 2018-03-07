@@ -31,8 +31,9 @@
 #include <features/feature_remove.h>
 #include <kit/collections/stack.h>
 
+
 FeatureDefine(StackPop) {
-    struct kit_Stack *sut = traits_context;
+    struct kit_Stack *sut = traits_unit_get_context();
 
     assert_not_null(sut);
     assert_false(kit_Stack_isEmpty(sut));

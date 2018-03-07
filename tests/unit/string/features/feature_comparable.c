@@ -30,11 +30,10 @@
 #include <features/feature_comparable.h>
 #include <kit/collections/string.h>
 
+
 #define u(x)    Option_unwrap((x))
 
 FeatureDefine(StringIsEqual) {
-    (void) traits_context;
-
     kit_String sut;
 
     {

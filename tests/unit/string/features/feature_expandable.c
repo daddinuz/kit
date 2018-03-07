@@ -30,11 +30,10 @@
 #include <features/feature_expandable.h>
 #include <kit/collections/string.h>
 
+
 #define u(x)    Option_unwrap((x))
 
 FeatureDefine(StringExpand) {
-    (void) traits_context;
-
     kit_String sut;
 
     {
@@ -169,8 +168,6 @@ FeatureDefine(StringExpand) {
 }
 
 FeatureDefine(StringShrink) {
-    (void) traits_context;
-
     kit_String sut;
 
     {

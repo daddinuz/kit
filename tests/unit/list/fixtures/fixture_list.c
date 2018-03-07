@@ -31,6 +31,7 @@
 #include <fixtures/fixture_list.h>
 #include <fixtures/fixture_list_context.h>
 
+
 /*
  * kit_ListType
  */
@@ -104,13 +105,13 @@ SetupDefine(ListIteratorFromSeededListVectorSetup) {
  * Teardowns implementations
  */
 TeardownDefine(ListTeardown) {
-    struct kit_List *sut = traits_context;
+    struct kit_List *sut = traits_unit_get_context();
     assert_not_null(sut);
     kit_List_delete(sut);
 }
 
 TeardownDefine(ListIteratorTeardown) {
-    struct kit_Traits_ListIteratorContext *context = traits_context;
+    struct kit_Traits_ListIteratorContext *context = traits_unit_get_context();
     assert_not_null(context);
     assert_not_null(context->list);
     assert_not_null(context->sut);

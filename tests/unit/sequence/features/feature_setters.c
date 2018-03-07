@@ -31,9 +31,10 @@
 #include <features/feature_setters.h>
 #include <kit/collections/sequence.h>
 
+
 FeatureDefine(SequencePut) {
     size_t i, j;
-    struct kit_Sequence *sut = traits_context;
+    struct kit_Sequence *sut = traits_unit_get_context();
 
     for (i = 0, j = SEEDS_SIZE - 1; i < SEEDS_SIZE; i++, j--) {
         void *replacedElement = (void *) SEEDS[i];

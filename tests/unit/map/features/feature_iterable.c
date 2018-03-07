@@ -32,13 +32,14 @@
 #include <fixtures/fixture_map_context.h>
 #include <kit/collections/atom.h>
 
+
 #define EXPECTED_SIZE   (SEEDS_SIZE / 2)
 #define COUPLES         (EXPECTED_SIZE * 2)
 
 #define _(x)            ((void) ((x) ? 1 : 0));
 
 FeatureDefine(MapIteratorFromEmptyMap) {
-    struct kit_Traits_MapIteratorContext *context = traits_context;;
+    struct kit_Traits_MapIteratorContext *context = traits_unit_get_context();;
     struct kit_Map_Iterator *sut = context->sut;
     struct kit_Pair *pair = Option_unwrap(kit_Pair_new("", NULL));
     Result result;
@@ -63,7 +64,7 @@ FeatureDefine(MapIteratorFromEmptyMap) {
 }
 
 FeatureDefine(MapIteratorRetrieveElements) {
-    struct kit_Traits_MapIteratorContext *context = traits_context;;
+    struct kit_Traits_MapIteratorContext *context = traits_unit_get_context();;
     struct kit_Map_Iterator *sut = context->sut;
     struct kit_Map *map = context->map;
     struct kit_Pair *pair = Option_unwrap(kit_Pair_new("", NULL));
@@ -94,7 +95,7 @@ FeatureDefine(MapIteratorRetrieveElements) {
 }
 
 FeatureDefine(MapIteratorUpdateElements) {
-    struct kit_Traits_MapIteratorContext *context = traits_context;;
+    struct kit_Traits_MapIteratorContext *context = traits_unit_get_context();;
     struct kit_Map_Iterator *sut = context->sut;
     struct kit_Map *map = context->map;
     struct kit_Pair *pair = Option_unwrap(kit_Pair_new("", NULL));
@@ -158,7 +159,7 @@ FeatureDefine(MapIteratorUpdateElements) {
 }
 
 FeatureDefine(MapIteratorDetectModifications) {
-    struct kit_Traits_MapIteratorContext *context = traits_context;;
+    struct kit_Traits_MapIteratorContext *context = traits_unit_get_context();;
     struct kit_Map_Iterator *sut = context->sut;
     struct kit_Map *map = context->map;
     struct kit_Pair *pair = Option_unwrap(kit_Pair_new("", NULL));

@@ -30,6 +30,7 @@
 #include <features/feature_modifiable.h>
 #include <kit/collections/string.h>
 
+
 #define u(x)    Option_unwrap((x))
 
 struct Seed {
@@ -94,8 +95,6 @@ const struct Seed BYTES_SEEDS[] = {
 const size_t BYTES_SEEDS_SIZE = sizeof(BYTES_SEEDS) / sizeof(BYTES_SEEDS[0]);
 
 FeatureDefine(StringAppend) {
-    (void) traits_context;
-
     kit_String sut;
     kit_String other;
     Option option;
@@ -170,8 +169,6 @@ FeatureDefine(StringAppend) {
 }
 
 FeatureDefine(StringAppendBytes) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
@@ -200,8 +197,6 @@ FeatureDefine(StringAppendBytes) {
 }
 
 FeatureDefine(StringAppendFormat) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
@@ -230,8 +225,6 @@ FeatureDefine(StringAppendFormat) {
 }
 
 FeatureDefine(StringAppendLiteral) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
@@ -260,8 +253,6 @@ FeatureDefine(StringAppendLiteral) {
 }
 
 FeatureDefine(StringSet) {
-    (void) traits_context;
-
     kit_String sut;
     kit_String other;
     Option option;
@@ -334,8 +325,6 @@ FeatureDefine(StringSet) {
 }
 
 FeatureDefine(StringSetBytes) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
@@ -363,8 +352,6 @@ FeatureDefine(StringSetBytes) {
 }
 
 FeatureDefine(StringSetFormat) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
@@ -392,8 +379,6 @@ FeatureDefine(StringSetFormat) {
 }
 
 FeatureDefine(StringSetLiteral) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
@@ -421,8 +406,6 @@ FeatureDefine(StringSetLiteral) {
 }
 
 FeatureDefine(StringQuote) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
@@ -558,8 +541,6 @@ FeatureDefine(StringQuote) {
 }
 
 FeatureDefine(StringClear) {
-    (void) traits_context;
-
     kit_String sut;
     Option option;
 
