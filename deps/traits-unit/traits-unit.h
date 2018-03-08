@@ -44,11 +44,11 @@ extern "C" {
  * Versioning
  */
 #define TRAITS_UNIT_VERSION_MAJOR       2
-#define TRAITS_UNIT_VERSION_MINOR       0
+#define TRAITS_UNIT_VERSION_MINOR       1
 #define TRAITS_UNIT_VERSION_PATCH       0
 #define TRAITS_UNIT_VERSION_SUFFIX      ""
 #define TRAITS_UNIT_VERSION_IS_RELEASE  1
-#define TRAITS_UNIT_VERSION_HEX         0x020000
+#define TRAITS_UNIT_VERSION_HEX         0x020100
 
 /*
  * Constants
@@ -102,7 +102,7 @@ extern void *
 traits_unit_get_context(void);
 
 extern size_t
-traits_unit_get_handled_signals_counter(void);
+traits_unit_get_wrapped_signals_counter(void);
 
 /*
  * Declare main in order to force definition by traits-unit
@@ -155,7 +155,7 @@ main(int argc, char *argv[]);
 /*
  * Helper macro to handle signals
  */
-#define traits_unit_with_raises(xSignal)                                                            \
+#define traits_unit_wraps(xSignal)                                                                  \
     for (                                                                                           \
         __traits_unit_previous_signal_handler = signal((xSignal), __traits_unit_signal_handler);    \
         !sigsetjmp(__traits_unit_jump_buffer, true);                                                \
