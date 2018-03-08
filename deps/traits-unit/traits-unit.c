@@ -71,7 +71,7 @@ void (*volatile __traits_unit_previous_signal_handler)(int);
 static volatile void *global_context = NULL;
 static volatile bool global_context_initialized = false;
 static volatile traits_unit_feature_t *global_feature = NULL;
-static volatile sig_atomic_t global_handled_signals_counter = 0;
+static volatile sig_atomic_t global_wrapped_signals_counter = 0;
 
 /*
  * Define internal types
@@ -179,12 +179,12 @@ traits_unit_get_context(void) {
 }
 
 size_t
-traits_unit_get_handled_signals_counter(void) {
-    if (global_handled_signals_counter < 0) {
+traits_unit_get_wrapped_signals_counter(void) {
+    if (global_wrapped_signals_counter < 0) {
         // this should never happen
-        traits_unit_panic("Unexpected handled signals counter value: %ld\n", (long) global_handled_signals_counter);
+        traits_unit_panic("Unexpected wrapped signals counter value: %ld\n", (long) global_wrapped_signals_counter);
     }
-    return (size_t) global_handled_signals_counter;
+    return (size_t) global_wrapped_signals_counter;
 }
 
 /*
@@ -197,6 +197,8 @@ main(int argc, char *argv[]) {
     traits_unit_trait_t *traits_list[TRAITS_UNIT_MAX_TRAITS] = {0};
     size_t counter_succeed = 0, counter_skipped = 0, counter_failed = 0, counter_todo = 0, counter_all = 0;
     size_t indentation_level = TRAITS_UNIT_INDENTATION_START;
+
+    traits_unit_print(0, "Running traits-unit version %s\n\n", traits_unit_version());
 
     /* Load traits_list */
     if (argc > 1) {
@@ -235,7 +237,6 @@ main(int argc, char *argv[]) {
     }
 
     if (loaded) {
-        traits_unit_print(0, "Running traits-unit version %s\n\n", traits_unit_version());
         /* Run features of traits in traits_list */
         traits_unit_trait_t *trait = NULL;
         buffer = traits_unit_buffer_new(TRAITS_UNIT_BUFFER_CAPACITY);
@@ -264,7 +265,7 @@ main(int argc, char *argv[]) {
  */
 void
 __traits_unit_signal_handler(int signal_id) {
-    global_handled_signals_counter++;
+    global_wrapped_signals_counter++;
     signal(signal_id, __traits_unit_previous_signal_handler);
     siglongjmp(__traits_unit_jump_buffer, 1);
 }
@@ -550,6 +551,7 @@ traits_unit_run_feature(size_t indentation_level, traits_unit_feature_t *feature
         }
         default: {
             traits_unit_panic("Unexpected traits_unit_action_t value: %d\n", feature->action);
+            abort();  // not needed, used to quiet analyzer
         }
     }
     return result;
@@ -558,9 +560,10 @@ traits_unit_run_feature(size_t indentation_level, traits_unit_feature_t *feature
 void
 traits_unit_report(size_t indentation_level, size_t succeed, size_t skipped, size_t failed, size_t todo, size_t all) {
     traits_unit_newline();
-    traits_unit_print(indentation_level, "Succeed: %zu\n", succeed);
-    traits_unit_print(indentation_level, "Skipped: %zu\n", skipped);
-    traits_unit_print(indentation_level, " Failed: %zu\n", failed);
-    traits_unit_print(indentation_level, "   Todo: %zu\n", todo);
-    traits_unit_print(indentation_level, "    All: %zu\n", all);
+    const int width = snprintf(NULL, 0, "%zu", all);
+    traits_unit_print(indentation_level, "Succeed: %*zu\n", width, succeed);
+    traits_unit_print(indentation_level, "Skipped: %*zu\n", width, skipped);
+    traits_unit_print(indentation_level, " Failed: %*zu\n", width, failed);
+    traits_unit_print(indentation_level, "   Todo: %*zu\n", width, todo);
+    traits_unit_print(indentation_level, "    All: %*zu\n", width, all);
 }

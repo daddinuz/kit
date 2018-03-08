@@ -17,6 +17,6 @@
   },
   "development": {
     "daddinuz/traits": "3.0.0",
-    "daddinuz/traits-unit": "2.0.0"
+    "daddinuz/traits-unit": "2.1.0"
   }
 }
