@@ -55,3 +55,6 @@ cmake-build-release/
 
 # log files
 *.log
+
+# docs
+docs/

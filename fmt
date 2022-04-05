@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+set -e
+clang-format --Werror --style=file -i `find examples/ include/ src/ -name '*.h' -o -name '*.c' -type f`
