@@ -4,12 +4,8 @@
 
 #include <kit/cta.h>
 #include <kit/dbg.h>
+#include <kit/types.h>
 #include <kit/allocator/system.h>
-
-cta(MUST_USE)
-static inline usize usize_min(const usize a, const usize b) {
-    return (a < b) ? a : b;
-}
 
 cta(MUST_USE)
 static AllocResult
