@@ -24,6 +24,12 @@ AllocResult AllocResult_err(const Error *const error) {
     return (AllocResult) { .error = error, .ok = false };
 }
 
+AllocResult
+AllocResult_fromNullable(void *const ptr, const Error *const error) {
+    assert(error);
+    return (ptr) ? AllocResult_ok(ptr) : AllocResult_err(error);
+}
+
 AllocResult allocate(const Allocator *const allocator,
                      const MemoryLayout layout,
                      const Trace trace) {

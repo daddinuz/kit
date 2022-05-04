@@ -25,6 +25,9 @@ extern AllocResult AllocResult_ok(void *ptr);
 cta(MUST_USE, DENY_NULL(1))
 extern AllocResult AllocResult_err(const Error *error);
 
+cta(MUST_USE, DENY_NULL(2))
+extern AllocResult AllocResult_fromNullable(void *ptr, const Error *error);
+
 typedef AllocResult (*const AllocateFn)(MemoryLayout layout, Trace trace);
 
 typedef AllocResult (*const ReallocateFn)(void *ptr,
