@@ -15,12 +15,12 @@ extern void require(bool condition, const RequireArgs args);
 
 #define require(condition)                                                     \
     ((require)((condition), ((RequireArgs) {                                   \
-                   .message = "requirement: " STRINGIZE_DEFER(condition)       \
-                   " not met", .trace = __TRACE__                              \
+                   .message = "requirement: `" STRINGIZE(condition)            \
+                   "` not met", .trace = __TRACE__                             \
                })))
 
 #define require_with(condition, ...)                                           \
     ((require)((condition), ((RequireArgs) {                                   \
-                   .message = "requirement: " STRINGIZE_DEFER(condition)       \
-                   " not met", .trace = __TRACE__, __VA_ARGS__                 \
+                   .message = "requirement: `" STRINGIZE(condition)            \
+                   "` not met", .trace = __TRACE__, __VA_ARGS__                \
                })))
