@@ -21,6 +21,6 @@ int main(void) {
     if (alloc.ok) {
         const Person *const person = alloc.ptr;
         Person_display(person);
-        deallocate(SystemAllocator, alloc.ptr, layoutof(Person));
+        deallocate(SystemAllocator, alloc.ptr);
     }
 }

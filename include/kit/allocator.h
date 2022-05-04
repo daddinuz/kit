@@ -6,77 +6,33 @@
 #include <kit/trace.h>
 #include <kit/types.h>
 #include <kit/error.h>
-#include <kit/memory/layout.h>
+#include <kit/alloc/result.h>
 
-extern const Error *const OutOfMemory;
-extern const Error *const UnsupportedLayout;
-
-typedef struct AllocResult {
-    const union {
-        void *const ptr;
-        const Error *const error;
-    };
-    const bool ok;
-} AllocResult;
+typedef AllocResult (*const Allocator)(void *ptr, usize size, Trace trace);
 
 cta(MUST_USE, DENY_NULL(1))
-extern AllocResult AllocResult_ok(void *ptr);
+extern AllocResult allocate(const Allocator allocator, usize size, Trace trace);
 
-cta(MUST_USE, DENY_NULL(1))
-extern AllocResult AllocResult_err(const Error *error);
+#define allocate(allocator, size) (allocate((allocator), (size), (__TRACE__)))
 
-cta(MUST_USE, DENY_NULL(2))
-extern AllocResult AllocResult_fromNullable(void *ptr, const Error *error);
-
-typedef AllocResult (*const AllocateFn)(MemoryLayout layout, Trace trace);
-
-typedef AllocResult (*const ReallocateFn)(void *ptr,
-                                          MemoryLayout oldLayout,
-                                          MemoryLayout newLayout,
-                                          Trace trace);
-
-typedef void (*const DeallocateFn)(void *ptr, MemoryLayout layout, Trace trace);
-
-typedef struct Allocator {
-    const AllocateFn allocate;
-    const ReallocateFn reallocate;
-    const DeallocateFn deallocate;
-} Allocator;
-
-cta(MUST_USE, DENY_NULL(1))
+cta(MUST_USE, DENY_NULL(1, 2))
 extern AllocResult
-allocate(const Allocator *allocator, MemoryLayout layout, Trace trace);
+duplicate(const Allocator allocator, const void *ptr, usize size, Trace trace);
 
-#define allocate(allocator, layout)                                            \
-    (allocate((allocator), (layout), (__TRACE__)))
-
-cta(MUST_USE, DENY_NULL(1, 2))
-extern AllocResult duplicate(const Allocator *allocator,
-                             const void *ptr,
-                             MemoryLayout layout,
-                             Trace trace);
-
-#define duplicate(allocator, ptr, layout)                                      \
-    (duplicate((allocator), (ptr), (layout), (__TRACE__)))
+#define duplicate(allocator, ptr, size)                                        \
+    (duplicate((allocator), (ptr), (size), (__TRACE__)))
 
 cta(MUST_USE, DENY_NULL(1, 2))
-extern AllocResult reallocate(const Allocator *allocator,
-                              void *ptr,
-                              MemoryLayout oldLayout,
-                              MemoryLayout newLayout,
-                              Trace trace);
+extern AllocResult
+reallocate(const Allocator allocator, void *ptr, usize size, Trace trace);
 
-#define reallocate(allocator, ptr, oldLayout, newLayout)                       \
-    (reallocate((allocator), (ptr), (oldLayout), (newLayout), (__TRACE__)))
+#define reallocate(allocator, ptr, size)                                       \
+    (reallocate((allocator), (ptr), (size), (__TRACE__)))
 
 cta(DENY_NULL(1, 2))
-extern void deallocate(const Allocator *allocator,
-                       void *ptr,
-                       MemoryLayout layout,
-                       Trace trace);
+extern void deallocate(const Allocator allocator, void *ptr, Trace trace);
 
-#define deallocate(allocator, ptr, layout)                                     \
-    (deallocate((allocator), (ptr), (layout), (__TRACE__)))
+#define deallocate(allocator, ptr) (deallocate((allocator), (ptr), (__TRACE__)))
 
 /**
  * Helper macro for allocating and initializing a struct.
@@ -84,5 +40,5 @@ extern void deallocate(const Allocator *allocator,
 #define emplace(allocator, type, ...)                                          \
     ((duplicate)((allocator),                                                  \
                  (&((type) { __VA_ARGS__ })),                                  \
-                 (layoutof(type)),                                             \
+                 (sizeof(type)),                                               \
                  (__TRACE__)))

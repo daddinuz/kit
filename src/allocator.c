@@ -8,67 +8,37 @@
 #undef reallocate
 #undef deallocate
 
-static const Error OutOfMemoryInstance = { "Out of memory" };
-const Error *const OutOfMemory = &OutOfMemoryInstance;
-
-static const Error UnsupportedLayoutInstance = { "Unsupported layout" };
-const Error *const UnsupportedLayout = &UnsupportedLayoutInstance;
-
-AllocResult AllocResult_ok(void *const ptr) {
-    assert(ptr);
-    return (AllocResult) { .ptr = ptr, .ok = true };
-}
-
-AllocResult AllocResult_err(const Error *const error) {
-    assert(error);
-    return (AllocResult) { .error = error, .ok = false };
-}
-
 AllocResult
-AllocResult_fromNullable(void *const ptr, const Error *const error) {
-    assert(error);
-    return (ptr) ? AllocResult_ok(ptr) : AllocResult_err(error);
-}
-
-AllocResult allocate(const Allocator *const allocator,
-                     const MemoryLayout layout,
-                     const Trace trace) {
+allocate(const Allocator allocator, const usize size, const Trace trace) {
     assert(allocator);
-    assert(allocator->allocate);
-    return allocator->allocate(layout, trace);
+    assert(size > 0);
+    return allocator(NULL, size, trace);
 }
 
-AllocResult duplicate(const Allocator *const allocator,
+AllocResult duplicate(const Allocator allocator,
                       const void *const ptr,
-                      const MemoryLayout layout,
+                      const usize size,
                       const Trace trace) {
     assert(allocator);
-    assert(allocator->allocate);
     assert(ptr);
-
-    const AllocResult alloc = allocate(allocator, layout, trace);
-    if (alloc.ok) { memcpy(alloc.ptr, ptr, layout.size); }
-
+    assert(size > 0);
+    const AllocResult alloc = allocate(allocator, size, trace);
+    if (alloc.ok) { memcpy(alloc.ptr, ptr, size); }
     return alloc;
 }
 
-AllocResult reallocate(const Allocator *const allocator,
+AllocResult reallocate(const Allocator allocator,
                        void *const ptr,
-                       const MemoryLayout oldLayout,
-                       const MemoryLayout newLayout,
+                       const usize size,
                        const Trace trace) {
     assert(allocator);
-    assert(allocator->reallocate);
     assert(ptr);
-    return allocator->reallocate(ptr, oldLayout, newLayout, trace);
+    assert(size > 0);
+    return allocator(ptr, size, trace);
 }
 
-void deallocate(const Allocator *const allocator,
-                void *const ptr,
-                const MemoryLayout layout,
-                const Trace trace) {
+void deallocate(const Allocator allocator, void *const ptr, const Trace trace) {
     assert(allocator);
-    assert(allocator->deallocate);
     assert(ptr);
-    allocator->deallocate(ptr, layout, trace);
+    allocator(ptr, 0, trace);
 }
