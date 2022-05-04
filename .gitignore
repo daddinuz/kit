@@ -58,3 +58,7 @@ cmake-build-release/
 
 # docs
 docs/
+
+# clangd
+.clangd/
+compile_commands.json
