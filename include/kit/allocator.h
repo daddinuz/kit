@@ -9,6 +9,7 @@
 #include <kit/memory/layout.h>
 
 extern const Error *const OutOfMemory;
+extern const Error *const UnsupportedLayout;
 
 typedef struct AllocResult {
     const union {

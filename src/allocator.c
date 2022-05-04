@@ -8,8 +8,11 @@
 #undef reallocate
 #undef deallocate
 
-static const Error OutOfMemoryInstance = { .description = "Out of memory" };
+static const Error OutOfMemoryInstance = { "Out of memory" };
 const Error *const OutOfMemory = &OutOfMemoryInstance;
+
+static const Error UnsupportedLayoutInstance = { "Unsupported layout" };
+const Error *const UnsupportedLayout = &UnsupportedLayoutInstance;
 
 AllocResult AllocResult_ok(void *const ptr) {
     assert(ptr);
