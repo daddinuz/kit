@@ -5,39 +5,57 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wpedantic")
 
-set(BASE ${CMAKE_CURRENT_LIST_DIR})
+option(KIT_EXPERIMENTAL "Enable experimental features")
+
+set(PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
+set(INCLUDE_ROOT ${PROJECT_ROOT}/include/kit)
+set(SOURCES_ROOT ${PROJECT_ROOT}/src)
 
 set(HEADERS
-    ${BASE}/include/kit.h
+    ${PROJECT_ROOT}/include/kit.h
 
-    ${BASE}/include/kit/pp.h
-    ${BASE}/include/kit/cta.h
-    ${BASE}/include/kit/dbg.h
-    ${BASE}/include/kit/trace.h
-    ${BASE}/include/kit/types.h
-    ${BASE}/include/kit/error.h
-    ${BASE}/include/kit/require.h
-    ${BASE}/include/kit/allocator.h
+    ${INCLUDE_ROOT}/pp.h
+    ${INCLUDE_ROOT}/cta.h
+    ${INCLUDE_ROOT}/dbg.h
+    ${INCLUDE_ROOT}/trace.h
+    ${INCLUDE_ROOT}/types.h
+    ${INCLUDE_ROOT}/error.h
+    ${INCLUDE_ROOT}/require.h
+    ${INCLUDE_ROOT}/allocator.h
 
-    ${BASE}/include/kit/memory/layout.h
+    ${INCLUDE_ROOT}/memory/layout.h
 
-    ${BASE}/include/kit/alloc/errors.h
-    ${BASE}/include/kit/alloc/result.h
+    ${INCLUDE_ROOT}/alloc/errors.h
+    ${INCLUDE_ROOT}/alloc/result.h
 
-    ${BASE}/include/kit/system/allocator.h
+    ${INCLUDE_ROOT}/system/allocator.h
    )
 
 set(SOURCES
-    ${BASE}/src/require.c
-    ${BASE}/src/allocator.c
+    ${SOURCES_ROOT}/require.c
+    ${SOURCES_ROOT}/allocator.c
 
-    ${BASE}/src/alloc/errors.c
-    ${BASE}/src/alloc/result.c
+    ${SOURCES_ROOT}/alloc/errors.c
+    ${SOURCES_ROOT}/alloc/result.c
 
-    ${BASE}/src/system/allocator.c
+    ${SOURCES_ROOT}/system/allocator.c
    )
 
-include_directories(include)
+if(KIT_EXPERIMENTAL)
+    set(HEADERS
+        ${HEADERS}
+        ${INCLUDE_ROOT}/__experimental__/allocator/ext.h
+        ${INCLUDE_ROOT}/__experimental__/system/allocator/ext.h
+       )
+
+    set(SOURCES
+        ${SOURCES}
+        ${SOURCES_ROOT}/__experimental__/allocator/ext.c
+        ${SOURCES_ROOT}/__experimental__/system/allocator/ext.c
+       )
+endif()
+
+include_directories(${PROJECT_ROOT}/include)
 
 # library
 add_library(kit ${HEADERS} ${SOURCES})
